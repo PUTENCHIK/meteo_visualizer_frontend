@@ -381,7 +381,7 @@ const rawSettings = {
         }),
     }),
     atmosphere: createSection('Настройки модели атмосферы', 'wind', {
-        enable: createBoolean('Отображение', true),
+        enable: createBoolean('Отображение', false),
         degreeOfInterpolation: createRange('Степень интерполяции', 3, 1, 4, 1),
         scale: createChapter('Шкала значений', {
             min: createRange('Минимум', 20, 0, 50, 1),
@@ -389,7 +389,7 @@ const rawSettings = {
         }),
         maxStations: createNumber(
             'Максимальное принимаемое визуализациями количество метеостанций',
-            64,
+            128,
             { visible: false },
         ),
         model: createTab('Вид модели', 'particles', {
@@ -420,7 +420,7 @@ const rawSettings = {
     }),
     camera: createSection('Настройки камеры', 'camera', {
         noLimits: createBoolean('Свободная камера', false),
-        minDistance: createRange('Дистанция приближения', 50, 30, 800, 10),
+        minDistance: createRange('Дистанция приближения', 50, 10, 800, 10),
         maxDistance: createRange('Дистанция отдаления', 500, 30, 800, 10),
         maxPolarAngle: createRange('Максимальный полярный угол', 89, 0, 180, 1),
         focusOffset: createNumber('Отступ при фокусировке на меше', 40, { visible: false }),

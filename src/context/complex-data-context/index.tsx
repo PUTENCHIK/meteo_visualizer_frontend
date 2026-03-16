@@ -1,34 +1,53 @@
+import { v5 as uuidv5 } from 'uuid';
 import { Guid } from 'typescript-guid';
 import { storageManager } from '@managers/local-storage-manager';
-import { getMastConfig, type Mast, type WeatherStation } from '@utils/complexes';
-import { polarToLocal, type GeographicSystemPosition } from '@utils/coordinate-systems';
+import {
+    getMastConfig,
+    type Mast,
+    type WeatherStation,
+    type WeatherStationData,
+    type WeatherStationsNum,
+} from '@utils/complexes';
+import { type GeographicSystemPosition } from '@utils/coordinate-systems';
 import {
     createContext,
     useCallback,
     useContext,
     useEffect,
+    useMemo,
     useRef,
     useState,
     type ReactNode,
 } from 'react';
-import { Vector2, Vector3 } from 'three';
+import { Vector3 } from 'three';
+import type { PollResult } from '@context/websocket-context';
+
+const APP_NAMESPACE = '6ba7b810-9dad-11d1-80b4-00c04fd430c8';
 
 interface ComplexDataContextType {
-    getStations: () => Record<string, WeatherStation>;
-    updateStation: (name: string, value: number) => void;
     position: GeographicSystemPosition;
     updatePosition: (lat: Vector3, lon: Vector3) => void;
     masts: Mast[];
-    getMast: (id: string) => Mast | undefined;
+    getMastById: (id: string) => Mast | undefined;
     addMast: () => void;
     updateMast: <K extends keyof Mast>(id: string, key: K, value: Mast[K]) => void;
     deleteMast: (id: string) => void;
+    stations: WeatherStation[];
+    getStation: (
+        mastId: string,
+        yardHeight: number,
+        num: WeatherStationsNum,
+    ) => WeatherStation | undefined;
+    getStationByName: (name: string) => WeatherStation | undefined;
+    getStationsData: () => Record<string, WeatherStationData>;
+    updateStationData: (name: string, pollResult: PollResult) => void;
 }
 
 const ComplexDataContext = createContext<ComplexDataContextType | undefined>(undefined);
 
 export const ComplexDataProvider = ({ children }: { children: ReactNode }) => {
-    const stationsRef = useRef<Record<string, WeatherStation>>({});
+    // {Имя станции от API: данные станции}
+    const stationsDataRef = useRef<Record<string, WeatherStationData>>({});
     const [position, setPosition] = useState<GeographicSystemPosition>(
         storageManager.getItem('position'),
     );
@@ -38,34 +57,63 @@ export const ComplexDataProvider = ({ children }: { children: ReactNode }) => {
         storageManager.setItem('masts', masts);
     }, [masts]);
 
-    const getStationPos = useCallback(
-        (name: string): Vector3 => {
-            const parts = name.toLowerCase().split('-');
-            let mastPos: Vector2 = new Vector2(0, 0);
-            let lastMast = undefined;
-            for (const mast of masts) {
-                mastPos = polarToLocal(mast.position);
-                lastMast = mast;
-                if (mast.prefix === parts[0]) break;
-            }
-            const mastHeight = lastMast ? getMastConfig(lastMast.configName).height : 100;
-            return new Vector3(mastPos.x, Math.random() * mastHeight, mastPos.y);
+    const stations = useMemo(() => {
+        const getId = (mastId: string, yard: number, num: number) => {
+            return uuidv5(`N${num}:${yard}m:${mastId}`, APP_NAMESPACE);
+        };
+
+        return masts.flatMap((mast) => {
+            return getMastConfig(mast.configName).yards.flatMap((yard) => {
+                const createStation = (num: WeatherStationsNum): WeatherStation => {
+                    const id = getId(mast.id, yard.height, num);
+                    return {
+                        id,
+                        mastId: mast.id,
+                        yardHeight: yard.height,
+                        num: num,
+                    };
+                };
+
+                return yard.amount === 1
+                    ? createStation(1)
+                    : [createStation(1), createStation(2), createStation(3)];
+            });
+        });
+    }, [masts]);
+
+    const getStationsData = useCallback(() => stationsDataRef.current, []);
+
+    const getStation = useCallback(
+        (mastId: string, yardHeight: number, num: WeatherStationsNum) => {
+            return stations.find(
+                (s) => s.mastId === mastId && s.yardHeight === yardHeight && s.num === num,
+            );
         },
-        [masts],
+        [stations],
     );
 
-    const getStations = useCallback(() => stationsRef.current, []);
+    const updateStationData = useCallback((name: string, pollResult: PollResult) => {
+        const data = stationsDataRef.current;
 
-    const updateStation = useCallback(
-        (name: string, value: number) => {
-            if (!(name in stationsRef.current)) {
-                stationsRef.current[name] = { position: getStationPos(name), value: value };
-            } else {
-                stationsRef.current[name].value = value;
+        // Если имя станции отсутствует
+        if (!data[name]) data[name] = {};
+
+        for (const pollItem of pollResult.payload) {
+            // Если отсутствует измерение в массиве у станции
+            if (!data[name][pollItem.name]) data[name][pollItem.name] = [];
+
+            const measurements = data[name][pollItem.name];
+
+            measurements.push({
+                value: pollItem.value,
+                timestamp: pollResult.timestamp,
+            });
+
+            if (measurements.length > 30) {
+                measurements.shift();
             }
-        },
-        [getStationPos],
-    );
+        }
+    }, []);
 
     const updatePosition = useCallback((lat: Vector3, lon: Vector3) => {
         const newPos: GeographicSystemPosition = { lat, lon };
@@ -73,11 +121,57 @@ export const ComplexDataProvider = ({ children }: { children: ReactNode }) => {
         storageManager.setItem('position', newPos);
     }, []);
 
-    const getMast = useCallback(
+    const getMastById = useCallback(
         (id: string) => {
             return masts.find((m) => m.id === id);
         },
         [masts],
+    );
+
+    const getStationByName = useCallback(
+        (name: string) => {
+            const parts = name.split('-');
+
+            // Префикс мачты, по которому она определяется
+            const mastPrefix = parts[0].toLowerCase();
+            let targetMast: Mast | undefined = undefined;
+            for (const mast of masts) {
+                if (mast.prefix.toLowerCase() === mastPrefix) {
+                    targetMast = mast;
+                    break;
+                }
+            }
+            if (!targetMast) return undefined;
+            const config = getMastConfig(targetMast.configName);
+
+            // Обозначение высоты в формате L{h}, где h - это номер реи, начиная с основания мачты
+            const yardLabel = parts[1];
+            const yardNumber = Number(yardLabel[1]);
+
+            if (yardNumber > config.yards.length) return undefined;
+            const yard = config.yards[yardNumber - 1];
+
+            // Номер станции на мачте
+            let num: WeatherStationsNum;
+            // Если в названии 3 части, значит обозначение номера нет в названии и станция только одна
+            if (parts.length === 3) {
+                num = 1;
+                // Иначе, обозначение в формате N{1 | 2 | 3} передано
+            } else {
+                const numLabel = parts[2];
+                const numNumber = Number(numLabel[1]);
+                if (numNumber > yard.amount) return undefined;
+                num = numNumber as WeatherStationsNum;
+            }
+
+            const station = getStation(targetMast.id, yard.height, num);
+            if (station && !station.name) {
+                station.name = name;
+            }
+
+            return station;
+        },
+        [masts, getStation],
     );
 
     const addMast = useCallback(() => {
@@ -103,15 +197,18 @@ export const ComplexDataProvider = ({ children }: { children: ReactNode }) => {
     }, []);
 
     const contextValue: ComplexDataContextType = {
-        getStations: getStations,
-        updateStation: updateStation,
         position: position,
         updatePosition: updatePosition,
         masts: masts,
-        getMast: getMast,
+        getMastById: getMastById,
+        getStationByName: getStationByName,
         addMast: addMast,
         updateMast: updateMast,
         deleteMast: deleteMast,
+        stations: stations,
+        getStation: getStation,
+        getStationsData: getStationsData,
+        updateStationData: updateStationData,
     };
 
     return (

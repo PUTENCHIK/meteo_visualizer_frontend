@@ -4,6 +4,7 @@ import { useFrame } from '@react-three/fiber';
 import { useMemo, useRef } from 'react';
 import { Vector3, Object3D, Vector2, ShaderMaterial, Vector4 } from 'three';
 import { vertexShader, fragmentShader } from '@utils/shaders';
+import { useScene } from '@context/scene-context';
 
 interface PillarmapProps {
     basePlateSize: Vector3;
@@ -12,7 +13,8 @@ interface PillarmapProps {
 
 export const Pillarmap = ({ basePlateSize, height }: PillarmapProps) => {
     const { map: settings } = useSettings();
-    const { getStations } = useComplexData();
+    const { getStationsData, getStationByName } = useComplexData();
+    const { getMeshPosition } = useScene();
 
     const materialRef = useRef<ShaderMaterial>(null);
 
@@ -84,21 +86,44 @@ export const Pillarmap = ({ basePlateSize, height }: PillarmapProps) => {
     useFrame(() => {
         if (!materialRef.current) return;
 
-        const stations = Object.values(getStations());
+        const targetMeasures = ['airtemperature', 'temperature'];
+        const stations = Object.entries(getStationsData()).filter(([_, data]) =>
+            Object.entries(data).some(
+                ([measure, measurements]) =>
+                    targetMeasures.includes(measure.toLowerCase()) && measurements.length,
+            ),
+        );
 
-        for (let i = 0; i < MAX_STATIONS; i++) {
-            if (i < stations.length) {
-                const s = stations[i];
-                stationsData[i].set(s.position.x, s.position.y, s.position.z, s.value);
-            } else {
-                stationsData[i].set(0, 0, 0, 0);
+        let stationIndex = 0;
+        let dataIndex = 0;
+
+        while (stationIndex < stations.length) {
+            const [name, data] = stations[stationIndex];
+            const station = getStationByName(name);
+
+            const pos = getMeshPosition(station?.id ?? '');
+            let value = 0;
+            for (const [measure, measurements] of Object.entries(data)) {
+                if (targetMeasures.includes(measure.toLowerCase()) && measurements.length) {
+                    value = measurements[measurements.length - 1].value;
+                    break;
+                }
             }
+
+            if (station && pos) {
+                stationsData[dataIndex].set(pos.x, pos.y, pos.z, value);
+                dataIndex++;
+            }
+            stationIndex++;
+        }
+        for (let i = dataIndex; i < MAX_STATIONS; i++) {
+            stationsData[i].set(0, 0, 0, 0);
         }
 
         const uniforms = materialRef.current.uniforms;
 
         uniforms.uStations.value = stationsData;
-        uniforms.uStationCount.value = Math.min(stations.length, MAX_STATIONS);
+        uniforms.uStationCount.value = Math.min(dataIndex, MAX_STATIONS);
         uniforms.uDegree.value = degree;
         uniforms.uOpacity.value = pixelOpacity;
         uniforms.uMinVal.value = scaleMin;

@@ -46,7 +46,7 @@ export const MastModel = ({ data }: MastModelProps) => {
 
             {/* Реи с метеостанциями */}
             {config.yards.map((yard, index) => (
-                <YardModel key={index} data={yard} />
+                <YardModel key={index} data={yard} mastId={data.id} />
             ))}
         </MeshGroup>
     );

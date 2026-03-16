@@ -41,6 +41,7 @@ export default defineConfig({
             '@helpers': path.resolve(__dirname, './src/components/helpers'),
             '@assets': path.resolve(__dirname, './src/assets'),
             '@dialogs': path.resolve(__dirname, './src/components/dialogs'),
+            '@hooks': path.resolve(__dirname, './src/hooks'),
         },
     },
     server: {

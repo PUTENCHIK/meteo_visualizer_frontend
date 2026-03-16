@@ -9,6 +9,11 @@
 @mixin item-box {
     box-sizing: border-box;
     padding: var(--box-padding);
+    
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+
     border-radius: var(--box-padding);
     border: 1px solid var(--outline-color);
 }

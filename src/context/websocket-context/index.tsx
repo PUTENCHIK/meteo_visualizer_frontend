@@ -1,6 +1,6 @@
 import { useComplexData } from '@context/complex-data-context';
 import { storageManager } from '@managers/local-storage-manager';
-import { createContext, useContext, useMemo, useState, type ReactNode } from 'react';
+import { createContext, useCallback, useContext, useMemo, useState, type ReactNode } from 'react';
 import useWebSocket, { ReadyState } from 'react-use-websocket';
 
 type PollStatus = 'DONE' | 'ERROR' | 'DEACTIVATED' | 'CONNECTION_FAILURE';
@@ -17,7 +17,7 @@ interface DebugInfo {
     poll_end_time: number;
 }
 
-interface PollResult {
+export interface PollResult {
     timestamp: number;
     payload: PayloadItem[];
     status: PollStatus;
@@ -48,12 +48,15 @@ interface SocketContextType {
 const SocketContext = createContext<SocketContextType | undefined>(undefined);
 
 export const WebSocketProvider = ({ children }: { children: ReactNode }) => {
-    const { updateStation } = useComplexData();
+    const { updateStationData } = useComplexData();
 
     const [connectionEnabled, setConnectionEnabled] = useState(false);
     const [config, setConfig] = useState<SocketConfig>(storageManager.getItem('socketContext'));
 
-    const getSocketUrl = () => `ws://${config.host}:${config.port}/ws`;
+    const getSocketUrl = useCallback(
+        () => `ws://${config.host}:${config.port}/ws`,
+        [config.host, config.port],
+    );
 
     const socketUrl = connectionEnabled ? getSocketUrl() : null;
 
@@ -61,16 +64,8 @@ export const WebSocketProvider = ({ children }: { children: ReactNode }) => {
         onMessage: (event) => {
             try {
                 const message: ServerMessage = JSON.parse(event.data);
-                const name = message.pollable_name;
-                if (message.poll_result && name.toLowerCase().includes('wind')) {
-                    let value = 0;
-                    for (const item of message.poll_result.payload!) {
-                        if (item.name.toLowerCase().includes('temp')) {
-                            value = item.value;
-                            break;
-                        }
-                    }
-                    updateStation(name, value);
+                if (message.poll_result) {
+                    updateStationData(message.pollable_name, message.poll_result);
                 }
             } catch (error) {
                 console.error(`Parsing error: ${error}`);
@@ -100,7 +95,7 @@ export const WebSocketProvider = ({ children }: { children: ReactNode }) => {
             updateConfig: updateConfig,
             socketUrl: getSocketUrl(),
         }),
-        [sendJsonMessage, readyState, isConnected, config],
+        [sendJsonMessage, readyState, isConnected, config, getSocketUrl],
     );
 
     return <SocketContext.Provider value={contextValue}>{children}</SocketContext.Provider>;

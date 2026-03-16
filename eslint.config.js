@@ -45,7 +45,8 @@ export default [
             '@typescript-eslint/no-explicit-any': 'warn',
             // ошибка при неиспользуемых переменных (за исключением _)
             '@typescript-eslint/no-unused-vars': ['error', {
-                "varsIgnorePattern": "_"
+                varsIgnorePattern: "_",
+                argsIgnorePattern: '_',
             }],
             // предупреждение при console.log
             'no-console': ['warn', { allow: ['warn', 'error'] }],

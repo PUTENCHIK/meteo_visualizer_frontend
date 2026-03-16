@@ -1,14 +1,28 @@
 import type { PolarSystemPosition } from '@utils/coordinate-systems';
-import type { Vector3 } from 'three';
 
 export type MastHeight = 35 | 50;
 
+// Количество станций на одной рее
 export type WeatherStationsAmount = 1 | 3;
 
+// Номер станции в рамках одной реи
+export type WeatherStationsNum = 1 | 2 | 3;
+
 export interface WeatherStation {
-    position: Vector3;
-    value: number;
+    id: string;
+    mastId: string;
+    yardHeight: number;
+    num: WeatherStationsNum;
+    name?: string;
 }
+
+export interface StationMeasurement {
+    value: number;
+    timestamp: number;
+}
+
+// {параметр атмосферы: замерение}
+export type WeatherStationData = Record<string, StationMeasurement[]>;
 
 export interface Yard {
     height: number;

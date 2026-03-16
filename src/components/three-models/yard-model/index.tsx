@@ -7,9 +7,10 @@ import type { Yard } from '@utils/complexes';
 
 interface YardModelProps {
     data: Yard;
+    mastId: string;
 }
 
-export const YardModel = ({ data }: YardModelProps) => {
+export const YardModel = ({ data, mastId }: YardModelProps) => {
     const { map: settings } = useSettings();
 
     const yardSize = 0.3;
@@ -58,7 +59,12 @@ export const YardModel = ({ data }: YardModelProps) => {
             />
 
             {/* Метеостанция на короткой части */}
-            <WeatherStationModel position={new Vector3(-shortYardLength, 0, 0)} />
+            <WeatherStationModel
+                position={new Vector3(-shortYardLength, 0, 0)}
+                mastId={mastId}
+                yardHeight={data.height}
+                num={1}
+            />
 
             {/* Если метеостанции на рее три */}
             {data.amount == 3 && (
@@ -87,10 +93,20 @@ export const YardModel = ({ data }: YardModelProps) => {
                     />
 
                     {/* Верхняя метеостанция на длинной части */}
-                    <WeatherStationModel position={getWeatherStationPosition(true)} />
+                    <WeatherStationModel
+                        position={getWeatherStationPosition(true)}
+                        mastId={mastId}
+                        yardHeight={data.height}
+                        num={2}
+                    />
 
                     {/* Нижняя метеостанция на длинной части */}
-                    <WeatherStationModel position={getWeatherStationPosition(false)} />
+                    <WeatherStationModel
+                        position={getWeatherStationPosition(false)}
+                        mastId={mastId}
+                        yardHeight={data.height}
+                        num={3}
+                    />
                 </>
             )}
         </MeshGroup>

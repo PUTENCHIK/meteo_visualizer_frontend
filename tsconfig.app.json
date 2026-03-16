@@ -21,6 +21,7 @@
             "@helpers/*": ["src/components/helpers/*"],
             "@assets/*": ["src/assets/*"],
             "@dialogs/*": ["src/components/dialogs/*"],
+            "@hooks/*": ["src/hooks/*"],
         },
 
         /* Bundler mode */

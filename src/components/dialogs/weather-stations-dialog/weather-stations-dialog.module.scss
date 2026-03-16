@@ -1,5 +1,9 @@
 @use '../../../styles/mixins.scss' as m;
 
-.mast-item {
+.station-item {
     @include m.item-box;
+}
+
+.wrapable {
+    overflow-wrap: break-word;
 }
