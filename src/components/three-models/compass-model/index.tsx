@@ -1,6 +1,6 @@
 import clsx from 'clsx';
 import s from './compass-model.module.scss';
-import { Canvas, useFrame } from '@react-three/fiber';
+import { Canvas } from '@react-three/fiber';
 import { Suspense, useMemo, useRef } from 'react';
 import { BoxMesh } from '@models_/box-mesh';
 import { Euler, Group, Vector3 } from 'three';
@@ -9,6 +9,7 @@ import { Loader } from '@components/loader';
 import { TextMesh } from '@models_/text-mesh';
 import { useSettings } from '@context/use-settings';
 import { useScene } from '@context/scene-context';
+import { useFpsFrame } from '@hooks/use-fps-frame';
 
 export type CompassType = '2D' | '3D';
 
@@ -28,7 +29,7 @@ const Compass = () => {
         return new Euler();
     }, []);
 
-    useFrame(() => {
+    useFpsFrame(() => {
         if (!compassRef.current || !mainCamera) return;
 
         if (compassType === '2D') {
@@ -38,7 +39,7 @@ const Compass = () => {
             compassRef.current.quaternion.copy(mainCamera.quaternion);
         }
         compassRef.current.quaternion.invert();
-    });
+    }, 60);
 
     return (
         <MeshGroup ref={compassRef}>

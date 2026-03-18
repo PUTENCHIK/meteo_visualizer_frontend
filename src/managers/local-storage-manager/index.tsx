@@ -1,6 +1,6 @@
 import type { Theme } from '@context/theme-context';
 import type { SocketConfig } from '@context/websocket-context';
-import type { Mast } from '@utils/complexes';
+import type { Mast, measures } from '@utils/complexes';
 import type { GeographicSystemPosition } from '@utils/coordinate-systems';
 import type { AppSettings } from '@utils/settings';
 import { Vector3 } from 'three';
@@ -11,6 +11,7 @@ interface AppData {
     socketContext: SocketConfig;
     position: GeographicSystemPosition;
     masts: Mast[];
+    measure: keyof typeof measures;
 }
 
 const STORAGE_KEY = 'meteo_visualizer';
@@ -38,6 +39,7 @@ class LocalStorageManager {
             socketContext: { host: 'localhost', port: 5052 },
             position: { lat: new Vector3(), lon: new Vector3() },
             masts: [],
+            measure: 'Температура',
         };
     }
 

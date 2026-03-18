@@ -12,13 +12,17 @@ import { ComplexDataProvider } from '@context/complex-data-context';
 import { DialogProvider } from '@context/dialog-context';
 import { ProviderComposer } from '@context/provider-composer';
 import { SceneProvider } from '@context/scene-context';
+import { BridgeProvider } from '@context/bridge-context';
+import { FiberProvider } from 'its-fine';
 
 const providers = [
+    FiberProvider,
     ThemeProvider,
     DialogProvider,
     ComplexDataProvider,
     WebSocketProvider,
     SceneProvider,
+    BridgeProvider,
 ];
 
 createRoot(document.getElementById('root')!).render(

@@ -6,13 +6,28 @@ import { IconButton } from '@components/icon-button';
 import { useComplexData } from '@context/complex-data-context';
 import { DialogWindow } from '@dialogs/dialog-window';
 import { useFocus } from '@hooks/use-focus';
+import { InputLabel } from '@components/input-label';
+import { measures } from '@utils/complexes';
 
 export const WeatherStationsDialog = () => {
-    const { stations } = useComplexData();
+    const { stations, measure, updateMeasure } = useComplexData();
     const { focusObject } = useFocus();
+
+    const handleMeasureSelectChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+        updateMeasure(event.target.value as keyof typeof measures);
+    };
 
     return (
         <DialogWindow title='Метеостанции' dialogId='weatherStations'>
+            <InputLabel label='Визуализируемый параметр'>
+                <select defaultValue={measure} onChange={handleMeasureSelectChange}>
+                    {Object.keys(measures).map((name, index) => (
+                        <option key={index} value={name}>
+                            {name}
+                        </option>
+                    ))}
+                </select>
+            </InputLabel>
             {stations.length === 0 && (
                 <div className={clsx(sBoxes['empty-label-wrapper'])}>
                     <span className={clsx(sBoxes['empty-label'])}>Добавьте первую мачту</span>

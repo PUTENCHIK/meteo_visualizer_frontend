@@ -3,7 +3,9 @@ import { Guid } from 'typescript-guid';
 import { storageManager } from '@managers/local-storage-manager';
 import {
     getMastConfig,
+    measures,
     type Mast,
+    type ScaleInterval,
     type WeatherStation,
     type WeatherStationData,
     type WeatherStationsNum,
@@ -21,6 +23,7 @@ import {
 } from 'react';
 import { Vector3 } from 'three';
 import type { PollResult } from '@context/websocket-context';
+import { useSettings } from '@context/use-settings';
 
 const APP_NAMESPACE = '6ba7b810-9dad-11d1-80b4-00c04fd430c8';
 
@@ -41,17 +44,25 @@ interface ComplexDataContextType {
     getStationByName: (name: string) => WeatherStation | undefined;
     getStationsData: () => Record<string, WeatherStationData>;
     updateStationData: (name: string, pollResult: PollResult) => void;
+    measure: keyof typeof measures;
+    updateMeasure: (value: keyof typeof measures) => void;
+    getMeasureScale: () => ScaleInterval;
 }
 
 const ComplexDataContext = createContext<ComplexDataContextType | undefined>(undefined);
 
 export const ComplexDataProvider = ({ children }: { children: ReactNode }) => {
+    const { map: settings } = useSettings();
+
     // {Имя станции от API: данные станции}
     const stationsDataRef = useRef<Record<string, WeatherStationData>>({});
     const [position, setPosition] = useState<GeographicSystemPosition>(
         storageManager.getItem('position'),
     );
     const [masts, setMasts] = useState<Mast[]>(storageManager.getItem('masts'));
+    const [measure, setMeasure] = useState<keyof typeof measures>(
+        storageManager.getItem('measure'),
+    );
 
     useEffect(() => {
         storageManager.setItem('masts', masts);
@@ -81,7 +92,32 @@ export const ComplexDataProvider = ({ children }: { children: ReactNode }) => {
         });
     }, [masts]);
 
-    const getStationsData = useCallback(() => stationsDataRef.current, []);
+    const getStationsData = useCallback(() => {
+        const data = stationsDataRef.current;
+        const keys = measures[measure] as readonly string[];
+
+        return Object.entries(data).reduce(
+            (acc, [stationName, stationData]) => {
+                const filteredData: WeatherStationData = {};
+                let hasMatch = false;
+
+                for (const key of keys) {
+                    if (stationData[key] && stationData[key].length > 0) {
+                        filteredData[key] = stationData[key];
+                        hasMatch = true;
+                        break;
+                    }
+                }
+
+                if (hasMatch) {
+                    acc[stationName] = filteredData;
+                }
+
+                return acc;
+            },
+            {} as Record<string, WeatherStationData>,
+        );
+    }, [measure]);
 
     const getStation = useCallback(
         (mastId: string, yardHeight: number, num: WeatherStationsNum) => {
@@ -131,6 +167,7 @@ export const ComplexDataProvider = ({ children }: { children: ReactNode }) => {
     const getStationByName = useCallback(
         (name: string) => {
             const parts = name.split('-');
+            if (parts[parts.length - 1] === '01') parts.pop();
 
             // Префикс мачты, по которому она определяется
             const mastPrefix = parts[0].toLowerCase();
@@ -165,7 +202,7 @@ export const ComplexDataProvider = ({ children }: { children: ReactNode }) => {
             }
 
             const station = getStation(targetMast.id, yard.height, num);
-            if (station && !station.name) {
+            if (station) {
                 station.name = name;
             }
 
@@ -196,6 +233,46 @@ export const ComplexDataProvider = ({ children }: { children: ReactNode }) => {
         setMasts((prev) => prev.filter((m) => m.id != id));
     }, []);
 
+    const updateMeasure = useCallback((value: keyof typeof measures) => {
+        setMeasure(value);
+        storageManager.setItem('measure', value);
+    }, []);
+
+    const getMeasureScale = useCallback(() => {
+        let scale: ScaleInterval;
+        switch (measure) {
+            case 'Температура':
+                scale = {
+                    min: settings.atmosphere.tempScale.min,
+                    max: settings.atmosphere.tempScale.max,
+                };
+                break;
+            case 'Влажность':
+                scale = {
+                    min: settings.atmosphere.humidityScale.min,
+                    max: settings.atmosphere.humidityScale.max,
+                };
+                break;
+            case 'Давление':
+                scale = {
+                    min: settings.atmosphere.pressureScale.min,
+                    max: settings.atmosphere.pressureScale.max,
+                };
+                break;
+            default:
+                scale = { min: 0, max: 100 };
+        }
+        return scale;
+    }, [
+        measure,
+        settings.atmosphere.tempScale.min,
+        settings.atmosphere.tempScale.max,
+        settings.atmosphere.humidityScale.min,
+        settings.atmosphere.humidityScale.max,
+        settings.atmosphere.pressureScale.min,
+        settings.atmosphere.pressureScale.max,
+    ]);
+
     const contextValue: ComplexDataContextType = {
         position: position,
         updatePosition: updatePosition,
@@ -209,6 +286,9 @@ export const ComplexDataProvider = ({ children }: { children: ReactNode }) => {
         getStation: getStation,
         getStationsData: getStationsData,
         updateStationData: updateStationData,
+        measure: measure,
+        updateMeasure: updateMeasure,
+        getMeasureScale: getMeasureScale,
     };
 
     return (

@@ -1,10 +1,10 @@
 import { useSettings } from '@context/use-settings';
 import { useComplexData } from '@context/complex-data-context';
-import { useFrame } from '@react-three/fiber';
 import { useMemo, useRef } from 'react';
 import { Vector3, Object3D, Vector2, ShaderMaterial, Vector4 } from 'three';
 import { vertexShader, fragmentShader } from '@utils/shaders';
 import { useScene } from '@context/scene-context';
+import { useFpsFrame } from '@hooks/use-fps-frame';
 
 interface PillarmapProps {
     basePlateSize: Vector3;
@@ -13,15 +13,15 @@ interface PillarmapProps {
 
 export const Pillarmap = ({ basePlateSize, height }: PillarmapProps) => {
     const { map: settings } = useSettings();
-    const { getStationsData, getStationByName } = useComplexData();
+    const { getStationsData, getStationByName, getMeasureScale } = useComplexData();
     const { getMeshPosition } = useScene();
 
     const materialRef = useRef<ShaderMaterial>(null);
 
     const MAX_STATIONS = settings.atmosphere.maxStations;
     const degree = settings.atmosphere.degreeOfInterpolation;
-    const scaleMin = settings.atmosphere.scale.min;
-    const scaleMax = settings.atmosphere.scale.max;
+    const scaleMin = getMeasureScale().min;
+    const scaleMax = getMeasureScale().max;
 
     const pixelOpacity = settings.atmosphere.model.pillarmap.opacity;
     const pixelAmount = settings.atmosphere.model.pillarmap.pixelAmount;
@@ -83,16 +83,10 @@ export const Pillarmap = ({ basePlateSize, height }: PillarmapProps) => {
         [MAX_STATIONS],
     );
 
-    useFrame(() => {
+    useFpsFrame(() => {
         if (!materialRef.current) return;
 
-        const targetMeasures = ['airtemperature', 'temperature'];
-        const stations = Object.entries(getStationsData()).filter(([_, data]) =>
-            Object.entries(data).some(
-                ([measure, measurements]) =>
-                    targetMeasures.includes(measure.toLowerCase()) && measurements.length,
-            ),
-        );
+        const stations = Object.entries(getStationsData());
 
         let stationIndex = 0;
         let dataIndex = 0;
@@ -102,13 +96,10 @@ export const Pillarmap = ({ basePlateSize, height }: PillarmapProps) => {
             const station = getStationByName(name);
 
             const pos = getMeshPosition(station?.id ?? '');
-            let value = 0;
-            for (const [measure, measurements] of Object.entries(data)) {
-                if (targetMeasures.includes(measure.toLowerCase()) && measurements.length) {
-                    value = measurements[measurements.length - 1].value;
-                    break;
-                }
-            }
+            const measurements = Object.values(data)[0];
+            const value = measurements[measurements.length - 1].value;
+
+            // if (stationIndex === 0) console.log(name, station?.id, pos);
 
             if (station && pos) {
                 stationsData[dataIndex].set(pos.x, pos.y, pos.z, value);
@@ -120,6 +111,8 @@ export const Pillarmap = ({ basePlateSize, height }: PillarmapProps) => {
             stationsData[i].set(0, 0, 0, 0);
         }
 
+        // console.log(stationIndex, dataIndex);
+
         const uniforms = materialRef.current.uniforms;
 
         uniforms.uStations.value = stationsData;
@@ -128,7 +121,7 @@ export const Pillarmap = ({ basePlateSize, height }: PillarmapProps) => {
         uniforms.uOpacity.value = pixelOpacity;
         uniforms.uMinVal.value = scaleMin;
         uniforms.uMaxVal.value = scaleMax;
-    });
+    }, settings.atmosphere.fps);
 
     if (pixelCount == 0) return null;
 

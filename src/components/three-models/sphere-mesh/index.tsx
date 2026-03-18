@@ -9,6 +9,9 @@ interface SphereMeshProps extends EdgesEnable, Namable {
     position?: Vector3;
     segments?: number;
     color: string;
+    onClick?: () => void;
+    onPointerOver?: () => void;
+    onPointerOut?: () => void;
 }
 
 export const SphereMesh = forwardRef<Mesh, SphereMeshProps>(
@@ -19,18 +22,27 @@ export const SphereMesh = forwardRef<Mesh, SphereMeshProps>(
             position = new Vector3(),
             segments = 32,
             color,
-            forceEdges: forceEdge,
+            forceEdges,
+            onClick,
+            onPointerOver,
+            onPointerOut,
         }: SphereMeshProps,
         ref,
     ) => {
         const { map: settings } = useSettings();
 
         return (
-            <mesh name={name} position={position} ref={ref}>
+            <mesh
+                name={name}
+                position={position}
+                onClick={onClick}
+                onPointerOver={onPointerOver}
+                onPointerOut={onPointerOut}
+                ref={ref}>
                 <sphereGeometry args={[radius, segments, segments]} />
                 <meshStandardMaterial color={color} />
-                {(forceEdge === 'with' ||
-                    (forceEdge !== 'without' && settings.scene.edges.enable)) && (
+                {(forceEdges === 'with' ||
+                    (forceEdges !== 'without' && settings.scene.edges.enable)) && (
                     <Outlines
                         color={settings.scene.edges.color}
                         thickness={settings.scene.edges.thickness}

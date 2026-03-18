@@ -83,3 +83,14 @@ export interface Mast {
 export const getMastConfig = (name: MastConfigName): MastConfig => {
     return mastConfigs.find((c) => c.name === name)!;
 };
+
+export const measures = {
+    Температура: ['AirTemperature', 'Temperature'],
+    Влажность: ['Humidity'],
+    Давление: ['Pressure'],
+} as const satisfies Record<string, readonly string[]>;
+
+export interface ScaleInterval {
+    min: number;
+    max: number;
+}

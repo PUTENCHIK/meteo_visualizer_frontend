@@ -1,10 +1,10 @@
 import { useSettings } from '@context/use-settings';
 import { useComplexData } from '@context/complex-data-context';
-import { useFrame } from '@react-three/fiber';
 import { useMemo, useRef } from 'react';
 import { Object3D, ShaderMaterial, Vector3, Vector4 } from 'three';
 import { vertexShader, fragmentShader } from '@utils/shaders';
 import { useScene } from '@context/scene-context';
+import { useFpsFrame } from '@hooks/use-fps-frame';
 
 export type AtmosphereParticleForm = 'sphere' | 'cube';
 
@@ -15,15 +15,15 @@ interface AtmosphereModelProps {
 
 export const AtmosphereModel = ({ basePlateSize, height }: AtmosphereModelProps) => {
     const { map: settings } = useSettings();
-    const { getStationsData, getStationByName } = useComplexData();
+    const { getStationsData, getStationByName, getMeasureScale } = useComplexData();
     const { getMeshPosition } = useScene();
 
     const materialRef = useRef<ShaderMaterial>(null);
 
     const MAX_STATIONS = settings.atmosphere.maxStations;
     const degree = settings.atmosphere.degreeOfInterpolation;
-    const scaleMin = settings.atmosphere.scale.min;
-    const scaleMax = settings.atmosphere.scale.max;
+    const scaleMin = getMeasureScale().min;
+    const scaleMax = getMeasureScale().max;
 
     const particleSize = settings.atmosphere.model.particles.size;
     const particleSegments = settings.atmosphere.model.particles.segments;
@@ -40,7 +40,7 @@ export const AtmosphereModel = ({ basePlateSize, height }: AtmosphereModelProps)
                 uMinVal: { value: scaleMin },
                 uMaxVal: { value: scaleMax },
                 uOpacity: { value: 1.0 },
-                uScalingHeight: { value: false },
+                uScalingHeight: { value: 1.0 },
             },
             vertexShader: vertexShader(MAX_STATIONS),
             fragmentShader: fragmentShader,
@@ -101,16 +101,10 @@ export const AtmosphereModel = ({ basePlateSize, height }: AtmosphereModelProps)
         [MAX_STATIONS],
     );
 
-    useFrame(() => {
+    useFpsFrame(() => {
         if (!materialRef.current) return;
 
-        const targetMeasures = ['airtemperature', 'temperature'];
-        const stations = Object.entries(getStationsData()).filter(([_, data]) =>
-            Object.entries(data).some(
-                ([measure, measurements]) =>
-                    targetMeasures.includes(measure.toLowerCase()) && measurements.length,
-            ),
-        );
+        const stations = Object.entries(getStationsData());
 
         let stationIndex = 0;
         let dataIndex = 0;
@@ -120,13 +114,8 @@ export const AtmosphereModel = ({ basePlateSize, height }: AtmosphereModelProps)
             const station = getStationByName(name);
 
             const pos = getMeshPosition(station?.id ?? '');
-            let value = 0;
-            for (const [measure, measurements] of Object.entries(data)) {
-                if (targetMeasures.includes(measure.toLowerCase()) && measurements.length) {
-                    value = measurements[measurements.length - 1].value;
-                    break;
-                }
-            }
+            const measurements = Object.values(data)[0];
+            const value = measurements[measurements.length - 1].value;
 
             if (station && pos) {
                 stationsData[dataIndex].set(pos.x, pos.y, pos.z, value);
@@ -146,7 +135,7 @@ export const AtmosphereModel = ({ basePlateSize, height }: AtmosphereModelProps)
         uniforms.uOpacity.value = particleOpacity;
         uniforms.uMinVal.value = scaleMin;
         uniforms.uMaxVal.value = scaleMax;
-    });
+    }, settings.atmosphere.fps);
 
     return (
         <instancedMesh args={[undefined, undefined, particleCount]}>
