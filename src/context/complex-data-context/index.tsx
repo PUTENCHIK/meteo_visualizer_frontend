@@ -4,6 +4,7 @@ import { storageManager } from '@managers/local-storage-manager';
 import {
     getMastConfig,
     measures,
+    type ChartPoint,
     type Mast,
     type ScaleInterval,
     type WeatherStation,
@@ -47,6 +48,8 @@ interface ComplexDataContextType {
     measure: keyof typeof measures;
     updateMeasure: (value: keyof typeof measures) => void;
     getMeasureScale: () => ScaleInterval;
+    getFormattedData: () => Record<string, ChartPoint[]>;
+    stationsName: string[];
 }
 
 const ComplexDataContext = createContext<ComplexDataContextType | undefined>(undefined);
@@ -63,6 +66,8 @@ export const ComplexDataProvider = ({ children }: { children: ReactNode }) => {
     const [measure, setMeasure] = useState<keyof typeof measures>(
         storageManager.getItem('measure'),
     );
+    const formattedData = useRef<Record<string, ChartPoint[]>>({});
+    const [stationsName, setStationsName] = useState<string[]>([]);
 
     useEffect(() => {
         storageManager.setItem('masts', masts);
@@ -128,28 +133,60 @@ export const ComplexDataProvider = ({ children }: { children: ReactNode }) => {
         [stations],
     );
 
-    const updateStationData = useCallback((name: string, pollResult: PollResult) => {
+    const updateFormattedData = useCallback(() => {
         const data = stationsDataRef.current;
+        const keys = measures[measure];
 
-        // Если имя станции отсутствует
-        if (!data[name]) data[name] = {};
+        const nextState: Record<string, ChartPoint[]> = {};
 
-        for (const pollItem of pollResult.payload) {
-            // Если отсутствует измерение в массиве у станции
-            if (!data[name][pollItem.name]) data[name][pollItem.name] = [];
-
-            const measurements = data[name][pollItem.name];
-
-            measurements.push({
-                value: pollItem.value,
-                timestamp: pollResult.timestamp,
-            });
-
-            if (measurements.length > 30) {
-                measurements.shift();
+        for (const [stationName, stationData] of Object.entries(data)) {
+            for (const key of keys) {
+                if (stationData[key]?.length > 0) {
+                    nextState[stationName] = stationData[key].map(
+                        (m) =>
+                            ({
+                                timestamp: new Date(m.timestamp),
+                                value: m.value,
+                            }) as ChartPoint,
+                    );
+                    break;
+                }
             }
         }
-    }, []);
+        formattedData.current = nextState;
+    }, [measure]);
+
+    const getFormattedData = useCallback(() => formattedData.current, []);
+
+    const updateStationData = useCallback(
+        (name: string, pollResult: PollResult) => {
+            const data = stationsDataRef.current;
+
+            // Если имя станции отсутствует
+            if (!data[name]) {
+                data[name] = {};
+                setStationsName((prev) => [...prev, name]);
+            }
+
+            for (const pollItem of pollResult.payload) {
+                // Если отсутствует измерение в массиве у станции
+                if (!data[name][pollItem.name]) data[name][pollItem.name] = [];
+
+                const measurements = data[name][pollItem.name];
+
+                measurements.push({
+                    value: pollItem.value,
+                    timestamp: pollResult.timestamp,
+                });
+
+                if (measurements.length > 150) {
+                    measurements.shift();
+                }
+            }
+            updateFormattedData();
+        },
+        [updateFormattedData],
+    );
 
     const updatePosition = useCallback((lat: Vector3, lon: Vector3) => {
         const newPos: GeographicSystemPosition = { lat, lon };
@@ -162,6 +199,16 @@ export const ComplexDataProvider = ({ children }: { children: ReactNode }) => {
             return masts.find((m) => m.id === id);
         },
         [masts],
+    );
+
+    const setStationName = useCallback(
+        (stationId: string, name: string) => {
+            const station = stations.filter((s) => s.id === stationId);
+            if (station.length) {
+                station[0].name = name;
+            }
+        },
+        [stations],
     );
 
     const getStationByName = useCallback(
@@ -202,13 +249,13 @@ export const ComplexDataProvider = ({ children }: { children: ReactNode }) => {
             }
 
             const station = getStation(targetMast.id, yard.height, num);
-            if (station) {
-                station.name = name;
+            if (station && station.name !== name) {
+                setStationName(station.id, name);
             }
 
             return station;
         },
-        [masts, getStation],
+        [masts, getStation, setStationName],
     );
 
     const addMast = useCallback(() => {
@@ -289,6 +336,8 @@ export const ComplexDataProvider = ({ children }: { children: ReactNode }) => {
         measure: measure,
         updateMeasure: updateMeasure,
         getMeasureScale: getMeasureScale,
+        getFormattedData: getFormattedData,
+        stationsName: stationsName,
     };
 
     return (

@@ -88,7 +88,7 @@ export const Heatmap = ({ basePlateSize, height }: HeatmapProps) => {
         if (geometryRef.current) {
             geometryRef.current.rotateX(-Math.PI / 2);
         }
-    }, [pixelAmount]);
+    }, [pixelAmount, basePlateSize.x, basePlateSize.z]);
 
     useFpsFrame(() => {
         if (!materialRef.current) return;

@@ -11,6 +11,7 @@ import { WebsocketApiDialog } from '@dialogs/websocket-api-dialog';
 import { Button } from '@components/button';
 import { MastsDialog } from '@dialogs/masts-dialog';
 import { WeatherStationsDialog } from '@dialogs/weather-stations-dialog';
+import { ChartsDialog } from '@dialogs/charts-dialog';
 
 export const ComplexPage = () => {
     const navigate = useNavigate();
@@ -42,6 +43,7 @@ export const ComplexPage = () => {
                         title={'Метеостанции'}
                         onClick={() => toggleDialog('weatherStations')}
                     />
+                    <Button title={'График'} onClick={() => toggleDialog('charts')} />
                 </div>
             </div>
 
@@ -54,6 +56,7 @@ export const ComplexPage = () => {
             <WebsocketApiDialog />
             <MastsDialog />
             <WeatherStationsDialog />
+            <ChartsDialog />
         </>
     );
 };

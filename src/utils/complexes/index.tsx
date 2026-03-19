@@ -94,3 +94,8 @@ export interface ScaleInterval {
     min: number;
     max: number;
 }
+
+export interface ChartPoint {
+    timestamp: Date;
+    value: number;
+}
