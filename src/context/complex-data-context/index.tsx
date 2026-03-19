@@ -4,9 +4,7 @@ import { storageManager } from '@managers/local-storage-manager';
 import {
     getMastConfig,
     measures,
-    type ChartPoint,
     type Mast,
-    type ScaleInterval,
     type WeatherStation,
     type WeatherStationData,
     type WeatherStationsNum,
@@ -25,6 +23,8 @@ import {
 import { Vector3 } from 'three';
 import type { PollResult } from '@context/websocket-context';
 import { useSettings } from '@context/use-settings';
+import type { ScaleInterval } from '@utils/common';
+import type { ChartPoint } from '@utils/charts';
 
 const APP_NAMESPACE = '6ba7b810-9dad-11d1-80b4-00c04fd430c8';
 

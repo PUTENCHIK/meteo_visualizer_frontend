@@ -1,15 +1,6 @@
-import { Vector2, Vector3 } from 'three';
-import { degToRad, radToDeg } from 'three/src/math/MathUtils.js';
-
-export interface PolarSystemPosition {
-    radius: number;
-    angle: number;
-}
-
-export interface GeographicSystemPosition {
-    lat: Vector3;
-    lon: Vector3;
-}
+import { Vector2, Vector3 } from "three";
+import { degToRad, radToDeg } from "three/src/math/MathUtils.js";
+import type { PolarSystemPosition, GeographicSystemPosition } from "./interfaces";
 
 export const polarToLocal = (pos: PolarSystemPosition) => {
     return new Vector2(

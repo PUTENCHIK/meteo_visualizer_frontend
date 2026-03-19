@@ -8,20 +8,7 @@ import arrow from '@assets/arrow.svg?react';
 import cross from '@assets/cross.svg?react';
 import bin from '@assets/bin.svg?react';
 import eye from '@assets/eye.svg?react';
-
-export type IconName =
-    | 'building'
-    | 'compass'
-    | 'telescope'
-    | 'wind'
-    | 'camera'
-    | 'scene'
-    | 'arrow'
-    | 'cross'
-    | 'bin'
-    | 'eye';
-
-export type IconSize = 48 | 36 | 24 | 20 | 16 | 12;
+import type { IconName, IconSize } from './types';
 
 export const iconFiles: Record<IconName, React.ComponentType<React.SVGProps<SVGSVGElement>>> = {
     building: building,
