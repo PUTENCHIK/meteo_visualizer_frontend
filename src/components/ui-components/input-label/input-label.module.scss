@@ -18,6 +18,10 @@ label.label {
     flex-direction: column;
     justify-content: center;
     row-gap: 6px;
+
+    & > * {
+        flex-grow: 1;
+    }
 }
 
 span.error {

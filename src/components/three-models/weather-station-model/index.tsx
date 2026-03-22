@@ -1,22 +1,22 @@
 import clsx from 'clsx';
 import s from './weather-station-model.module.scss';
-import { useComplexData } from '@context/complex-data-context';
 import { useSettings } from '@context/use-settings';
 import { SphereMesh } from '@models_/sphere-mesh';
 import { Html } from '@react-three/drei';
 import type { WeatherStationsNum } from '@utils/complexes';
-import { useMemo, useState } from 'react';
-import { Vector3 } from 'three';
+import { Mesh, Vector3 } from 'three';
 import { GuidLabel } from '@components/guid-label';
 import { IconButton } from '@components/icon-button';
 import { useBridge } from '@context/bridge-context';
 import { useFocus } from '@hooks/use-focus';
-import { Button } from '@components/button';
-import { useFpsFrame } from '@hooks/use-fps-frame';
+import type { Guid } from 'typescript-guid';
+import { useComplexStore, useStation } from '@stores/complex-store';
+import { useDeviceData } from '@context/devices-data-context';
+import { useEffect, useRef, useState } from 'react';
 
 interface WeatherStationModelProps {
     position: Vector3;
-    mastId: string;
+    mastId: Guid;
     yardHeight: number;
     num: WeatherStationsNum;
 }
@@ -28,42 +28,34 @@ export const WeatherStationModel = ({
     num,
 }: WeatherStationModelProps) => {
     const { map: settings } = useSettings();
-    const { getStation, getStationsData, measure } = useComplexData();
     const { focusStation } = useFocus();
     const { Bridge } = useBridge();
+    const setStationPosition = useComplexStore((state) => state.setStationPosition);
 
+    const meshRef = useRef<Mesh>(null);
     const [showInfo, setShowInfo] = useState(false);
-    const [value, setValue] = useState<number | undefined>(0);
 
-    const data = useMemo(() => {
-        const data = getStation(mastId, yardHeight, num);
-        if (data) {
-            return data;
-        } else {
-            console.error(
-                `Impossible to get weather station from ` +
-                    `context: ${mastId}, ${yardHeight}, ${num}`,
-            );
-            return undefined;
-        }
-    }, [mastId, yardHeight, num, getStation]);
+    const data = useStation(mastId, yardHeight, num);
+    const devices = useDeviceData(data?.id);
 
-    useFpsFrame(() => {
-        if (showInfo && data?.name) {
-            const d = getStationsData();
-            if (data.name in d) {
-                const measurements = Object.values(d[data.name]);
-                setValue(measurements[measurements.length - 1][0].value);
-            } else {
-                setValue(undefined);
-            }
+    useEffect(() => {
+        if (meshRef.current) {
+            const worldPosition = new Vector3();
+            meshRef.current.getWorldPosition(worldPosition);
+
+            setStationPosition(data?.id.toString(), worldPosition);
         }
-    }, 10);
+    }, [data, setStationPosition]);
 
     const handleStationClick = () => {
         if (!showInfo && data) focusStation(data.id);
         setShowInfo((prev) => !prev);
     };
+
+    if (!data || !devices) {
+        console.error(`Impossible to get weather station: ${mastId}, ${yardHeight}, ${num}`);
+        return null;
+    }
 
     return (
         <>
@@ -92,13 +84,29 @@ export const WeatherStationModel = ({
                                         Мачта
                                         <GuidLabel value={mastId} objct='mast' />
                                     </div>
-                                    <span>Обозначение: {data.name ?? '-'}</span>
-                                    {data.name && (
+                                    {devices.length > 0 && (
                                         <>
-                                            <span>
-                                                Значение ({measure}): {value?.toFixed(2) ?? '-'}
-                                            </span>
-                                            <Button title='График' type='primary' />
+                                            <span>Девайсы:</span>
+                                            <ol>
+                                                {devices.map((device, index) => (
+                                                    <>
+                                                        <li key={index}>{device.name}</li>
+                                                        <ul>
+                                                            {Object.entries(device.data).map(
+                                                                ([name, measure], mIndex) => (
+                                                                    <li key={mIndex}>
+                                                                        {name}:{' '}
+                                                                        {measure.measurements
+                                                                            .at(-1)
+                                                                            ?.value.toFixed(2)}
+                                                                        {measure.units}
+                                                                    </li>
+                                                                ),
+                                                            )}
+                                                        </ul>
+                                                    </>
+                                                ))}
+                                            </ol>
                                         </>
                                     )}
                                 </>
@@ -109,13 +117,14 @@ export const WeatherStationModel = ({
                 </Html>
             )}
             <SphereMesh
-                name={data?.id}
+                name={data?.id.toString()}
                 radius={settings.model.weatherStation.radius}
                 position={position}
                 color={settings.model.weatherStation.color}
                 onClick={handleStationClick}
                 onPointerOver={() => (document.body.style.cursor = 'pointer')}
                 onPointerOut={() => (document.body.style.cursor = 'auto')}
+                ref={meshRef}
             />
         </>
     );

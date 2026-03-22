@@ -4,8 +4,7 @@ import { MeshGroup } from '@models_/mesh-group';
 import { YardModel } from '@models_/yard-model';
 import { CylinderMesh } from '@models_/cylinder-mesh';
 import { useSettings } from '@context/use-settings';
-import { getMastConfig, type Mast } from '@utils/complexes';
-import { polarToLocal } from '@utils/coordinate-systems';
+import { Mast } from '@utils/complexes';
 
 interface MastModelProps {
     data: Mast;
@@ -14,12 +13,10 @@ interface MastModelProps {
 export const MastModel = ({ data }: MastModelProps) => {
     const { map: settings } = useSettings();
 
-    const config = getMastConfig(data.configName);
-
     return (
         <MeshGroup
-            name={data.id}
-            position={new Vector3(polarToLocal(data.position).x, 0, polarToLocal(data.position).y)}
+            name={data.id.toString()}
+            position={new Vector3(data.position.x, 0, data.position.y)}
             rotation={new Vector3(0, data.rotation, 0)}>
             {/* Платформа для мачты */}
             {settings.model.masts.plates.enable && (
@@ -39,13 +36,13 @@ export const MastModel = ({ data }: MastModelProps) => {
             {/* Мачта */}
             <CylinderMesh
                 radius={settings.model.masts.radius}
-                height={config.height}
-                position={new Vector3(0, config.height / 2, 0)}
+                height={data.height}
+                position={new Vector3(0, data.height / 2, 0)}
                 color={settings.model.masts.mastsColor}
             />
 
             {/* Реи с метеостанциями */}
-            {config.yards.map((yard, index) => (
+            {data.config.yards.map((yard, index) => (
                 <YardModel key={index} data={yard} mastId={data.id} />
             ))}
         </MeshGroup>

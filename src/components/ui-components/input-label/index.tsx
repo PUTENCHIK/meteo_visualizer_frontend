@@ -12,12 +12,12 @@ interface InputLabelProps {
 
 export const InputLabel = ({
     label,
-    orientation: type = 'vertical',
+    orientation = 'vertical',
     error,
     children,
 }: InputLabelProps) => {
     return (
-        <label className={clsx(s['label'], s[type])}>
+        <label className={clsx(s['label'], s[orientation])}>
             <span>{label}:</span>
             <div className={clsx(s['input-wrapper'])}>
                 {children}

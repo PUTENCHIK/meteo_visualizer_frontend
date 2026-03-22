@@ -1,7 +1,6 @@
 import clsx from 'clsx';
 import s from './masts-dialog.module.scss';
 import sBoxes from '@styles/item-boxes.module.scss';
-import { useComplexData } from '@context/complex-data-context';
 import { DialogWindow } from '@dialogs/dialog-window';
 import { PolarSystemInput } from '@components/polar-system-input';
 import { InputLabel } from '@components/input-label';
@@ -12,10 +11,15 @@ import { GuidLabel } from '@components/guid-label';
 import { IconButton } from '@components/icon-button';
 import { Button } from '@components/button';
 import { useFocus } from '@hooks/use-focus';
+import { useComplexStore } from '@stores/complex-store';
+import { PolarPosition } from '@utils/coordinate-systems';
 
 export const MastsDialog = () => {
-    const { masts, addMast, updateMast, deleteMast } = useComplexData();
     const { focusMast } = useFocus();
+    const masts = useComplexStore((state) => state.masts);
+    const addMast = useComplexStore((state) => state.addMast);
+    const updateMast = useComplexStore((state) => state.updateMast);
+    const deleteMast = useComplexStore((state) => state.deleteMast);
 
     return (
         <DialogWindow
@@ -54,38 +58,40 @@ export const MastsDialog = () => {
                         <TextInput
                             defaultValue={mast.prefix}
                             placeholder='west/north'
-                            onChange={(value) => updateMast(mast.id, 'prefix', value)}
+                            onChange={(value) => updateMast(mast.id, { prefix: value })}
                         />
                     </InputLabel>
                     <InputLabel label='Описание'>
                         <TextInput
                             defaultValue={mast.description}
                             placeholder='Описание'
-                            onChange={(value) => updateMast(mast.id, 'description', value)}
+                            onChange={(value) => updateMast(mast.id, { description: value })}
                         />
                     </InputLabel>
                     <InputLabel label='Положение'>
                         <PolarSystemInput
                             value={mast.position}
-                            onChange={(value) => updateMast(mast.id, 'position', value)}
+                            onChange={(value) =>
+                                updateMast(mast.id, {
+                                    position: new PolarPosition(value.radius, value.angle),
+                                })
+                            }
                         />
                     </InputLabel>
                     <InputLabel label='Угол поворота'>
                         <NumberInput
                             defaultValue={mast.rotation ?? 0}
                             postfix='°'
-                            onChange={(value) => updateMast(mast.id, 'rotation', value)}
+                            onChange={(value) => updateMast(mast.id, { rotation: value })}
                         />
                     </InputLabel>
                     <InputLabel label='Конфиг'>
                         <select
                             defaultValue={mast.configName}
                             onChange={(event) =>
-                                updateMast(
-                                    mast.id,
-                                    'configName',
-                                    event.target.value as MastConfigName,
-                                )
+                                updateMast(mast.id, {
+                                    configName: event.target.value as MastConfigName,
+                                })
                             }>
                             {mastConfigs.map((config, cIndex) => (
                                 <option key={cIndex} value={config.name}>

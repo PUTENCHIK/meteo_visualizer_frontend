@@ -1,10 +1,9 @@
 import { useSettings } from '@context/use-settings';
-import { useComplexData } from '@context/complex-data-context';
 import { useMemo, useRef } from 'react';
 import { Vector3, Object3D, Vector2, ShaderMaterial, Vector4 } from 'three';
 import { vertexShader, fragmentShader } from '@utils/shaders';
-import { useScene } from '@context/scene-context';
 import { useFpsFrame } from '@hooks/use-fps-frame';
+import { useDevicesStore, useMeasureScale } from '@context/devices-data-context';
 
 interface PillarmapProps {
     basePlateSize: Vector3;
@@ -13,15 +12,13 @@ interface PillarmapProps {
 
 export const Pillarmap = ({ basePlateSize, height }: PillarmapProps) => {
     const { map: settings } = useSettings();
-    const { getStationsData, getStationByName, getMeasureScale } = useComplexData();
-    const { getMeshPosition } = useScene();
+    const store = useDevicesStore();
 
     const materialRef = useRef<ShaderMaterial>(null);
 
     const MAX_STATIONS = settings.atmosphere.maxStations;
     const degree = settings.atmosphere.degreeOfInterpolation;
-    const scaleMin = getMeasureScale().min;
-    const scaleMax = getMeasureScale().max;
+    const scale = useMeasureScale();
 
     const pixelOpacity = settings.atmosphere.model.pillarmap.opacity;
     const pixelAmount = settings.atmosphere.model.pillarmap.pixelAmount;
@@ -32,8 +29,8 @@ export const Pillarmap = ({ basePlateSize, height }: PillarmapProps) => {
                 uStations: { value: [new Vector4(0, 0, 0, 0)] },
                 uStationCount: { value: 0 },
                 uDegree: { value: degree },
-                uMinVal: { value: scaleMin },
-                uMaxVal: { value: scaleMax },
+                uMinVal: { value: scale.min },
+                uMaxVal: { value: scale.max },
                 uOpacity: { value: 1.0 },
                 uScaling: { value: true },
                 uScalingHeight: { value: height },
@@ -41,7 +38,7 @@ export const Pillarmap = ({ basePlateSize, height }: PillarmapProps) => {
             vertexShader: vertexShader(MAX_STATIONS),
             fragmentShader: fragmentShader,
         }),
-        [MAX_STATIONS, degree, scaleMin, scaleMax, height],
+        [MAX_STATIONS, degree, scale, height],
     );
 
     const pixelSizes: Vector2 = useMemo(() => {
@@ -86,32 +83,22 @@ export const Pillarmap = ({ basePlateSize, height }: PillarmapProps) => {
     useFpsFrame(() => {
         if (!materialRef.current) return;
 
-        const stations = Object.entries(getStationsData());
+        const filteredDevices = store.getAtmosphereData();
 
-        let stationIndex = 0;
         let dataIndex = 0;
-
-        while (stationIndex < stations.length) {
-            const [name, data] = stations[stationIndex];
-            const station = getStationByName(name);
-
-            const pos = getMeshPosition(station?.id ?? '');
-            const measurements = Object.values(data)[0];
-            const value = measurements[measurements.length - 1].value;
-
-            // if (stationIndex === 0) console.log(name, station?.id, pos);
-
-            if (station && pos) {
-                stationsData[dataIndex].set(pos.x, pos.y, pos.z, value);
-                dataIndex++;
-            }
-            stationIndex++;
+        for (const deviceId in filteredDevices) {
+            const data = filteredDevices[deviceId];
+            stationsData[dataIndex].set(
+                data.position.x,
+                data.position.y,
+                data.position.z,
+                data.value,
+            );
+            dataIndex++;
         }
         for (let i = dataIndex; i < MAX_STATIONS; i++) {
             stationsData[i].set(0, 0, 0, 0);
         }
-
-        // console.log(stationIndex, dataIndex);
 
         const uniforms = materialRef.current.uniforms;
 
@@ -119,8 +106,8 @@ export const Pillarmap = ({ basePlateSize, height }: PillarmapProps) => {
         uniforms.uStationCount.value = Math.min(dataIndex, MAX_STATIONS);
         uniforms.uDegree.value = degree;
         uniforms.uOpacity.value = pixelOpacity;
-        uniforms.uMinVal.value = scaleMin;
-        uniforms.uMaxVal.value = scaleMax;
+        uniforms.uMinVal.value = scale.min;
+        uniforms.uMaxVal.value = scale.max;
     }, settings.atmosphere.fps);
 
     if (pixelCount == 0) return null;

@@ -7,8 +7,8 @@ import React from 'react';
 import { useSettings } from '@context/use-settings';
 
 interface WindowSizeLimits {
-    min?: number;
-    max?: number;
+    min?: number | null;
+    max?: number | null;
 }
 
 interface DialogWindowProps {
@@ -48,10 +48,26 @@ export const DialogWindow = ({
                 width: 'auto',
                 height: 'auto',
             }}
-            minWidth={widthLimits?.min ?? settings.ui.windows.minWidth}
-            maxWidth={widthLimits?.max ?? settings.ui.windows.maxWidth}
-            minHeight={heightLimits?.min ?? settings.ui.windows.minHeight}
-            maxHeight={heightLimits?.max ?? settings.ui.windows.maxHeight}
+            minWidth={
+                widthLimits?.min === null
+                    ? undefined
+                    : (widthLimits?.min ?? settings.ui.windows.minWidth)
+            }
+            maxWidth={
+                widthLimits?.max === null
+                    ? undefined
+                    : (widthLimits?.max ?? settings.ui.windows.maxWidth)
+            }
+            minHeight={
+                heightLimits?.min === null
+                    ? undefined
+                    : (heightLimits?.min ?? settings.ui.windows.minHeight)
+            }
+            maxHeight={
+                heightLimits?.max === null
+                    ? undefined
+                    : (heightLimits?.max ?? settings.ui.windows.maxHeight)
+            }
             bounds='window'
             dragHandleClassName='handle-area'
             cancel='.close-button'

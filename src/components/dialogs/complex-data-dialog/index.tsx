@@ -55,7 +55,7 @@ export const ComplexDataDialog = () => {
         <DialogWindow
             dialogId='complexData'
             title='Данные комплекса'
-            heightLimits={{ max: 400 }}
+            widthLimits={{ min: 300 }}
             buttons={[
                 <Button title='Сбросить' onClick={handleReset} />,
                 <Button title='Сохранить' type='primary' onClick={handleSave} />,

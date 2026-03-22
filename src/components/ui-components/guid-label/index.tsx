@@ -2,11 +2,12 @@ import clsx from 'clsx';
 import s from './guid-label.module.scss';
 import { useMemo } from 'react';
 import { useFocus } from '@hooks/use-focus';
+import type { Guid } from 'typescript-guid';
 
 type GuidObject = 'mast' | 'station' | 'undefined';
 
 interface GuidLabelProps {
-    value: string;
+    value: Guid;
     objct?: GuidObject;
 }
 
@@ -14,11 +15,11 @@ export const GuidLabel = ({ value, objct = 'undefined' }: GuidLabelProps) => {
     const { focusMast, focusStation, focusObject } = useFocus();
 
     const displayLabel = useMemo(() => {
-        const parts = value.split('-');
+        const parts = value.toString().split('-');
         return `${parts[0]}`;
     }, [value]);
 
-    const color = displayLabel.slice(0, 6);
+    const color = displayLabel.slice(-6);
 
     const handleClick = () => {
         switch (objct) {
@@ -37,7 +38,7 @@ export const GuidLabel = ({ value, objct = 'undefined' }: GuidLabelProps) => {
     return (
         <div
             className={clsx(s['guid-label'], s[objct])}
-            title={value}
+            title={value.toString()}
             onClick={handleClick}
             style={{
                 backgroundColor: `#${color}`,
