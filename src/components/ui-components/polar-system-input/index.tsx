@@ -1,24 +1,20 @@
 import { VectorInput } from '@components/vector-input';
-import type { PolarSystemPosition } from '@utils/coordinate-systems';
+import { PolarPosition } from '@utils/coordinate-systems';
 import { useState } from 'react';
 import { Vector2 } from 'three';
 
 interface PolarSystemInputProps {
-    value: PolarSystemPosition;
+    value: PolarPosition;
     disabled?: boolean;
-    onChange?: (value: PolarSystemPosition) => void;
+    onChange?: (value: PolarPosition) => void;
 }
 
 export const PolarSystemInput = ({ value, disabled = false, onChange }: PolarSystemInputProps) => {
-    const polarToVector = (pos: PolarSystemPosition) => {
-        return new Vector2(pos.radius, pos.angle);
-    };
-
-    const [innerValue, setInnerValue] = useState<Vector2>(polarToVector(value));
+    const [innerValue, setInnerValue] = useState<Vector2>(value.toVector2());
 
     const handleChange = (v: Vector2) => {
         setInnerValue(v);
-        onChange?.({ radius: v.x, angle: v.y });
+        onChange?.(new PolarPosition(v.x, v.y));
     };
 
     return (

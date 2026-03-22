@@ -1,10 +1,9 @@
 import { useSettings } from '@context/use-settings';
-import { useComplexData } from '@context/complex-data-context';
 import { useLayoutEffect, useMemo, useRef } from 'react';
 import { Vector3, Object3D, Vector2, ShaderMaterial, Vector4, PlaneGeometry } from 'three';
 import { vertexShader, fragmentShader } from '@utils/shaders';
-import { useScene } from '@context/scene-context';
 import { useFpsFrame } from '@hooks/use-fps-frame';
+import { useDevicesStore, useMeasureScale } from '@context/devices-data-context';
 
 interface HeatmapProps {
     basePlateSize: Vector3;
@@ -13,16 +12,14 @@ interface HeatmapProps {
 
 export const Heatmap = ({ basePlateSize, height }: HeatmapProps) => {
     const { map: settings } = useSettings();
-    const { getStationsData, getStationByName, getMeasureScale } = useComplexData();
-    const { getMeshPosition } = useScene();
+    const store = useDevicesStore();
 
     const geometryRef = useRef<PlaneGeometry>(null);
     const materialRef = useRef<ShaderMaterial>(null);
 
     const MAX_STATIONS = settings.atmosphere.maxStations;
     const degree = settings.atmosphere.degreeOfInterpolation;
-    const scaleMin = getMeasureScale().min;
-    const scaleMax = getMeasureScale().max;
+    const scale = useMeasureScale();
 
     const pixelOpacity = settings.atmosphere.model.heatmap.opacity;
     const pixelAmount = settings.atmosphere.model.heatmap.pixelAmount;
@@ -33,8 +30,8 @@ export const Heatmap = ({ basePlateSize, height }: HeatmapProps) => {
                 uStations: { value: [new Vector4(0, 0, 0, 0)] },
                 uStationCount: { value: 0 },
                 uDegree: { value: degree },
-                uMinVal: { value: scaleMin },
-                uMaxVal: { value: scaleMax },
+                uMinVal: { value: scale.min },
+                uMaxVal: { value: scale.max },
                 uOpacity: { value: 1.0 },
                 uScaling: { value: false },
                 uScalingHeight: { value: 1.0 },
@@ -42,7 +39,7 @@ export const Heatmap = ({ basePlateSize, height }: HeatmapProps) => {
             vertexShader: vertexShader(MAX_STATIONS),
             fragmentShader: fragmentShader,
         }),
-        [MAX_STATIONS, degree, scaleMin, scaleMax],
+        [MAX_STATIONS, degree, scale],
     );
 
     const pixelSizes: Vector2 = useMemo(() => {
@@ -93,24 +90,18 @@ export const Heatmap = ({ basePlateSize, height }: HeatmapProps) => {
     useFpsFrame(() => {
         if (!materialRef.current) return;
 
-        const stations = Object.entries(getStationsData());
+        const filteredDevices = store.getAtmosphereData();
 
-        let stationIndex = 0;
         let dataIndex = 0;
-
-        while (stationIndex < stations.length) {
-            const [name, data] = stations[stationIndex];
-            const station = getStationByName(name);
-
-            const pos = getMeshPosition(station?.id ?? '');
-            const measurements = Object.values(data)[0];
-            const value = measurements[measurements.length - 1].value;
-
-            if (station && pos) {
-                stationsData[dataIndex].set(pos.x, pos.y, pos.z, value);
-                dataIndex++;
-            }
-            stationIndex++;
+        for (const deviceId in filteredDevices) {
+            const data = filteredDevices[deviceId];
+            stationsData[dataIndex].set(
+                data.position.x,
+                data.position.y,
+                data.position.z,
+                data.value,
+            );
+            dataIndex++;
         }
         for (let i = dataIndex; i < MAX_STATIONS; i++) {
             stationsData[i].set(0, 0, 0, 0);
@@ -122,8 +113,8 @@ export const Heatmap = ({ basePlateSize, height }: HeatmapProps) => {
         uniforms.uStationCount.value = Math.min(dataIndex, MAX_STATIONS);
         uniforms.uDegree.value = degree;
         uniforms.uOpacity.value = pixelOpacity;
-        uniforms.uMinVal.value = scaleMin;
-        uniforms.uMaxVal.value = scaleMax;
+        uniforms.uMinVal.value = scale.min;
+        uniforms.uMaxVal.value = scale.max;
     }, settings.atmosphere.fps);
 
     if (pixelCount == 0) return null;

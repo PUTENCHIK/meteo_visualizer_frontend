@@ -1,6 +1,6 @@
 import type { Theme } from '@context/theme-context';
 import type { SocketConfig } from '@context/websocket-context';
-import type { Mast, measures } from '@utils/complexes';
+import type { measures } from '@utils/complexes';
 import type { GeographicSystemPosition } from '@utils/coordinate-systems';
 import type { AppSettings } from '@utils/settings';
 import { Vector3 } from 'three';
@@ -10,7 +10,6 @@ interface AppData {
     settings: AppSettings;
     socketContext: SocketConfig;
     position: GeographicSystemPosition;
-    masts: Mast[];
     measure: keyof typeof measures;
 }
 
@@ -38,7 +37,6 @@ class LocalStorageManager {
             settings: {},
             socketContext: { host: 'localhost', port: 5052 },
             position: { lat: new Vector3(), lon: new Vector3() },
-            masts: [],
             measure: 'Температура',
         };
     }

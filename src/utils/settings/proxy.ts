@@ -1,4 +1,4 @@
-import type { AppSettings } from "./structure";
+import type { AppSettings } from './structure';
 
 export type SettingsMap<T> = {
     // SettingsTab

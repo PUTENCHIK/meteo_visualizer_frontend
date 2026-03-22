@@ -4,10 +4,11 @@ import { Vector3 } from 'three';
 import { BoxMesh } from '@models_/box-mesh';
 import { useSettings } from '@context/use-settings';
 import type { Yard } from '@utils/complexes';
+import type { Guid } from 'typescript-guid';
 
 interface YardModelProps {
     data: Yard;
-    mastId: string;
+    mastId: Guid;
 }
 
 export const YardModel = ({ data, mastId }: YardModelProps) => {

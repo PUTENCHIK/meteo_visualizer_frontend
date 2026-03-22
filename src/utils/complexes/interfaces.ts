@@ -1,35 +1,42 @@
-import type { PolarSystemPosition } from "@utils/coordinate-systems";
-import type { MastConfigName, MastHeight, WeatherStationsAmount, WeatherStationsNum } from "./types";
+import type { PolarPositionDto } from '@utils/coordinate-systems';
+import type {
+    WeatherStationsNum,
+    MastConfigName,
+} from './types';
+import type { Vector3 } from 'three';
 
-export interface WeatherStation {
-    id: string;
-    mastId: string;
-    yardHeight: number;
-    num: WeatherStationsNum;
-    name?: string;
-}
-
-export interface StationMeasurement {
+export interface DeviceMeasurement {
     value: number;
     timestamp: number;
 }
 
-export interface Yard {
-    height: number;
-    amount: WeatherStationsAmount;
+export interface DeviceMeasure {
+    units: string;
+    measurements: DeviceMeasurement[];
 }
 
-export interface MastConfig {
+export interface VisualizationData {
+    position: Vector3;
+    value: number;
+}
+
+export interface WeatherDeviceName {
+    mast: string;
+    yard: number;
+    num: WeatherStationsNum;
     name: string;
-    yards: Yard[];
-    height: MastHeight;
+    postfix?: string;
 }
 
-export interface Mast {
-    id: string;
+export interface GuidDto {
+    value: string;
+}
+
+export interface MastDto {
+    id: GuidDto;
     prefix: string;
-    description?: string;
-    position: PolarSystemPosition;
-    rotation?: number;
-    configName: MastConfigName;
+    description: string;
+    position: PolarPositionDto;
+    rotation: number;
+    _configName: MastConfigName;
 }

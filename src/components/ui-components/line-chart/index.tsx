@@ -1,84 +1,60 @@
-import { useComplexData } from '@context/complex-data-context';
-import { type ECharts, init } from 'echarts';
-import { useEffect, useRef } from 'react';
+import { ChartsTooltip } from '@components/charts-tooltip';
+import { useChartData } from '@context/devices-data-context';
+import { useCallback, useDeferredValue } from 'react';
+import {
+    ResponsiveContainer,
+    LineChart as RechartsLineChart,
+    CartesianGrid,
+    XAxis,
+    YAxis,
+    Tooltip,
+    Line,
+} from 'recharts';
 
-interface FastLineChartProps {
-    currentStation?: string;
+const timeFormatter = new Intl.DateTimeFormat('ru-RU', {
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+    fractionalSecondDigits: 3,
+});
+
+interface LineChartProps {
+    deviceName: string;
+    measure: string;
 }
 
-export const FastLineChart = ({ currentStation }: FastLineChartProps) => {
-    const { getFormattedData, getMeasureScale, measure } = useComplexData();
+export const LineChart = ({ deviceName, measure }: LineChartProps) => {
+    const data = useChartData(deviceName, measure);
+    const deferredData = useDeferredValue(data);
 
-    const chartRef = useRef<HTMLDivElement>(null);
-    const chartInstance = useRef<ECharts | null>(null);
+    const formatXAxis = useCallback((item: number) => {
+        return timeFormatter.format(item);
+    }, []);
 
-    const updateInterval = 100;
-
-    useEffect(() => {
-        const scale = getMeasureScale();
-
-        if (chartRef.current) {
-            // 1. Инициализация (используем Canvas, он быстрее для частых обновлений)
-            chartInstance.current = init(chartRef.current, undefined, {
-                renderer: 'canvas',
-                useDirtyRect: true, // Оптимизация: перерисовывать только изменившиеся части
-            });
-
-            // Базовая конфигурация
-            chartInstance.current.setOption({
-                tooltip: {
-                    show: true,
-                    trigger: 'axis', // Срабатывает на всю вертикальную линию (удобно для линий)
-                    confine: true, // Чтобы тултип не вылезал за границы контейнера
-                    axisPointer: {
-                        type: 'line', // Показывает вертикальную черту под курсором
-                        label: {
-                            backgroundColor: '#6a7985',
-                        },
-                    },
-                    // Оптимизация: рендерим через Canvas, если точек ОЧЕНЬ много
-                    renderMode: 'html',
-                    // Форматирование даты в тултипе
-                    valueFormatter: (value: number) => Number(value).toFixed(2),
-                },
-
-                xAxis: { type: 'time' },
-                yAxis: { type: 'value', min: scale.min, max: scale.max },
-                series: [{ id: 'main-series', type: 'line', data: [], animation: false }],
-            });
-        }
-
-        // 2. Цикл обновления (Pull-модель)
-        const updateLoop = setInterval(() => {
-            if (!currentStation) return;
-            if (chartInstance.current) {
-                const freshData = getFormattedData(); // Забираем данные через коллбэк
-
-                const data = freshData[currentStation];
-
-                if (!data) return;
-
-                const finalData = data.map((item) => [item.timestamp.getTime(), item.value]);
-
-                chartInstance.current.setOption(
-                    {
-                        series: [{ id: 'main-series', data: finalData }],
-                    },
-                    { notMerge: false, lazyUpdate: true },
-                );
-            }
-        }, updateInterval);
-
-        // 3. Обработка ресайза
-        const handleResize = () => chartInstance.current?.resize();
-        window.addEventListener('resize', handleResize);
-
-        return () => {
-            clearInterval(updateLoop);
-            window.removeEventListener('resize', handleResize);
-            chartInstance.current?.dispose();
-        };
-    }, [getFormattedData, getMeasureScale, currentStation, measure]);
-
-    return <div ref={chartRef} style={{ width: '700px', height: '500px' }} />;
+    return (
+        <div
+            style={{
+                width: '100%',
+                height: 500,
+                boxSizing: 'border-box',
+                padding: '10px',
+            }}>
+            <ResponsiveContainer width='100%' height='100%'>
+                <RechartsLineChart data={deferredData}>
+                    <CartesianGrid strokeDasharray='3 3' />
+                    <XAxis dataKey='timestamp' tickFormatter={formatXAxis} minTickGap={30} />
+                    <YAxis dataKey='value' domain={['auto', 'auto']} />
+                    <Tooltip isAnimationActive={false} content={<ChartsTooltip />} />
+                    <Line
+                        type='linear'
+                        dataKey='value'
+                        stroke='#8884d8'
+                        dot={false}
+                        activeDot={false}
+                        isAnimationActive={false}
+                    />
+                </RechartsLineChart>
+            </ResponsiveContainer>
+        </div>
+    );
 };

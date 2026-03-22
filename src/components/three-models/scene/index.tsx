@@ -13,13 +13,12 @@ import { useSettings } from '@context/use-settings';
 import { Heatmap } from '@models_/heatmap';
 import { Pillarmap } from '@models_/pillarmap';
 import { SunModel } from '@models_/sun-model';
-import { polarToLocal } from '@utils/coordinate-systems';
-import { useComplexData } from '@context/complex-data-context';
 import { useScene } from '@context/scene-context';
+import { useComplexStore } from '@stores/complex-store';
 
 export const Scene = () => {
     const { map: settings } = useSettings();
-    const { masts } = useComplexData();
+    const masts = useComplexStore((state) => state.masts);
     const { controlsRef } = useScene();
 
     const [controls, setControls] = useState<CameraControls | null>(null);
@@ -36,9 +35,8 @@ export const Scene = () => {
         const size = new Vector3(20, settings.model.basePlate.height, 20);
 
         masts.forEach((mast) => {
-            const mastPos = polarToLocal(mast.position);
-            size.x = Math.max(size.x, 2 * Math.abs(mastPos.x));
-            size.z = Math.max(size.z, 2 * Math.abs(mastPos.y));
+            size.x = Math.max(size.x, 2 * Math.abs(mast.position.x));
+            size.z = Math.max(size.z, 2 * Math.abs(mast.position.y));
         });
 
         size.x += settings.model.basePlate.padding;

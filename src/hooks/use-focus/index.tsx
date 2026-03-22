@@ -1,19 +1,18 @@
-import { useComplexData } from '@context/complex-data-context';
 import { useScene } from '@context/scene-context';
 import { useSettings } from '@context/use-settings';
-import { getMastConfig } from '@utils/complexes';
+import { useComplexStore } from '@stores/complex-store';
 import { Vector3 } from 'three';
+import type { Guid } from 'typescript-guid';
 
 export const useFocus = () => {
     const { map: settings } = useSettings();
-    const { getMastById } = useComplexData();
     const { controlsRef, sceneRef } = useScene();
 
-    const focusObject = (id: string, targetOffset?: Vector3) => {
+    const focusObject = (id: Guid, targetOffset?: Vector3) => {
         const controls = controlsRef.current;
         const scene = sceneRef.current;
         if (controls && scene) {
-            const target = scene.getObjectByName(id);
+            const target = scene.getObjectByName(id.toString());
 
             if (target) {
                 const p = new Vector3();
@@ -44,17 +43,16 @@ export const useFocus = () => {
         }
     };
 
-    const focusMast = (mastId: string) => {
-        const mast = getMastById(mastId);
+    const focusMast = (mastId: Guid) => {
+        const mast = useComplexStore.getState().getMast(mastId);
         if (mast) {
-            const mastHeight = getMastConfig(mast.configName).height;
-            focusObject(mastId, new Vector3(0, mastHeight / 2, 0));
+            focusObject(mastId, new Vector3(0, mast.height / 2, 0));
         } else {
             console.error(`Mast #${mastId} is undefined`);
         }
     };
 
-    const focusStation = (stationId: string) => {
+    const focusStation = (stationId: Guid) => {
         focusObject(stationId);
     };
 

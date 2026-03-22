@@ -1,0 +1,10 @@
+.filters-box {
+    display: flex;
+    gap: 8px;
+    align-items: flex-end;
+    flex-wrap: wrap;
+
+    & > * {
+        flex-grow: 1;
+    }
+}

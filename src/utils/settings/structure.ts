@@ -1,4 +1,4 @@
-import type { IconName } from "@utils/icons";
+import type { IconName } from '@utils/icons';
 
 export type SettingsKind =
     | 'boolean'

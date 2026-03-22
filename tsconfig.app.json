@@ -22,6 +22,7 @@
             "@assets/*": ["src/assets/*"],
             "@dialogs/*": ["src/components/dialogs/*"],
             "@hooks/*": ["src/hooks/*"],
+            "@stores/*": ["src/stores/*"],
         },
 
         /* Bundler mode */

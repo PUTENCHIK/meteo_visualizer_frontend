@@ -1,5 +1,5 @@
-import type { mastConfigs } from "./consts";
-import type { StationMeasurement } from "./interfaces";
+import type { mastConfigs } from './consts';
+import type { DeviceMeasure } from './interfaces';
 
 export type MastHeight = 35 | 50;
 
@@ -10,6 +10,6 @@ export type WeatherStationsAmount = 1 | 3;
 export type WeatherStationsNum = 1 | 2 | 3;
 
 // {параметр атмосферы: замерение}
-export type WeatherStationData = Record<string, StationMeasurement[]>;
+export type DeviceData = Record<string, DeviceMeasure>;
 
 export type MastConfigName = (typeof mastConfigs)[number]['name'];
