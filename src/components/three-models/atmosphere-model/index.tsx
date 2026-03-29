@@ -37,6 +37,7 @@ export const AtmosphereModel = ({ basePlateSize, height }: AtmosphereModelProps)
                 uMinVal: { value: scale.min },
                 uMaxVal: { value: scale.max },
                 uOpacity: { value: 1.0 },
+                uScaling: { value: false },
                 uScalingHeight: { value: 1.0 },
             },
             vertexShader: vertexShader(MAX_STATIONS),

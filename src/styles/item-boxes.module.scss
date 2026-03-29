@@ -27,10 +27,10 @@ span.empty-label {
 .group {
     display: flex;
     gap: 12px;
-    align-items: end;
+    align-items: center;
     flex-wrap: wrap;
 }
 
 span.number {
-    font-size: 22px;
+    font-size: 1.375rem;
 }

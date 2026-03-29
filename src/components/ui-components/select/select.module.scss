@@ -1,0 +1,9 @@
+@use '../../../styles/mixins.scss' as m;
+
+select.select {
+    @include m.input;
+
+    &:disabled {
+        color: var(--disabled-color);
+    }
+}

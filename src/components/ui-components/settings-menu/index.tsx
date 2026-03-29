@@ -32,7 +32,7 @@ export const SettingsMenu = () => {
                                 )}
                                 title={section.title}
                                 onClick={() => handleSectionClick(key)}>
-                                <SvgIcon iconName={section.iconName} size={24} color='white' />
+                                <SvgIcon iconName={section.iconName} size={24} />
                             </div>
                         ),
                 )}

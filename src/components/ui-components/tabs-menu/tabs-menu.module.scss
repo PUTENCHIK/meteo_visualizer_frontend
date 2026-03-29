@@ -8,7 +8,6 @@
 
 .tab-item {
     width: 100%;
-    min-height: var(--tabs-menu-height);
     padding: 5px 10px;
     box-sizing: border-box;
 
@@ -17,17 +16,17 @@
     justify-content: center;
 
     text-align: center;
-    background-color: #292929;
-    border-bottom: 1px solid black;
+    background-color: var(--tab-background-color);
+    border-bottom: 1px solid var(--text-primary);
     cursor: pointer;
 
     &:hover:not(.current):not(.disabled) {
-        background-color: #1f1f1f;
+        background-color: var(--tab-background-hover-color);
     }
 
     &.current {
-        background-color: #181818;
-        border-bottom: 2px solid black;
+        background-color: var(--tab-background-current-color);
+        border-bottom: 2px solid var(--text-primary);
         cursor: default;
     }
 

@@ -86,7 +86,7 @@ export const WeatherStationModel = ({
                                     </div>
                                     {devices.length > 0 && (
                                         <>
-                                            <span>Девайсы:</span>
+                                            <span>Датчики:</span>
                                             <ol>
                                                 {devices.map((device, index) => (
                                                     <>

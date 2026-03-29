@@ -24,7 +24,7 @@ import { storageManager } from '@managers/local-storage-manager';
 type DevicesData = Record<string, WeatherDevice[]>;
 
 class DevicesStore {
-    private EMIT_FREQUENCY = 500;
+    private EMIT_FREQUENCY = 300;
     private _data: DevicesData = {};
     private _listeners = new Set<(data: DevicesData) => void>();
     private _measure: keyof typeof measures;

@@ -1,13 +1,20 @@
 :root {
     --main-color: #e95420;
-    --text-primary: black;
+    --text-primary: #121212;
     --background-color: white;
-    --menu-background-color: #dadada;
-    --menu-background-color-hover: #bcbcbc;
+    --disabled-color: gray;
+    --menu-background-color: #f0f0f0;
+    --menu-background-color-hover: #e0e0e0;
     --header-background-color: #e6e6e6;
     --icon-default-color: var(--text-primary);
-    --input-background: #eaeaea;
-    --outline-color: #80808080;
+    --input-background: #e0e0e0;
+    --outline-color: #00000080;
+    --outline-window-color: #80808080;
+    --tab-background-color: #eaeaea;
+    --tab-background-hover-color: #e6e6e6;
+    --tab-background-current-color: #f4f4f4;
+    --compass-background-color: #b3b3b394;
+    --compass-text-color: var(--text-primary);
 }
 
 [data-theme='dark'] {
@@ -17,4 +24,10 @@
     --menu-background-color-hover: #131313;
     --header-background-color: #121212;
     --input-background: #2d2d2d;
+    --outline-color: #ffffff80;
+    --tab-background-color: #292929;
+    --tab-background-hover-color: #1f1f1f;
+    --tab-background-current-color: #181818;
+    --compass-background-color: #39393994;
+    --compass-text-color: var(--text-primary);
 }

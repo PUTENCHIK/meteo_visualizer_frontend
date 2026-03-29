@@ -1,6 +1,6 @@
 import { ChartsTooltip } from '@components/charts-tooltip';
-import { useChartData } from '@context/devices-data-context';
-import { useCallback, useDeferredValue } from 'react';
+import { useDevicesStore } from '@context/devices-data-context';
+import { useCallback, useEffect, useState } from 'react';
 import {
     ResponsiveContainer,
     LineChart as RechartsLineChart,
@@ -24,8 +24,22 @@ interface LineChartProps {
 }
 
 export const LineChart = ({ deviceName, measure }: LineChartProps) => {
-    const data = useChartData(deviceName, measure);
-    const deferredData = useDeferredValue(data);
+    const store = useDevicesStore();
+    const [data, setData] = useState(() => store.getChartData(deviceName, measure));
+
+    useEffect(() => {
+        const currentData = store.getChartData(deviceName, measure);
+        setData([...currentData]);
+
+        const unsubscribe = store.subscribe(() => {
+            const newData = store.getChartData(deviceName, measure);
+            setData([...newData]);
+        });
+
+        return () => {
+            unsubscribe();
+        };
+    }, [store, deviceName, measure]);
 
     const formatXAxis = useCallback((item: number) => {
         return timeFormatter.format(item);
@@ -40,7 +54,7 @@ export const LineChart = ({ deviceName, measure }: LineChartProps) => {
                 padding: '10px',
             }}>
             <ResponsiveContainer width='100%' height='100%'>
-                <RechartsLineChart data={deferredData}>
+                <RechartsLineChart key={`${deviceName}-${measure}`} data={data}>
                     <CartesianGrid strokeDasharray='3 3' />
                     <XAxis dataKey='timestamp' tickFormatter={formatXAxis} minTickGap={30} />
                     <YAxis dataKey='value' domain={['auto', 'auto']} />
@@ -50,7 +64,6 @@ export const LineChart = ({ deviceName, measure }: LineChartProps) => {
                         dataKey='value'
                         stroke='#8884d8'
                         dot={false}
-                        activeDot={false}
                         isAnimationActive={false}
                     />
                 </RechartsLineChart>

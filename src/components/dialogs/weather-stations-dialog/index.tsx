@@ -9,6 +9,7 @@ import { useStations } from '@stores/complex-store';
 import { useDevicesData, useDevicesStore } from '@context/devices-data-context';
 import { measures } from '@utils/complexes';
 import { InputLabel } from '@components/input-label';
+import { Select } from '@components/select';
 
 export const WeatherStationsDialog = () => {
     const { focusStation } = useFocus();
@@ -16,20 +17,18 @@ export const WeatherStationsDialog = () => {
     const stations = useStations();
     const devices = useDevicesData();
 
-    const handleMeasureSelectChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-        store.measure = event.target.value as keyof typeof measures;
+    const handleMeasureSelectChange = (value: keyof typeof measures) => {
+        store.measure = value;
     };
 
     return (
         <DialogWindow title='Метеостанции' dialogId='weatherStations'>
             <InputLabel label='Визуализируемый параметр'>
-                <select defaultValue={store.measure} onChange={handleMeasureSelectChange}>
-                    {Object.keys(measures).map((name, index) => (
-                        <option key={index} value={name}>
-                            {name}
-                        </option>
-                    ))}
-                </select>
+                <Select
+                    defaultValue={store.measure}
+                    options={Object.keys(measures).map((name) => name as keyof typeof measures)}
+                    onChange={handleMeasureSelectChange}
+                />
             </InputLabel>
             {stations.length === 0 && (
                 <div className={clsx(sBoxes['empty-label-wrapper'])}>

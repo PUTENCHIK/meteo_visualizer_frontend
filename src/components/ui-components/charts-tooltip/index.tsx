@@ -23,7 +23,7 @@ export const ChartsTooltip = ({ active, payload }: ChartsTooltipProps) => {
                 second: '2-digit',
                 fractionalSecondDigits: 3,
             })}`}</span>
-            <span>{`Значение: ${data.value.toFixed(2)}`}</span>
+            <span>{`Значение: ${data.value}`}</span>
         </div>
     );
 };

@@ -4,16 +4,28 @@
     @include m.input;
     cursor: pointer;
 
-    &.secondary {
-        background-color: color-mix(in srgb, var(--icon-default-color), transparent 90%);
+    &.tertiary {
+        background-color: var(--menu-background-color);
     
         &:hover {
-            background-color: color-mix(in srgb, var(--icon-default-color), transparent 80%);
+            background-color: var(--menu-background-color-hover);
+        }
+    }
+
+    &.secondary {
+        background-color: var(--input-background);
+    
+        &:hover {
+            background-color: color-mix(in srgb, var(--input-background), transparent 30%);
         }
     }
 
     &.primary {
         background-color: var(--main-color);
         color: white;
+
+        &:hover {
+            background-color: color-mix(in srgb, var(--main-color), transparent 20%);
+        }
     }
 }

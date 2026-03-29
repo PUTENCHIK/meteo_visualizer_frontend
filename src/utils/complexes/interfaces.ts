@@ -1,8 +1,5 @@
 import type { PolarPositionDto } from '@utils/coordinate-systems';
-import type {
-    WeatherStationsNum,
-    MastConfigName,
-} from './types';
+import type { WeatherStationsNum, MastConfigName } from './types';
 import type { Vector3 } from 'three';
 
 export interface DeviceMeasurement {

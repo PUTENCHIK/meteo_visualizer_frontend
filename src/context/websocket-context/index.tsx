@@ -1,4 +1,3 @@
-// import { useComplexData } from '@context/complex-data-context';
 import { useDevicesStore } from '@context/devices-data-context';
 import { storageManager } from '@managers/local-storage-manager';
 import { createContext, useCallback, useContext, useMemo, useState, type ReactNode } from 'react';
@@ -49,7 +48,6 @@ interface SocketContextType {
 const SocketContext = createContext<SocketContextType | undefined>(undefined);
 
 export const WebSocketProvider = ({ children }: { children: ReactNode }) => {
-    // const { updateStationData } = useComplexData();
     const { addData } = useDevicesStore();
 
     const [connectionEnabled, setConnectionEnabled] = useState(false);
@@ -64,15 +62,14 @@ export const WebSocketProvider = ({ children }: { children: ReactNode }) => {
 
     const { sendJsonMessage, readyState } = useWebSocket<ServerMessage>(socketUrl, {
         onMessage: (event) => {
-            // try {
-            const message: ServerMessage = JSON.parse(event.data);
-            if (message.poll_result) {
-                addData(message.pollable_name, message.poll_result);
-                // updateStationData(message.pollable_name, message.poll_result);
+            try {
+                const message: ServerMessage = JSON.parse(event.data);
+                if (message.poll_result) {
+                    addData(message.pollable_name, message.poll_result);
+                }
+            } catch (error) {
+                console.error(`Parsing error: ${error}`);
             }
-            // } catch (error) {
-            //     console.error(`Parsing error: ${error}`);
-            // }
         },
         shouldReconnect: () => true,
         reconnectAttempts: 10,

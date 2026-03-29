@@ -35,15 +35,25 @@ export const ComplexPage = () => {
                 <div className={clsx(s['header-group'])}>
                     <Button
                         title={'Данные комплекса'}
+                        type='tertiary'
                         onClick={() => toggleDialog('complexData')}
                     />
-                    <Button title={'Веб-сокет'} onClick={() => toggleDialog('websocketApi')} />
-                    <Button title={'Мачты'} onClick={() => toggleDialog('masts')} />
+                    <Button
+                        title={'Веб-сокет'}
+                        type='tertiary'
+                        onClick={() => toggleDialog('websocketApi')}
+                    />
+                    <Button title={'Мачты'} type='tertiary' onClick={() => toggleDialog('masts')} />
                     <Button
                         title={'Метеостанции'}
+                        type='tertiary'
                         onClick={() => toggleDialog('weatherStations')}
                     />
-                    <Button title={'График'} onClick={() => toggleDialog('charts')} />
+                    <Button
+                        title={'График'}
+                        type='tertiary'
+                        onClick={() => toggleDialog('charts')}
+                    />
                 </div>
             </div>
 

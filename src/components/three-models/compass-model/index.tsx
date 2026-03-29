@@ -10,11 +10,13 @@ import { TextMesh } from '@models_/text-mesh';
 import { useSettings } from '@context/use-settings';
 import { useScene } from '@context/scene-context';
 import { useFpsFrame } from '@hooks/use-fps-frame';
+import { useTheme } from '@context/theme-context';
 
 export type CompassType = '2D' | '3D';
 
 const Compass = () => {
     const { map: settings } = useSettings();
+    const { theme } = useTheme();
     const { cameraRef } = useScene();
 
     const directionSize = 0.06;
@@ -24,6 +26,11 @@ const Compass = () => {
 
     const compassType = settings.compass.type;
     const mainCamera = cameraRef.current;
+
+    const textColor = useMemo(() => {
+        const styles = getComputedStyle(document.documentElement);
+        return styles.getPropertyValue('--compass-text-color'.trim());
+    }, [theme]);
 
     const euler: Euler = useMemo(() => {
         return new Euler();
@@ -58,6 +65,7 @@ const Compass = () => {
                     size={0.1}
                     height={0.05}
                     forceEdges='without'
+                    color={textColor}
                 />
                 {/* South arrow */}
                 <BoxMesh
@@ -73,6 +81,7 @@ const Compass = () => {
                     size={0.1}
                     height={0.05}
                     forceEdges='without'
+                    color={textColor}
                 />
                 {/* East arrow */}
                 <BoxMesh

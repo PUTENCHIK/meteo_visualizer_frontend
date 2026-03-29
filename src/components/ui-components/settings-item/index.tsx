@@ -1,12 +1,13 @@
 import clsx from 'clsx';
 import s from './settings-item.module.scss';
-import type { SettingsItem as SettingsItemType } from '@shared/settings';
 import { settingsManager } from '@managers/settings-manager';
+import { type SettingsItem as SettingsItemType } from '@utils/settings';
 import { RangeInput } from '@components/range-input';
 import { Toggle } from '@components/toggle';
 import { TabsMenu } from '@components/tabs-menu';
 import { TextInput } from '@components/text-input';
 import { NumberInput } from '@components/number-input';
+import { Select } from '@components/select';
 
 interface SettingsItemProps {
     item: SettingsItemType;
@@ -93,17 +94,13 @@ export const SettingsItem = ({ item, path, parentDisabled = false }: SettingsIte
             break;
         case 'select':
             component = (
-                <select
+                <Select
                     key={path}
-                    onChange={(e) => handleChange(e.target.value)}
+                    defaultValue={item.value}
+                    options={item.options.map((value) => value)}
+                    onChange={handleChange}
                     disabled={disabled}
-                    defaultValue={item.value}>
-                    {item.options.map((value, index) => (
-                        <option key={index} value={value}>
-                            {value}
-                        </option>
-                    ))}
-                </select>
+                />
             );
             break;
         case 'tab':
@@ -152,7 +149,7 @@ export const SettingsItem = ({ item, path, parentDisabled = false }: SettingsIte
             );
         } else {
             return (
-                <div className={clsx(s['settings-item'])}>
+                <div className={clsx(s['settings-item'], disabled && s['disabled'])}>
                     {item.kind !== 'tab' && <span>{item.title}:</span>}
                     {component}
                 </div>

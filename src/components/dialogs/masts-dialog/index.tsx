@@ -6,13 +6,14 @@ import { PolarSystemInput } from '@components/polar-system-input';
 import { InputLabel } from '@components/input-label';
 import { TextInput } from '@components/text-input';
 import { NumberInput } from '@components/number-input';
-import { mastConfigs, type MastConfigName } from '@utils/complexes';
+import { mastConfigs } from '@utils/complexes';
 import { GuidLabel } from '@components/guid-label';
 import { IconButton } from '@components/icon-button';
 import { Button } from '@components/button';
 import { useFocus } from '@hooks/use-focus';
 import { useComplexStore } from '@stores/complex-store';
 import { PolarPosition } from '@utils/coordinate-systems';
+import { Select } from '@components/select';
 
 export const MastsDialog = () => {
     const { focusMast } = useFocus();
@@ -86,19 +87,15 @@ export const MastsDialog = () => {
                         />
                     </InputLabel>
                     <InputLabel label='Конфиг'>
-                        <select
+                        <Select
                             defaultValue={mast.configName}
-                            onChange={(event) =>
+                            options={mastConfigs.map((config) => config.name)}
+                            onChange={(value) =>
                                 updateMast(mast.id, {
-                                    configName: event.target.value as MastConfigName,
+                                    configName: value,
                                 })
-                            }>
-                            {mastConfigs.map((config, cIndex) => (
-                                <option key={cIndex} value={config.name}>
-                                    {config.name}
-                                </option>
-                            ))}
-                        </select>
+                            }
+                        />
                     </InputLabel>
                 </div>
             ))}

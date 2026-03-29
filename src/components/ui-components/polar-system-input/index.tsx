@@ -10,7 +10,7 @@ interface PolarSystemInputProps {
 }
 
 export const PolarSystemInput = ({ value, disabled = false, onChange }: PolarSystemInputProps) => {
-    const [innerValue, setInnerValue] = useState<Vector2>(value.toVector2());
+    const [innerValue, setInnerValue] = useState<Vector2>(new Vector2(value.radius, value.angle));
 
     const handleChange = (v: Vector2) => {
         setInnerValue(v);

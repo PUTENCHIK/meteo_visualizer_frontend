@@ -1,31 +1,38 @@
+html {
+    font-size: var(--font-regular);
+    font-family: 'Roboto', serif;
+}
+
 body {
     padding: 0;
     margin: 0;
-    font-size: 18px;
     color: var(--text-primary);
 }
 
-body,
 button,
 input,
 select,
-textarea {
-    font-family: 'Times New Roman', Times, serif;
-}
-
-button,
-input,
-select,
-textarea {
-    font-size: 16px;
+textarea,
+option {
+    font-size: var(--font-input);
 }
 
 h1,
 h2,
-h3 {
+h3,
+ol,
+ul {
     margin: 0;
 }
 
-ol, ul {
-    margin: 0;
+h1 {
+    font-size: var(--font-h1);
+}
+
+h2 {
+    font-size: var(--font-h2);
+}
+
+h3 {
+    font-size: var(--font-h3);
 }

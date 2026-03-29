@@ -1,12 +1,6 @@
 import { storageManager } from '@managers/local-storage-manager';
 import { type GeographicSystemPosition } from '@utils/coordinate-systems';
-import {
-    createContext,
-    useCallback,
-    useContext,
-    useState,
-    type ReactNode,
-} from 'react';
+import { createContext, useCallback, useContext, useState, type ReactNode } from 'react';
 import { Vector3 } from 'three';
 
 interface ComplexDataContextType {
@@ -17,7 +11,6 @@ interface ComplexDataContextType {
 const ComplexDataContext = createContext<ComplexDataContextType | undefined>(undefined);
 
 export const ComplexDataProvider = ({ children }: { children: ReactNode }) => {
-
     const [position, setPosition] = useState<GeographicSystemPosition>(
         storageManager.getItem('position'),
     );
