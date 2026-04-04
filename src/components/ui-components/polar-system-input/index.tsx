@@ -5,11 +5,17 @@ import { Vector2 } from 'three';
 
 interface PolarSystemInputProps {
     value: PolarPosition;
+    maxRadius?: number;
     disabled?: boolean;
     onChange?: (value: PolarPosition) => void;
 }
 
-export const PolarSystemInput = ({ value, disabled = false, onChange }: PolarSystemInputProps) => {
+export const PolarSystemInput = ({
+    value,
+    maxRadius,
+    disabled = false,
+    onChange,
+}: PolarSystemInputProps) => {
     const [innerValue, setInnerValue] = useState<Vector2>(new Vector2(value.radius, value.angle));
 
     const handleChange = (v: Vector2) => {
@@ -23,7 +29,7 @@ export const PolarSystemInput = ({ value, disabled = false, onChange }: PolarSys
             axisLabels={{ x: 'радиус', y: 'полярный угол' }}
             postfixes={{ x: 'м', y: '°' }}
             min={{ x: 0, y: 0 }}
-            max={{ y: 360 }}
+            max={{ x: maxRadius, y: 360 }}
             decimal={{ x: 2, y: 0 }}
             disabled={disabled}
             onChange={handleChange}

@@ -3,10 +3,13 @@
 }
 
 .tabs-menu {
+    box-sizing: border-box;
+    padding: 0 1px;
     display: flex;
+    gap: 1px;
 }
 
-.tab-item {
+button.tab-item {
     width: 100%;
     padding: 5px 10px;
     box-sizing: border-box;
@@ -17,10 +20,22 @@
 
     text-align: center;
     background-color: var(--tab-background-color);
-    border-bottom: 1px solid var(--text-primary);
+    border: 0 0 1px 0 solid var(--text-primary);
+    outline: 0;
+    color: inherit;
     cursor: pointer;
 
-    &:hover:not(.current):not(.disabled) {
+    &:focus-visible {
+        outline: 1px solid var(--outline-window-color);
+    }
+
+    &:disabled {
+        color: gray;
+        cursor: default;
+        opacity: 80%;
+    }
+
+    &:hover:not(.current):not(:disabled) {
         background-color: var(--tab-background-hover-color);
     }
 
@@ -36,11 +51,5 @@
 
     &:last-child {
         border-top-right-radius: calc(var(--tabs-menu-height) * 0.2);
-    }
-
-    &.disabled {
-        color: gray;
-        cursor: default;
-        opacity: 80%;
     }
 }

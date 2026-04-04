@@ -13,10 +13,12 @@ export const Toggle = ({ value, onChange, disabled = false }: ToggleProps) => {
     };
 
     return (
-        <div
-            className={clsx(s['toggle'], disabled && s['disabled'], value ? s['on'] : s['off'])}
+        <button
+            type='button'
+            className={clsx(s['toggle'], value ? s['on'] : s['off'])}
+            disabled={disabled}
             onClick={handleClick}>
             <div className={clsx(s['ball'])}></div>
-        </div>
+        </button>
     );
 };

@@ -1,7 +1,7 @@
 import clsx from 'clsx';
 import s from './charts-dialog.module.scss';
 import { LineChart } from '@components/line-chart';
-import { useDevicesOfMast } from '@context/devices-data-context';
+import { useDevicesOfMast } from '@stores/devices-store';
 import { DialogWindow } from '@dialogs/dialog-window';
 import { useMemo, useState } from 'react';
 import { InputLabel } from '@components/input-label';

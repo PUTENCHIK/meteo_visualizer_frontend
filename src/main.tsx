@@ -17,7 +17,7 @@ import { ProviderComposer } from '@context/provider-composer';
 import { SceneProvider } from '@context/scene-context';
 import { BridgeProvider } from '@context/bridge-context';
 import { FiberProvider } from 'its-fine';
-import { DevicesProvider } from '@context/devices-data-context';
+import { DevicesProvider } from '@context/devices-context';
 
 const providers = [
     FiberProvider,

@@ -18,16 +18,14 @@ export const TabsMenu = ({ current, tabs, disabled = false, onChange }: TabsMenu
             {Object.entries(tabs).map(([value, title]) => {
                 const isCurrent = value === current;
                 return (
-                    <div
+                    <button
                         key={value}
-                        className={clsx(
-                            s['tab-item'],
-                            isCurrent && s['current'],
-                            disabled && s['disabled'],
-                        )}
+                        type='button'
+                        className={clsx(s['tab-item'], isCurrent && s['current'])}
+                        disabled={disabled}
                         onClick={() => handleClick(value, isCurrent)}>
                         {title}
-                    </div>
+                    </button>
                 );
             })}
         </div>

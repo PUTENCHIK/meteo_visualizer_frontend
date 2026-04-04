@@ -1,4 +1,5 @@
 :root {
+    --page-content-width: 1240px;
     --complex-page-padding: 20px;
     --window-padding: 20px;
     --box-padding: 12px;

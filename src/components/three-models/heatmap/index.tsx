@@ -3,7 +3,8 @@ import { useLayoutEffect, useMemo, useRef } from 'react';
 import { Vector3, Object3D, Vector2, ShaderMaterial, Vector4, PlaneGeometry } from 'three';
 import { vertexShader, fragmentShader } from '@utils/shaders';
 import { useFpsFrame } from '@hooks/use-fps-frame';
-import { useDevicesStore, useMeasureScale } from '@context/devices-data-context';
+import { useMeasureScale } from '@stores/devices-store';
+import { useDevicesStore } from '@context/devices-context';
 
 interface HeatmapProps {
     basePlateSize: Vector3;

@@ -6,7 +6,7 @@ import { PolarSystemInput } from '@components/polar-system-input';
 import { InputLabel } from '@components/input-label';
 import { TextInput } from '@components/text-input';
 import { NumberInput } from '@components/number-input';
-import { mastConfigs } from '@utils/complexes';
+import { Mast, mastConfigs } from '@utils/complexes';
 import { GuidLabel } from '@components/guid-label';
 import { IconButton } from '@components/icon-button';
 import { Button } from '@components/button';
@@ -72,6 +72,7 @@ export const MastsDialog = () => {
                     <InputLabel label='Положение'>
                         <PolarSystemInput
                             value={mast.position}
+                            maxRadius={Mast.MAX_POS_RADIUS}
                             onChange={(value) =>
                                 updateMast(mast.id, {
                                     position: new PolarPosition(value.radius, value.angle),

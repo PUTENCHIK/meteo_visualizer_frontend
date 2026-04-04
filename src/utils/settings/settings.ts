@@ -20,8 +20,6 @@ const rawSettings = {
         }),
         edges: createChapter('Границы', {
             enable: createBoolean('Отображение', true),
-            threshold: createRange('Угол появления', 15, 1, 180, 1),
-            scale: createRange('Вынос', 1, 0.8, 1.2, 0.01),
             thickness: createRange('Толщина', 1, 0.5, 5, 0.5),
             color: createColor('Цвет', 'black'),
         }),
@@ -36,6 +34,10 @@ const rawSettings = {
                 intensity: createRange('Интенсивность', 2, 0, 3, 0.1),
                 color: createColor('Цвет', 'rgb(255, 255, 255)'),
             }),
+        }),
+        shadows: createChapter('Продвинутые тени', {
+            enable: createBoolean('Отображение', true),
+            mapSize: createSelect('Детализация', 2048, [1024, 2048, 4096, 8192]),
         }),
         grid: createChapter('Сетка', {
             enable: createBoolean('Отображение', false),
@@ -64,7 +66,6 @@ const rawSettings = {
                 color: createColor('Цвет', 'rgba(104, 104, 104, 1)'),
             }),
             mastsColor: createColor('Цвет мачт', 'rgba(104, 104, 104, 1)'),
-            yardsColor: createColor('Цвет мачтовых рей', 'rgba(104, 104, 104, 1)'),
         }),
         weatherStation: createChapter('Метеостанции', {
             radius: createRange('Радиус', 0.35, 0.2, 0.5, 0.05),
@@ -129,7 +130,7 @@ const rawSettings = {
         minDistance: createRange('Дистанция приближения', 50, 10, 800, 10),
         maxDistance: createRange('Дистанция отдаления', 500, 30, 800, 10),
         maxPolarAngle: createRange('Максимальный полярный угол', 89, 0, 180, 1),
-        focusOffset: createNumber('Отступ при фокусировке на меше', 40, { visible: false }),
+        focusOffset: createNumber('Отступ при фокусировке на меше', 4, { visible: false }),
         focusPadding: createNumber('Другой отступ при фокусировке на меше', 4, { visible: false }),
     }),
     ui: createSection(

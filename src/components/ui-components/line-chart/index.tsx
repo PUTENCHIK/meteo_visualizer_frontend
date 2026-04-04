@@ -1,5 +1,5 @@
 import { ChartsTooltip } from '@components/charts-tooltip';
-import { useDevicesStore } from '@context/devices-data-context';
+import { useDevicesStore } from '@context/devices-context';
 import { useCallback, useEffect, useState } from 'react';
 import {
     ResponsiveContainer,

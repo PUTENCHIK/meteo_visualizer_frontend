@@ -11,8 +11,9 @@ import { useBridge } from '@context/bridge-context';
 import { useFocus } from '@hooks/use-focus';
 import type { Guid } from 'typescript-guid';
 import { useComplexStore, useStation } from '@stores/complex-store';
-import { useDeviceData } from '@context/devices-data-context';
+import { useDeviceData } from '@stores/devices-store';
 import { useEffect, useRef, useState } from 'react';
+import type { ThreeEvent } from '@react-three/fiber';
 
 interface WeatherStationModelProps {
     position: Vector3;
@@ -47,7 +48,8 @@ export const WeatherStationModel = ({
         }
     }, [data, setStationPosition]);
 
-    const handleStationClick = () => {
+    const handleStationClick = (e: ThreeEvent<MouseEvent>) => {
+        e.stopPropagation();
         if (!showInfo && data) focusStation(data.id);
         setShowInfo((prev) => !prev);
     };
@@ -61,9 +63,11 @@ export const WeatherStationModel = ({
         <>
             {showInfo && (
                 <Html
-                    distanceFactor={12}
-                    position={[position.x + 2 * (num === 1 ? -1 : 1), position.y - 0.5, position.z]}
-                    center>
+                    distanceFactor={14}
+                    position={[position.x + 2.2 * (num === 1 ? -1 : 1), position.y, position.z]}
+                    center
+                    occlude
+                    zIndexRange={[0, 10]}>
                     <Bridge>
                         <div className={clsx(s['info-box'])}>
                             {data && (

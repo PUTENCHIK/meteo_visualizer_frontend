@@ -3,9 +3,9 @@ import { Edges } from '@react-three/drei';
 import { forwardRef } from 'react';
 import { degToRad } from 'three/src/math/MathUtils.js';
 import { useSettings } from '@context/use-settings';
-import type { EdgesEnable } from '@utils/three-models';
+import type { EdgesEnable, Shadowable } from '@utils/three-models';
 
-interface BoxMeshProps extends EdgesEnable {
+interface BoxMeshProps extends EdgesEnable, Shadowable {
     size: Vector3;
     position?: Vector3;
     rotation?: Vector3;
@@ -19,25 +19,31 @@ export const BoxMesh = forwardRef<Mesh, BoxMeshProps>(
             position = new Vector3(),
             rotation = new Vector3(),
             color,
-            forceEdges: forceEdge,
+            forceEdges,
+            forceShadow,
         }: BoxMeshProps,
         ref,
     ) => {
         const { map: settings } = useSettings();
 
+        const isShadow =
+            forceShadow === 'with' || (forceShadow !== 'without' && settings.scene.shadows.enable);
+        const isEdges =
+            forceEdges === 'with' || (forceEdges !== 'without' && settings.scene.edges.enable);
+
         return (
             <mesh
                 position={position}
                 rotation={[degToRad(rotation.x), degToRad(rotation.y), degToRad(rotation.z)]}
+                castShadow={isShadow}
+                receiveShadow={isShadow}
                 ref={ref}>
                 <boxGeometry args={size.toArray()} />
                 <meshStandardMaterial color={color} />
-                {(forceEdge === 'with' ||
-                    (forceEdge !== 'without' && settings.scene.edges.enable)) && (
+                {isEdges && (
                     <Edges
                         color={settings.scene.edges.color}
-                        threshold={settings.scene.edges.threshold}
-                        scale={settings.scene.edges.scale}
+                        threshold={15}
                         lineWidth={settings.scene.edges.thickness}
                     />
                 )}

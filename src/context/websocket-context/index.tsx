@@ -1,4 +1,4 @@
-import { useDevicesStore } from '@context/devices-data-context';
+import { useDevicesStore } from '@context/devices-context';
 import { storageManager } from '@managers/local-storage-manager';
 import { createContext, useCallback, useContext, useMemo, useState, type ReactNode } from 'react';
 import useWebSocket, { ReadyState } from 'react-use-websocket';

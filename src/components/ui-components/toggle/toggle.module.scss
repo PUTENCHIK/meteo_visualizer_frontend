@@ -13,8 +13,14 @@
     display: flex;
     justify-content: start;
 
-    cursor: pointer;
     border-radius: var(--width);
+    border: 0;
+    outline: 0;
+    cursor: pointer;
+
+    &:focus-visible {
+        outline: 1px solid var(--text-primary);
+    }
 
     &.off {
         background-color: #a3a3a3;
@@ -25,7 +31,7 @@
         justify-content: end;
     }
 
-    &.disabled {
+    &:disabled {
         cursor: default;
         background-color: #cacaca;
 

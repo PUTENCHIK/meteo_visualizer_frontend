@@ -2,14 +2,15 @@ import { Vector3, type Mesh } from 'three';
 import { Outlines } from '@react-three/drei';
 import { useSettings } from '@context/use-settings';
 import { forwardRef } from 'react';
-import type { EdgesEnable, Namable } from '@utils/three-models';
+import type { EdgesEnable, Namable, Shadowable } from '@utils/three-models';
+import type { ThreeEvent } from '@react-three/fiber';
 
-interface SphereMeshProps extends EdgesEnable, Namable {
+interface SphereMeshProps extends EdgesEnable, Namable, Shadowable {
     radius: number;
     position?: Vector3;
     segments?: number;
     color: string;
-    onClick?: () => void;
+    onClick?: (e: ThreeEvent<MouseEvent>) => void;
     onPointerOver?: () => void;
     onPointerOut?: () => void;
 }
@@ -23,6 +24,7 @@ export const SphereMesh = forwardRef<Mesh, SphereMeshProps>(
             segments = 32,
             color,
             forceEdges,
+            forceShadow,
             onClick,
             onPointerOver,
             onPointerOut,
@@ -31,22 +33,27 @@ export const SphereMesh = forwardRef<Mesh, SphereMeshProps>(
     ) => {
         const { map: settings } = useSettings();
 
+        const isShadow =
+            forceShadow === 'with' || (forceShadow !== 'without' && settings.scene.shadows.enable);
+        const isEdges =
+            forceEdges === 'with' || (forceEdges !== 'without' && settings.scene.edges.enable);
+
         return (
             <mesh
                 name={name}
                 position={position}
                 onClick={onClick}
+                castShadow={isShadow}
+                receiveShadow={isShadow}
                 onPointerOver={onPointerOver}
                 onPointerOut={onPointerOut}
                 ref={ref}>
                 <sphereGeometry args={[radius, segments, segments]} />
                 <meshStandardMaterial color={color} />
-                {(forceEdges === 'with' ||
-                    (forceEdges !== 'without' && settings.scene.edges.enable)) && (
+                {isEdges && (
                     <Outlines
                         color={settings.scene.edges.color}
                         thickness={settings.scene.edges.thickness}
-                        scale={settings.scene.edges.scale}
                     />
                 )}
             </mesh>

@@ -3,7 +3,8 @@ import { useMemo, useRef } from 'react';
 import { Object3D, ShaderMaterial, Vector3, Vector4 } from 'three';
 import { vertexShader, fragmentShader } from '@utils/shaders';
 import { useFpsFrame } from '@hooks/use-fps-frame';
-import { useDevicesStore, useMeasureScale } from '@context/devices-data-context';
+import { useMeasureScale } from '@stores/devices-store';
+import { useDevicesStore } from '@context/devices-context';
 
 export type AtmosphereParticleForm = 'sphere' | 'cube';
 

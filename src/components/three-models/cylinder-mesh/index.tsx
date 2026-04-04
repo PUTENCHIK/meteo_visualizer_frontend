@@ -1,10 +1,10 @@
 import type { Mesh, Vector3 } from 'three';
 import { Edges, Outlines } from '@react-three/drei';
 import { useSettings } from '@context/use-settings';
-import type { EdgesEnable, Namable } from '@utils/three-models';
+import type { EdgesEnable, Namable, Shadowable } from '@utils/three-models';
 import { forwardRef } from 'react';
 
-interface CylinderMeshProps extends EdgesEnable, Namable {
+interface CylinderMeshProps extends EdgesEnable, Namable, Shadowable {
     radius: number;
     height: number;
     position: Vector3;
@@ -21,29 +21,37 @@ export const CylinderMesh = forwardRef<Mesh, CylinderMeshProps>(
             position,
             segments = 32,
             color,
-            forceEdges: forceEdge,
+            forceEdges,
+            forceShadow,
         }: CylinderMeshProps,
         ref,
     ) => {
         const { map: settings } = useSettings();
 
+        const isShadow =
+            forceShadow === 'with' || (forceShadow !== 'without' && settings.scene.shadows.enable);
+        const isEdges =
+            forceEdges === 'with' || (forceEdges !== 'without' && settings.scene.edges.enable);
+
         return (
-            <mesh name={name} position={position} ref={ref}>
+            <mesh
+                name={name}
+                position={position}
+                castShadow={isShadow}
+                receiveShadow={isShadow}
+                ref={ref}>
                 <cylinderGeometry args={[radius, radius, height, segments]} />
                 <meshStandardMaterial color={color} />
-                {(forceEdge === 'with' ||
-                    (forceEdge !== 'without' && settings.scene.edges.enable)) && (
+                {isEdges && (
                     <>
                         <Edges
                             color={settings.scene.edges.color}
-                            threshold={settings.scene.edges.threshold}
-                            scale={settings.scene.edges.scale}
+                            threshold={15}
                             lineWidth={settings.scene.edges.thickness}
                         />
                         <Outlines
                             color={settings.scene.edges.color}
                             thickness={settings.scene.edges.thickness}
-                            scale={settings.scene.edges.scale}
                         />
                     </>
                 )}

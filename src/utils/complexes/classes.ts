@@ -154,11 +154,13 @@ export class Mast {
     public id: Guid;
     public prefix: string;
     public description: string;
-    public position: PolarPosition;
     public rotation: number;
     public stations: WeatherStation[];
 
+    private _position: PolarPosition = new PolarPosition();
     private _configName: MastConfigName;
+
+    public static MAX_POS_RADIUS = 500;
 
     constructor(
         prefix: string,
@@ -195,6 +197,16 @@ export class Mast {
 
     get height(): number {
         return this.config.height;
+    }
+
+    get position(): PolarPosition {
+        return this._position;
+    }
+
+    set position(value: PolarPosition) {
+        value.radius = Math.max(0, value.radius);
+        value.radius = Math.min(value.radius, Mast.MAX_POS_RADIUS);
+        this._position = value;
     }
 
     public toJSON(): MastDto {

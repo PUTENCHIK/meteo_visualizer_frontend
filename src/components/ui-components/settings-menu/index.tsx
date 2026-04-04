@@ -4,13 +4,14 @@ import { SvgIcon } from '@components/svg-icon';
 import { useState } from 'react';
 import { SettingsItem } from '@components/settings-item';
 import { useSettings } from '@context/use-settings';
+import { IconButton } from '@components/icon-button';
 
 export const SettingsMenu = () => {
     const { raw: settings } = useSettings();
     const [currentSection, setCurrentSection] = useState<string>();
 
     const handleSectionClick = (key: string) => {
-        setCurrentSection(key !== currentSection ? key : undefined);
+        setCurrentSection((prev) => (key !== prev ? key : undefined));
     };
 
     const section =
@@ -24,23 +25,38 @@ export const SettingsMenu = () => {
                 {Object.entries(settings).map(
                     ([key, section]) =>
                         section.visible && (
-                            <div
+                            <button
                                 key={key}
+                                type='button'
                                 className={clsx(
                                     s['section'],
                                     key === currentSection && s['current'],
                                 )}
                                 title={section.title}
-                                onClick={() => handleSectionClick(key)}>
-                                <SvgIcon iconName={section.iconName} size={24} />
-                            </div>
+                                disabled={section.disabled}
+                                onClick={
+                                    !section.disabled ? () => handleSectionClick(key) : undefined
+                                }>
+                                <SvgIcon
+                                    iconName={section.iconName}
+                                    size={24}
+                                    disabled={section.disabled}
+                                />
+                            </button>
                         ),
                 )}
             </div>
             {currentSection && section && (
                 <div className={clsx(s['settings-menu'])}>
-                    <div className={clsx(s['menu-content'])}>
+                    <div className={clsx(s['menu-header'])}>
                         <h2>{section.title}</h2>
+                        <IconButton
+                            iconName='cross'
+                            title='Закрыть'
+                            onClick={() => handleSectionClick(currentSection)}
+                        />
+                    </div>
+                    <div className={clsx(s['menu-content'])}>
                         {Object.entries(section.items).map(([key, item]) => (
                             <SettingsItem key={key} path={`${currentSection}.${key}`} item={item} />
                         ))}

@@ -81,7 +81,7 @@ export const Scene = () => {
     ]);
 
     return (
-        <Canvas camera={cameraProps} style={sceneStyle}>
+        <Canvas camera={cameraProps} style={sceneStyle} shadows>
             <Suspense fallback={<Loader type='circle' />}>
                 {settings.scene.light.ambient.enable && (
                     <ambientLight
@@ -89,7 +89,7 @@ export const Scene = () => {
                         color={settings.scene.light.ambient.color}
                     />
                 )}
-                <SunModel />
+                <SunModel basePlateSize={basePlateSize} />
 
                 <SceneReporter />
 

@@ -48,7 +48,7 @@ export const YardModel = ({ data, mastId }: YardModelProps) => {
             <BoxMesh
                 size={new Vector3(shortYardLength, yardSize, yardSize)}
                 position={getYardPartPosition(true)}
-                color={settings.model.masts.yardsColor}
+                color={settings.model.masts.mastsColor}
             />
 
             {/* Подпорка короткой части */}
@@ -56,7 +56,7 @@ export const YardModel = ({ data, mastId }: YardModelProps) => {
                 size={new Vector3(supportLength, supportSize, supportSize)}
                 position={getSupportPosition(true)}
                 rotation={new Vector3(0, 0, -45)}
-                color={settings.model.masts.yardsColor}
+                color={settings.model.masts.mastsColor}
             />
 
             {/* Метеостанция на короткой части */}
@@ -74,7 +74,7 @@ export const YardModel = ({ data, mastId }: YardModelProps) => {
                     <BoxMesh
                         size={new Vector3(longYardLength, yardSize, yardSize)}
                         position={getYardPartPosition(false)}
-                        color={settings.model.masts.yardsColor}
+                        color={settings.model.masts.mastsColor}
                     />
 
                     {/* Подпорка длинной части */}
@@ -82,7 +82,7 @@ export const YardModel = ({ data, mastId }: YardModelProps) => {
                         size={new Vector3(supportLength, supportSize, supportSize)}
                         position={getSupportPosition(false)}
                         rotation={new Vector3(0, 0, 45)}
-                        color={settings.model.masts.yardsColor}
+                        color={settings.model.masts.mastsColor}
                     />
 
                     {/* Наклонная часть реи */}
@@ -90,7 +90,7 @@ export const YardModel = ({ data, mastId }: YardModelProps) => {
                         size={new Vector3(longYardExtraLength, yardSize, yardSize)}
                         position={new Vector3(longYardLength, 0, 0)}
                         rotation={new Vector3(0, 0, -45)}
-                        color={settings.model.masts.yardsColor}
+                        color={settings.model.masts.mastsColor}
                     />
 
                     {/* Верхняя метеостанция на длинной части */}

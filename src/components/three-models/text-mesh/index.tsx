@@ -28,9 +28,12 @@ export const TextMesh = ({
     font = 'roboto',
     size,
     height,
-    forceEdges: forceEdge,
+    forceEdges,
 }: TextMeshProps) => {
     const { map: settings } = useSettings();
+
+    const isEdges =
+        forceEdges === 'with' || (forceEdges !== 'without' && settings.scene.edges.enable);
 
     return (
         <MeshGroup position={position} rotation={rotation}>
@@ -38,12 +41,10 @@ export const TextMesh = ({
                 <Text3D font={fontsToFiles[font]} size={size} height={height}>
                     {text.trim()}
                     <meshStandardMaterial color={color} />
-                    {(forceEdge === 'with' ||
-                        (forceEdge !== 'without' && settings.scene.edges.enable)) && (
+                    {isEdges && (
                         <Edges
                             color={settings.scene.edges.color}
-                            threshold={settings.scene.edges.threshold}
-                            scale={settings.scene.edges.scale}
+                            threshold={15}
                             lineWidth={settings.scene.edges.thickness}
                         />
                     )}

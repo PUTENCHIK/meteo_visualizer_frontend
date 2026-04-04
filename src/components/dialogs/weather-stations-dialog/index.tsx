@@ -6,10 +6,11 @@ import { IconButton } from '@components/icon-button';
 import { DialogWindow } from '@dialogs/dialog-window';
 import { useFocus } from '@hooks/use-focus';
 import { useStations } from '@stores/complex-store';
-import { useDevicesData, useDevicesStore } from '@context/devices-data-context';
+import { useDevicesData } from '@stores/devices-store';
 import { measures } from '@utils/complexes';
 import { InputLabel } from '@components/input-label';
 import { Select } from '@components/select';
+import { useDevicesStore } from '@context/devices-context';
 
 export const WeatherStationsDialog = () => {
     const { focusStation } = useFocus();

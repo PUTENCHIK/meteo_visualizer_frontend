@@ -24,36 +24,52 @@ export const ComplexPage = () => {
     return (
         <>
             <div className={clsx(s['header-menu-wrapper'])}>
-                <div className={clsx(s['header-group'])}>
-                    <IconButton
-                        iconName='arrow'
-                        title='Назад на главную'
-                        onClick={handleBackToHomePageClick}
-                    />
-                    <h2>Комплекс МАМКА №1243</h2>
+                <div className={clsx(s['header-side'])}>
+                    <div className={clsx(s['header-group'])}>
+                        <IconButton
+                            iconName='arrow'
+                            title='Назад на главную'
+                            onClick={handleBackToHomePageClick}
+                        />
+                        <h2>Комплекс МАМКА №1243</h2>
+                    </div>
+                    <div className={clsx(s['header-group'])}>
+                        <Button
+                            title={'Данные комплекса'}
+                            type='tertiary'
+                            onClick={() => toggleDialog('complexData')}
+                        />
+                        <Button
+                            title={'Веб-сокет'}
+                            type='tertiary'
+                            onClick={() => toggleDialog('websocketApi')}
+                        />
+                        <Button
+                            title={'Мачты'}
+                            type='tertiary'
+                            onClick={() => toggleDialog('masts')}
+                        />
+                        <Button
+                            title={'Метеостанции'}
+                            type='tertiary'
+                            onClick={() => toggleDialog('weatherStations')}
+                        />
+                        <Button
+                            title={'График'}
+                            type='tertiary'
+                            onClick={() => toggleDialog('charts')}
+                        />
+                    </div>
                 </div>
-                <div className={clsx(s['header-group'])}>
-                    <Button
-                        title={'Данные комплекса'}
-                        type='tertiary'
-                        onClick={() => toggleDialog('complexData')}
-                    />
-                    <Button
-                        title={'Веб-сокет'}
-                        type='tertiary'
-                        onClick={() => toggleDialog('websocketApi')}
-                    />
-                    <Button title={'Мачты'} type='tertiary' onClick={() => toggleDialog('masts')} />
-                    <Button
-                        title={'Метеостанции'}
-                        type='tertiary'
-                        onClick={() => toggleDialog('weatherStations')}
-                    />
-                    <Button
-                        title={'График'}
-                        type='tertiary'
-                        onClick={() => toggleDialog('charts')}
-                    />
+                <div className={clsx(s['header-side'])}>
+                    <div className={clsx(s['header-group'])}>
+                        <IconButton iconName='user' title='Профиль' iconSize={28} />
+                        <IconButton
+                            iconName='settings'
+                            title='Настройки приложения'
+                            iconSize={28}
+                        />
+                    </div>
                 </div>
             </div>
 

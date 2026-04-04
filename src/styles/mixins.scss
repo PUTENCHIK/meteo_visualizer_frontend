@@ -31,4 +31,8 @@
     &:focus-visible {
         outline: 1px solid var(--outline-color);
     }
+
+    &:hover {
+        background-color: color-mix(in srgb, var(--input-background), transparent 30%);
+    }
 }

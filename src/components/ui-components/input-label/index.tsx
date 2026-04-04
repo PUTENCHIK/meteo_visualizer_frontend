@@ -17,12 +17,12 @@ export const InputLabel = ({
     children,
 }: InputLabelProps) => {
     return (
-        <label className={clsx(s['label'], s[orientation])}>
+        <div className={clsx(s['label'], s[orientation])}>
             <span>{label}:</span>
             <div className={clsx(s['input-wrapper'])}>
                 {children}
                 {error && <span className={clsx(s['error'])}>{error}</span>}
             </div>
-        </label>
+        </div>
     );
 };

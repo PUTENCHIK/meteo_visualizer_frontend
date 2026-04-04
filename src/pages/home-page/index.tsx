@@ -4,6 +4,7 @@ import { Header } from '@pages/header';
 import { useTheme } from '@context/theme-context';
 import { Link } from 'react-router-dom';
 import { Toggle } from '@components/toggle';
+import { InputLabel } from '@components/input-label';
 
 export const HomePage = () => {
     const { theme, toggleTheme } = useTheme();
@@ -12,14 +13,13 @@ export const HomePage = () => {
         <div className={clsx(s['main'])}>
             <Header />
             <div className={clsx(s['content'])}>
-                <h1>Meteo Visualizer</h1>
+                <h1>Главная страница</h1>
 
                 <Link to={'/complex'}>На страницу комплекса</Link>
 
-                <div className={clsx(s['setting'])}>
-                    <span>Тёмная тема:</span>
-                    <Toggle value={theme == 'dark'} onChange={toggleTheme} />
-                </div>
+                <InputLabel label='Тёмная тема' orientation='horizontal'>
+                    <Toggle value={theme === 'dark'} onChange={toggleTheme} />
+                </InputLabel>
             </div>
         </div>
     );
