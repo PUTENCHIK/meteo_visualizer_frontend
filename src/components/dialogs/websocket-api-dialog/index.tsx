@@ -8,7 +8,15 @@ import { DialogWindow } from '@dialogs/dialog-window';
 import { useState } from 'react';
 
 export const WebsocketApiDialog = () => {
-    const { isConnected, toggleConnection, config, updateConfig, socketUrl } = useSocket();
+    const {
+        connectionEnabled,
+        isConnecting,
+        isConnected,
+        toggleConnection,
+        config,
+        updateConfig,
+        socketUrl,
+    } = useSocket();
 
     const [host, setHost] = useState(config.host);
     const [port, setPort] = useState(config.port);
@@ -31,7 +39,11 @@ export const WebsocketApiDialog = () => {
                 <Button title='Сохранить' type='primary' onClick={handleSave} />,
             ]}>
             <InputLabel label='Подключение' orientation='horizontal'>
-                <Toggle value={isConnected} onChange={toggleConnection} />
+                <Toggle
+                    value={isConnected}
+                    intermediate={isConnecting || (connectionEnabled && !isConnected)}
+                    onChange={toggleConnection}
+                />
             </InputLabel>
             <span>Адрес: {socketUrl}</span>
             <InputLabel label='Хост'>

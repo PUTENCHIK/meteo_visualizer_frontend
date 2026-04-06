@@ -5,6 +5,7 @@ import {
     useCallback,
     useContext,
     useRef,
+    useState,
     type ReactNode,
     type RefObject,
 } from 'react';
@@ -15,6 +16,8 @@ interface SceneContextType {
     cameraRef: RefObject<Camera | null>;
     controlsRef: RefObject<CameraControls | null>;
     getMeshPosition: (id: string) => Vector3 | undefined;
+    fps: number;
+    updateFps: (value: number) => void;
 }
 
 const SceneContext = createContext<SceneContextType | undefined>(undefined);
@@ -23,6 +26,7 @@ export const SceneProvider = ({ children }: { children: ReactNode }) => {
     const sceneRef = useRef<Scene>(null);
     const controlsRef = useRef<CameraControls>(null);
     const cameraRef = useRef<Camera>(null);
+    const [fps, setFps] = useState<number>(0);
 
     const getMeshPosition = useCallback((id: string) => {
         if (!sceneRef.current || !id) return undefined;
@@ -35,6 +39,8 @@ export const SceneProvider = ({ children }: { children: ReactNode }) => {
         controlsRef: controlsRef,
         cameraRef: cameraRef,
         getMeshPosition: getMeshPosition,
+        fps: fps,
+        updateFps: setFps,
     };
 
     return <SceneContext.Provider value={contextValue}>{children}</SceneContext.Provider>;

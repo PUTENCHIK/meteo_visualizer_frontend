@@ -12,6 +12,7 @@ import { Button } from '@components/button';
 import { MastsDialog } from '@dialogs/masts-dialog';
 import { WeatherStationsDialog } from '@dialogs/weather-stations-dialog';
 import { ChartsDialog } from '@dialogs/charts-dialog';
+import { SceneStats } from '@components/scene-stats';
 
 export const ComplexPage = () => {
     const navigate = useNavigate();
@@ -74,9 +75,10 @@ export const ComplexPage = () => {
             </div>
 
             <Scene />
-            <CompassModel />
-
             <SettingsMenu />
+
+            <CompassModel />
+            <SceneStats />
 
             <ComplexDataDialog />
             <WebsocketApiDialog />

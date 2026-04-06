@@ -1,0 +1,15 @@
+.scene-stats-box {
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+    
+    display: inline-flex;
+    flex-direction: column;
+    gap: 4px;
+
+    opacity: 0.5;
+    font-family: monospace;
+    font-size: 0.625rem;
+    pointer-events: none;
+    z-index: 10;
+}

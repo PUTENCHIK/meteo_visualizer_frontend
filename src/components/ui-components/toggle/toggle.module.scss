@@ -13,6 +13,7 @@
     display: flex;
     justify-content: start;
 
+    background-color: #a3a3a3;
     border-radius: var(--width);
     border: 0;
     outline: 0;
@@ -21,16 +22,21 @@
     &:focus-visible {
         outline: 1px solid var(--text-primary);
     }
-
-    &.off {
-        background-color: #a3a3a3;
+    
+    &:hover {
+        background-color: color-mix(in srgb, var(--main-color), transparent 20%);
     }
-
-    &.on {
+    
+    &.intermediate {
+        background-color: color-mix(in srgb, var(--main-color), transparent 50%);
+        justify-content: center;
+    }
+    
+    &.on:not(.intermediate) {
         background-color: var(--main-color);
         justify-content: end;
     }
-
+    
     &:disabled {
         cursor: default;
         background-color: #cacaca;
