@@ -1,8 +1,8 @@
 import clsx from 'clsx';
-import s from './dialog-window.module.scss';
+import s from './base-panel.module.scss';
 import { Rnd } from 'react-rnd';
 import { IconButton } from '@components/icon-button';
-import { useDialogs, type DialogId } from '@context/dialog-context';
+import { usePanels, type PanelId } from '@context/panel-context';
 import React from 'react';
 import { useSettings } from '@context/use-settings';
 
@@ -11,8 +11,8 @@ interface WindowSizeLimits {
     max?: number | null;
 }
 
-interface DialogWindowProps {
-    dialogId: DialogId;
+interface BasePanelProps {
+    panelId: PanelId;
     title: string;
     buttons?: React.ReactNode[];
     widthLimits?: WindowSizeLimits;
@@ -20,31 +20,31 @@ interface DialogWindowProps {
     children?: React.ReactNode;
 }
 
-export const DialogWindow = ({
-    dialogId,
+export const BasePanel = ({
+    panelId,
     title,
     buttons,
     widthLimits,
     heightLimits,
     children,
-}: DialogWindowProps) => {
+}: BasePanelProps) => {
     const { map: settings } = useSettings();
-    const { activeDialogs, closeDialog, focusDialog } = useDialogs();
+    const { activePanels, closePanel, focusPanel } = usePanels();
 
-    const isOpen = activeDialogs.includes(dialogId);
+    const isOpen = activePanels.includes(panelId);
 
     const handleCloseClick = () => {
-        closeDialog(dialogId);
+        closePanel(panelId);
     };
 
     if (!isOpen) return null;
 
     return (
         <Rnd
-            className={clsx(s['dialog-window'])}
+            className={clsx(s['panel-window'])}
             default={{
-                x: 100 + 20 * activeDialogs.indexOf(dialogId),
-                y: 100 + 20 * activeDialogs.indexOf(dialogId),
+                x: 100 + 20 * activePanels.indexOf(panelId),
+                y: 100 + 20 * activePanels.indexOf(panelId),
                 width: 'auto',
                 height: 'auto',
             }}
@@ -71,9 +71,9 @@ export const DialogWindow = ({
             bounds='window'
             dragHandleClassName='handle-area'
             cancel='.close-button'
-            onMouseDown={() => focusDialog(dialogId)}
+            onMouseDown={() => focusPanel(panelId)}
             style={{
-                zIndex: 10 + activeDialogs.indexOf(dialogId),
+                zIndex: 10 + activePanels.indexOf(panelId),
                 maxHeight: `${heightLimits?.max ?? settings.ui.windows.maxHeight}px`,
             }}>
             <div className={clsx(s['window-content'])}>

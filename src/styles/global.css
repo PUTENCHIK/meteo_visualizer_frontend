@@ -6,6 +6,10 @@ html {
 body {
     padding: 0;
     margin: 0;
+}
+
+body,
+dialog {
     color: var(--text-primary);
 }
 

@@ -5,18 +5,21 @@ import { Scene } from '@models_/scene';
 import { SettingsMenu } from '@components/settings-menu';
 import { IconButton } from '@components/icon-button';
 import { useNavigate } from 'react-router-dom';
-import { useDialogs } from '@context/dialog-context';
-import { ComplexDataDialog } from '@panels/complex-data-panel';
-import { WebsocketApiDialog } from '@panels/websocket-api-panel';
+import { usePanels } from '@context/panel-context';
+import { ComplexDataPanel } from '@panels/complex-data-panel';
+import { WebsocketApiPanel } from '@panels/websocket-api-panel';
 import { Button } from '@components/button';
-import { MastsDialog } from '@panels/masts-panel';
-import { WeatherStationsDialog } from '@panels/weather-stations-panel';
+import { MastsPanel } from '@panels/masts-panel';
+import { WeatherStationsPanel } from '@panels/weather-stations-panel';
 import { ChartsPanel } from '@panels/charts-panel';
 import { SceneStats } from '@components/scene-stats';
+import { ProfileDialog } from '@dialogs/profile-dialog';
+import { useDialogs } from '@context/dialog-context';
 
 export const ComplexPage = () => {
     const navigate = useNavigate();
-    const { toggleDialog } = useDialogs();
+    const { togglePanel } = usePanels();
+    const { openDialog } = useDialogs();
 
     const handleBackToHomePageClick = () => {
         navigate('/');
@@ -38,33 +41,38 @@ export const ComplexPage = () => {
                         <Button
                             title={'Данные комплекса'}
                             type='tertiary'
-                            onClick={() => toggleDialog('complexData')}
+                            onClick={() => togglePanel('complexData')}
                         />
                         <Button
                             title={'Веб-сокет'}
                             type='tertiary'
-                            onClick={() => toggleDialog('websocketApi')}
+                            onClick={() => togglePanel('websocketApi')}
                         />
                         <Button
                             title={'Мачты'}
                             type='tertiary'
-                            onClick={() => toggleDialog('masts')}
+                            onClick={() => togglePanel('masts')}
                         />
                         <Button
                             title={'Метеостанции'}
                             type='tertiary'
-                            onClick={() => toggleDialog('weatherStations')}
+                            onClick={() => togglePanel('weatherStations')}
                         />
                         <Button
                             title={'График'}
                             type='tertiary'
-                            onClick={() => toggleDialog('charts')}
+                            onClick={() => togglePanel('charts')}
                         />
                     </div>
                 </div>
                 <div className={clsx(s['header-side'])}>
                     <div className={clsx(s['header-group'])}>
-                        <IconButton iconName='user' title='Профиль' iconSize={28} />
+                        <IconButton
+                            iconName='user'
+                            title='Профиль'
+                            iconSize={28}
+                            onClick={() => openDialog('profile')}
+                        />
                         <IconButton
                             iconName='settings'
                             title='Настройки приложения'
@@ -80,11 +88,13 @@ export const ComplexPage = () => {
             <CompassModel />
             <SceneStats />
 
-            <ComplexDataDialog />
-            <WebsocketApiDialog />
-            <MastsDialog />
-            <WeatherStationsDialog />
+            <ComplexDataPanel />
+            <WebsocketApiPanel />
+            <MastsPanel />
+            <WeatherStationsPanel />
             <ChartsPanel />
+
+            <ProfileDialog />
         </>
     );
 };

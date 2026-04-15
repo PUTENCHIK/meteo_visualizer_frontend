@@ -1,6 +1,6 @@
 import { Box3, Vector3 } from 'three';
 import { Canvas } from '@react-three/fiber';
-import { CameraControls } from '@react-three/drei';
+import { CameraControls, Html } from '@react-three/drei';
 import { BasePlateModel } from '@models_/base-plate-model';
 import { TelescopeModel } from '@models_/telescope-model';
 import { MastModel } from '@models_/mast-model';
@@ -82,7 +82,7 @@ export const Scene = () => {
 
     return (
         <Canvas camera={cameraProps} style={sceneStyle} shadows>
-            <Suspense fallback={<Loader type='circle' />}>
+            <Suspense fallback={<Html center><Loader /></Html>}>
                 {settings.scene.light.ambient.enable && (
                     <ambientLight
                         intensity={settings.scene.light.ambient.intensity}

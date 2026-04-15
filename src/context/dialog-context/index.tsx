@@ -1,44 +1,29 @@
 import React, { createContext, useContext, useState, useCallback } from 'react';
 
-export type DialogId = 'complexData' | 'websocketApi' | 'masts' | 'weatherStations' | 'charts';
+export type DialogId = 'profile';
 
 interface DialogContextType {
-    activeDialogs: DialogId[];
+    activeDialog: DialogId | null;
     openDialog: (id: DialogId) => void;
-    closeDialog: (id: DialogId) => void;
-    toggleDialog: (id: DialogId) => void;
-    focusDialog: (id: DialogId) => void;
+    closeDialog: () => void;
 }
 
 const DialogContext = createContext<DialogContextType | undefined>(undefined);
 
 export const DialogProvider = ({ children }: { children: React.ReactNode }) => {
-    const [activeDialogs, setActiveDialogs] = useState<DialogId[]>([]);
+    const [activeDialog, setActiveDialog] = useState<DialogId | null>(null);
 
-    const openDialog = useCallback((id: DialogId) => {
-        setActiveDialogs((prev) => (prev.includes(id) ? prev : [...prev, id]));
-    }, []);
-
-    const closeDialog = useCallback((id: DialogId) => {
-        setActiveDialogs((prev) => prev.filter((d) => d !== id));
-    }, []);
-
-    const toggleDialog = useCallback((id: DialogId) => {
-        setActiveDialogs((prev) =>
-            prev.includes(id) ? prev.filter((d) => d !== id) : [...prev, id],
-        );
-    }, []);
-
-    const focusDialog = useCallback((id: DialogId) => {
-        setActiveDialogs((prev) => {
-            if (prev[prev.length - 1] === id) return prev;
-            return [...prev.filter((d) => d !== id), id];
-        });
+    const closeDialog = useCallback(() => {
+        setActiveDialog(null);
     }, []);
 
     return (
         <DialogContext.Provider
-            value={{ activeDialogs, openDialog, closeDialog, toggleDialog, focusDialog }}>
+            value={{
+                activeDialog,
+                openDialog: setActiveDialog,
+                closeDialog,
+            }}>
             {children}
         </DialogContext.Provider>
     );

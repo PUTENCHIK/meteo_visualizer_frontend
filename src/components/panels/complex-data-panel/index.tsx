@@ -2,12 +2,12 @@ import { Button } from '@components/button';
 import { InputLabel } from '@components/input-label';
 import { VectorInput, type VectorInputRef } from '@components/vector-input';
 import { useComplexData } from '@context/complex-data-context';
-import { DialogWindow } from '@dialogs/dialog-window';
+import { BasePanel } from '@panels/base-panel';
 import { geographicToNumber } from '@utils/coordinate-systems';
 import { useEffect, useRef, useState } from 'react';
 import { Vector3 } from 'three';
 
-export const ComplexDataDialog = () => {
+export const ComplexDataPanel = () => {
     const { position, updatePosition } = useComplexData();
 
     const latRef = useRef<VectorInputRef>(null);
@@ -52,8 +52,8 @@ export const ComplexDataDialog = () => {
     };
 
     return (
-        <DialogWindow
-            dialogId='complexData'
+        <BasePanel
+            panelId='complexData'
             title='Данные комплекса'
             widthLimits={{ min: 300 }}
             buttons={[
@@ -82,6 +82,6 @@ export const ComplexDataDialog = () => {
                     ref={lonRef}
                 />
             </InputLabel>
-        </DialogWindow>
+        </BasePanel>
     );
 };

@@ -1,9 +1,9 @@
 import clsx from 'clsx';
-import s from './weather-stations-dialog.module.scss';
+import s from './weather-stations-panel.module.scss';
 import sBoxes from '@styles/item-boxes.module.scss';
 import { GuidLabel } from '@components/guid-label';
 import { IconButton } from '@components/icon-button';
-import { DialogWindow } from '@dialogs/dialog-window';
+import { BasePanel } from '@panels/base-panel';
 import { useFocus } from '@hooks/use-focus';
 import { useStations } from '@stores/complex-store';
 import { useDevicesData } from '@stores/devices-store';
@@ -12,7 +12,7 @@ import { InputLabel } from '@components/input-label';
 import { Select } from '@components/select';
 import { useDevicesStore } from '@context/devices-context';
 
-export const WeatherStationsDialog = () => {
+export const WeatherStationsPanel = () => {
     const { focusStation } = useFocus();
     const store = useDevicesStore();
     const stations = useStations();
@@ -23,7 +23,7 @@ export const WeatherStationsDialog = () => {
     };
 
     return (
-        <DialogWindow title='Метеостанции' dialogId='weatherStations'>
+        <BasePanel title='Метеостанции' panelId='weatherStations'>
             <InputLabel label='Визуализируемый параметр'>
                 <Select
                     defaultValue={store.measure}
@@ -87,6 +87,6 @@ export const WeatherStationsDialog = () => {
                     )}
                 </div>
             ))}
-        </DialogWindow>
+        </BasePanel>
     );
 };

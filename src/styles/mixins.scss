@@ -6,6 +6,12 @@
     overflow: hidden;
 }
 
+@mixin dialog-window {
+    @include window;
+
+    padding: 20px;
+}
+
 @mixin item-box {
     box-sizing: border-box;
     padding: var(--box-padding);

@@ -3,6 +3,7 @@ import { Layout } from '@pages/layout';
 import { ComplexPage } from '@pages/complex-page';
 import { HomePage } from '@pages/home-page';
 import { AuthPage } from '@pages/auth-page';
+import { ProtectedRoute } from '@pages/protected-route';
 
 export const AppRouter = createBrowserRouter([
     {
@@ -10,18 +11,23 @@ export const AppRouter = createBrowserRouter([
         element: <Layout />,
         children: [
             {
-                index: true,
-                path: '/',
-                element: <HomePage />,
-            },
-            {
                 path: '/auth',
                 element: <AuthPage />,
             },
             {
-                path: '/complex',
-                element: <ComplexPage />,
-            },
+                element: <ProtectedRoute />,
+                children: [
+                    {
+                        index: true,
+                        path: '/',
+                        element: <HomePage />,
+                    },
+                    {
+                        path: '/complex',
+                        element: <ComplexPage />,
+                    },
+                ]
+            }
         ],
     },
 ]);

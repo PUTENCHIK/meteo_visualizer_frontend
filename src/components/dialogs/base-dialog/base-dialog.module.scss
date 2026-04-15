@@ -1,0 +1,23 @@
+@use '../../../styles/mixins.scss' as m;
+
+.base-dialog {
+    padding: 20px;
+    background-color: transparent;
+    border: 0;
+    outline: 0;
+
+    &::backdrop {
+        background-color: var(--backdrop-color);
+    }
+}
+
+.dialog {
+    @include m.dialog-window;
+}
+
+.header {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}

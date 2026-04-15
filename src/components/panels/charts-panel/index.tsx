@@ -1,14 +1,14 @@
 import clsx from 'clsx';
-import s from './charts-dialog.module.scss';
+import s from './charts-panel.module.scss';
 import { LineChart } from '@components/line-chart';
 import { useDevicesOfMast } from '@stores/devices-store';
-import { DialogWindow } from '@dialogs/dialog-window';
+import { BasePanel } from '@panels/base-panel';
 import { useMemo, useState } from 'react';
 import { InputLabel } from '@components/input-label';
 import { useComplexStore } from '@stores/complex-store';
 import { Select } from '@components/select';
 
-export const ChartsDialog = () => {
+export const ChartsPanel = () => {
     const masts = useComplexStore((state) => state.masts);
     const [currentMast, setCurrentMast] = useState<string>('');
 
@@ -37,8 +37,8 @@ export const ChartsDialog = () => {
     };
 
     return (
-        <DialogWindow
-            dialogId='charts'
+        <BasePanel
+            panelId='charts'
             title='График'
             widthLimits={{ min: 400, max: null }}
             heightLimits={{ min: 400 }}>
@@ -96,6 +96,6 @@ export const ChartsDialog = () => {
             ) : (
                 <span>Добавьте первую мачту</span>
             )}
-        </DialogWindow>
+        </BasePanel>
     );
 };

@@ -3,17 +3,18 @@ import { InputLabel } from '@components/input-label';
 import { TextInput } from '@components/text-input';
 import { BaseForm } from '@forms/base-form';
 import { useAuthStore } from '@stores/auth-store';
-import api from '@stores/auth-store/api';
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 export const SigninForm = () => {
-    const navigate  = useNavigate()
+    const navigate  = useNavigate();
+    const location = useLocation();
+    const from = location.state?.from?.pathname || "/";
 
     const [login, setLogin] = useState('');
     const [password, setPassword] = useState('');
 
-    const setAccessToken = useAuthStore(state => state.setAccessToken);
+    const signin = useAuthStore(state => state.signin);
 
     const handleResetButton = () => {
         setLogin('');
@@ -26,11 +27,9 @@ export const SigninForm = () => {
             formData.append('username', login);
             formData.append('password', password);
 
-            const response = await api.post('/api/auth/signin', formData);
+            await signin(formData);
             
-            setAccessToken(response.data.access_token);
-            
-            navigate('/');
+            navigate(from, { replace: true }); 
         } catch (error) {
             throw error;
         }

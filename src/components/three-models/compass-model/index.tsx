@@ -11,6 +11,7 @@ import { useSettings } from '@context/use-settings';
 import { useScene } from '@context/scene-context';
 import { useFpsFrame } from '@hooks/use-fps-frame';
 import { useTheme } from '@context/theme-context';
+import { Html } from '@react-three/drei';
 
 export type CompassType = '2D' | '3D';
 
@@ -115,7 +116,7 @@ export const CompassModel = () => {
             <Canvas
                 camera={{ position: [0, 0, 1], fov: 60 }}
                 style={{ width: `${compassSize}px`, height: `${compassSize}px` }}>
-                <Suspense fallback={<Loader type='circle' />}>
+                <Suspense fallback={<Html center><Loader /></Html>}>
                     <ambientLight intensity={1.5} />
                     <Compass />
                 </Suspense>

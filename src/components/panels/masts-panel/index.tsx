@@ -1,7 +1,7 @@
 import clsx from 'clsx';
-import s from './masts-dialog.module.scss';
+import s from './masts-panel.module.scss';
 import sBoxes from '@styles/item-boxes.module.scss';
-import { DialogWindow } from '@dialogs/dialog-window';
+import { BasePanel } from '@panels/base-panel';
 import { PolarSystemInput } from '@components/polar-system-input';
 import { InputLabel } from '@components/input-label';
 import { TextInput } from '@components/text-input';
@@ -15,7 +15,7 @@ import { useComplexStore } from '@stores/complex-store';
 import { PolarPosition } from '@utils/coordinate-systems';
 import { Select } from '@components/select';
 
-export const MastsDialog = () => {
+export const MastsPanel = () => {
     const { focusMast } = useFocus();
     const masts = useComplexStore((state) => state.masts);
     const addMast = useComplexStore((state) => state.addMast);
@@ -23,9 +23,9 @@ export const MastsDialog = () => {
     const deleteMast = useComplexStore((state) => state.deleteMast);
 
     return (
-        <DialogWindow
+        <BasePanel
             title='Мачты'
-            dialogId='masts'
+            panelId='masts'
             widthLimits={{ min: 300 }}
             buttons={[<Button title='Добавить мачту' type='primary' onClick={addMast} />]}>
             {masts.length === 0 && (
@@ -100,6 +100,6 @@ export const MastsDialog = () => {
                     </InputLabel>
                 </div>
             ))}
-        </DialogWindow>
+        </BasePanel>
     );
 };

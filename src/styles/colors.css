@@ -15,6 +15,7 @@
     --tab-background-current-color: #f4f4f4;
     --compass-background-color: #b3b3b394;
     --compass-text-color: var(--text-primary);
+    --backdrop-color: #000000a8;
 }
 
 [data-theme='dark'] {

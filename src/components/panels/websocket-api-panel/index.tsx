@@ -4,10 +4,10 @@ import { NumberInput } from '@components/number-input';
 import { TextInput } from '@components/text-input';
 import { Toggle } from '@components/toggle';
 import { useSocket } from '@context/websocket-context';
-import { DialogWindow } from '@dialogs/dialog-window';
+import { BasePanel } from '@panels/base-panel';
 import { useState } from 'react';
 
-export const WebsocketApiDialog = () => {
+export const WebsocketApiPanel = () => {
     const {
         connectionEnabled,
         isConnecting,
@@ -31,8 +31,8 @@ export const WebsocketApiDialog = () => {
     };
 
     return (
-        <DialogWindow
-            dialogId='websocketApi'
+        <BasePanel
+            panelId='websocketApi'
             title='Конфиг вебсокета'
             buttons={[
                 <Button title='Сбросить' onClick={handleReset} />,
@@ -59,6 +59,6 @@ export const WebsocketApiDialog = () => {
                     onChange={(v?: number) => setPort(v ?? 0)}
                 />
             </InputLabel>
-        </DialogWindow>
+        </BasePanel>
     );
 };

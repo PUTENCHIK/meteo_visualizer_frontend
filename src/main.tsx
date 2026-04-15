@@ -12,17 +12,21 @@ import { Suspense } from 'react';
 import { Loader } from '@components/loader';
 import { WebSocketProvider } from '@context/websocket-context';
 import { ComplexDataProvider } from '@context/complex-data-context';
-import { DialogProvider } from '@context/dialog-context';
+import { PanelProvider } from '@context/panel-context';
 import { ProviderComposer } from '@context/provider-composer';
 import { SceneProvider } from '@context/scene-context';
 import { BridgeProvider } from '@context/bridge-context';
 import { FiberProvider } from 'its-fine';
 import { DevicesProvider } from '@context/devices-context';
+import { DialogProvider } from '@context/dialog-context';
+import { AuthProvider } from '@context/auth-context';
 
 const providers = [
     FiberProvider,
     ThemeProvider,
+    AuthProvider,
     DialogProvider,
+    PanelProvider,
     ComplexDataProvider,
     DevicesProvider,
     WebSocketProvider,
@@ -32,7 +36,7 @@ const providers = [
 
 createRoot(document.getElementById('root')!).render(
     <ProviderComposer providers={providers}>
-        <Suspense fallback={<Loader type='circle' />}>
+        <Suspense fallback={<Loader />}>
             <RouterProvider router={AppRouter} />
         </Suspense>
     </ProviderComposer>,
