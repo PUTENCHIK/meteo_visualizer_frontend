@@ -3,16 +3,29 @@ import s from './button.module.scss';
 
 type ButtonType = 'tertiary' | 'secondary' | 'primary';
 
+type ButtonActionType = 'button' | 'submit' | 'reset';
+
 interface ButtonProps {
     title: string;
     type?: ButtonType;
+    actionType?: ButtonActionType;
     disabled?: boolean;
     onClick?: () => void;
 }
 
-export const Button = ({ title, type = 'secondary', disabled = false, onClick }: ButtonProps) => {
+export const Button = ({
+    title,
+    type = 'secondary',
+    actionType = 'button',
+    disabled = false,
+    onClick,
+}: ButtonProps) => {
     return (
-        <button className={clsx(s['button'], s[type])} disabled={disabled} onClick={onClick}>
+        <button
+            type={actionType}
+            className={clsx(s['button'], s[type])}
+            disabled={disabled}
+            onClick={onClick}>
             {title}
         </button>
     );

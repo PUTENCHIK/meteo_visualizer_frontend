@@ -40,9 +40,10 @@ export default defineConfig({
             '@components': path.resolve(__dirname, './src/components/ui-components'),
             '@helpers': path.resolve(__dirname, './src/components/helpers'),
             '@assets': path.resolve(__dirname, './src/assets'),
-            '@dialogs': path.resolve(__dirname, './src/components/dialogs'),
+            '@panels': path.resolve(__dirname, './src/components/panels'),
             '@hooks': path.resolve(__dirname, './src/hooks'),
             '@stores': path.resolve(__dirname, './src/stores'),
+            '@forms': path.resolve(__dirname, './src/components/forms'),
         },
     },
     server: {

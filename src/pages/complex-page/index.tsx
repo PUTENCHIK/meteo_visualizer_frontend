@@ -6,12 +6,12 @@ import { SettingsMenu } from '@components/settings-menu';
 import { IconButton } from '@components/icon-button';
 import { useNavigate } from 'react-router-dom';
 import { useDialogs } from '@context/dialog-context';
-import { ComplexDataDialog } from '@dialogs/complex-data-dialog';
-import { WebsocketApiDialog } from '@dialogs/websocket-api-dialog';
+import { ComplexDataDialog } from '@panels/complex-data-panel';
+import { WebsocketApiDialog } from '@panels/websocket-api-panel';
 import { Button } from '@components/button';
-import { MastsDialog } from '@dialogs/masts-dialog';
-import { WeatherStationsDialog } from '@dialogs/weather-stations-dialog';
-import { ChartsDialog } from '@dialogs/charts-dialog';
+import { MastsDialog } from '@panels/masts-panel';
+import { WeatherStationsDialog } from '@panels/weather-stations-panel';
+import { ChartsPanel } from '@panels/charts-panel';
 import { SceneStats } from '@components/scene-stats';
 
 export const ComplexPage = () => {
@@ -84,7 +84,7 @@ export const ComplexPage = () => {
             <WebsocketApiDialog />
             <MastsDialog />
             <WeatherStationsDialog />
-            <ChartsDialog />
+            <ChartsPanel />
         </>
     );
 };

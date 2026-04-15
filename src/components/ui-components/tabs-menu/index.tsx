@@ -1,21 +1,21 @@
 import clsx from 'clsx';
 import s from './tabs-menu.module.scss';
 
-interface TabsMenuProps {
-    current: string;
-    tabs: Record<string, string>;
+interface TabsMenuProps<T extends string> {
+    current: T;
+    tabs: Record<T, string>;
     disabled?: boolean;
-    onChange?: (value: string) => void;
+    onChange?: (value: T) => void;
 }
 
-export const TabsMenu = ({ current, tabs, disabled = false, onChange }: TabsMenuProps) => {
+export const TabsMenu = <T extends string>({ current, tabs, disabled = false, onChange }: TabsMenuProps<T>) => {
     const handleClick = (value: string, isCurrent: boolean) => {
-        if (onChange && !disabled && !isCurrent) onChange(value);
+        if (onChange && !disabled && !isCurrent) onChange(value as T);
     };
 
     return (
         <div className={clsx(s['tabs-menu'])}>
-            {Object.entries(tabs).map(([value, title]) => {
+            {(Object.entries(tabs) as [T, string][]).map(([value, title]) => {
                 const isCurrent = value === current;
                 return (
                     <button
