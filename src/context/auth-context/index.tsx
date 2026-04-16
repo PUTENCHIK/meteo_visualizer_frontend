@@ -15,7 +15,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
                 setAccessToken(response.data.access_token);
                 await fetchUser();
             } catch (e) {
-                console.log("Сессия не найдена или истекла");
+                console.log(`Сессия не найдена или истекла: ${e}`);
             } finally {
                 setIsChecking(false);
             }

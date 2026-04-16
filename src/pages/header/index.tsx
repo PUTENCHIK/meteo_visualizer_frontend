@@ -22,7 +22,11 @@ export const Header = () => {
                             iconSize={24}
                             onClick={() => openDialog('profile')}
                         />
-                        <IconButton iconName='settings' title='Настройки приложения' iconSize={24} />
+                        <IconButton
+                            iconName='settings'
+                            title='Настройки приложения'
+                            iconSize={24}
+                        />
                     </div>
                 </div>
             </div>

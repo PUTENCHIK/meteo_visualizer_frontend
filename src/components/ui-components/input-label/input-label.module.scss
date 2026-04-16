@@ -1,3 +1,5 @@
+@use '../../../styles/mixins.scss' as m;
+
 .label {
     display: flex;
     gap: 8px;
@@ -34,7 +36,6 @@ span.required-mark {
 }
 
 span.error {
-    font-size: 0.875rem;
-    font-style: italic;
-    color: red;
+    @include m.error-block;
+    font-size: 0.75rem;
 }

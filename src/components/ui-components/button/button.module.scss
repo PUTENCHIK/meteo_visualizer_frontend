@@ -28,4 +28,11 @@
             background-color: color-mix(in srgb, var(--main-color), transparent 20%);
         }
     }
+
+    &:disabled,
+    &:disabled:hover {
+        background-color: color-mix(in srgb, var(--disabled-color), transparent 30%);
+        color: var(disabled-color);
+        cursor: default;
+    }
 }

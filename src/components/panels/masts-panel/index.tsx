@@ -59,14 +59,14 @@ export const MastsPanel = () => {
                         <TextInput
                             defaultValue={mast.prefix}
                             placeholder='west/north'
-                            onChange={(value) => updateMast(mast.id, { prefix: value })}
+                            onBlur={(value) => updateMast(mast.id, { prefix: value })}
                         />
                     </InputLabel>
                     <InputLabel label='Описание'>
                         <TextInput
                             defaultValue={mast.description}
                             placeholder='Описание'
-                            onChange={(value) => updateMast(mast.id, { description: value })}
+                            onBlur={(value) => updateMast(mast.id, { description: value })}
                         />
                     </InputLabel>
                     <InputLabel label='Положение'>

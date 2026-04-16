@@ -1,15 +1,18 @@
 import type { User } from '@utils/http';
 import { create } from 'zustand';
 import api from './api';
+import type { SigninFormData } from '@forms/signin-form/schema';
+import type { SignupFormData } from '@forms/signup-form/schema';
 
 interface AuthState {
     accessToken: string | null;
     user: User | null;
     isAuthenticated: boolean;
     setAccessToken: (token: string | null) => void;
-    signin: (formData: FormData) => Promise<void>;
+    signin: (payload: SigninFormData) => Promise<void>;
+    signup: (payload: SignupFormData) => Promise<void>;
     fetchUser: () => Promise<void>;
-    logout: () => void;
+    logout: () => Promise<void>;
 }
 
 export const useAuthStore = create<AuthState>((set, get) => ({
@@ -21,19 +24,32 @@ export const useAuthStore = create<AuthState>((set, get) => ({
             accessToken: token,
             isAuthenticated: !!token,
         }),
-    signin: async (formData) => {
+    signin: async (payload) => {
+        const formData = new FormData();
+        formData.append('username', payload.username);
+        formData.append('password', payload.password);
         const response = await api.post('/api/auth/signin', formData);
         const token = response.data.access_token;
-        
+
         set({ accessToken: token });
-        
+
+        await get().fetchUser();
+    },
+    signup: async (payload) => {
+        const { passwordAgain, ...formData } = payload;
+        const response = await api.post('/api/auth/signup', formData);
+        const token = response.data.access_token;
+
+        set({ accessToken: token });
+
         await get().fetchUser();
     },
     fetchUser: async () => {
-        const response = await api.get<User>('/api/users/me'); 
+        const response = await api.get<User>('/api/users/me');
         set({ user: response.data });
     },
-    logout: () => {
+    logout: async () => {
+        await api.post('/api/auth/logout');
         set({
             accessToken: null,
             isAuthenticated: false,

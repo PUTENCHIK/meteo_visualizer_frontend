@@ -3,61 +3,58 @@ import { InputLabel } from '@components/input-label';
 import { TextInput } from '@components/text-input';
 import { BaseForm } from '@forms/base-form';
 import { useAuthStore } from '@stores/auth-store';
-import { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { useForm, Controller } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { signinSchema, type SigninFormData } from './schema';
 
 export const SigninForm = () => {
-    const navigate  = useNavigate();
+    const navigate = useNavigate();
     const location = useLocation();
-    const from = location.state?.from?.pathname || "/";
+    const from = location.state?.from?.pathname || '/';
+    const signin = useAuthStore((state) => state.signin);
 
-    const [login, setLogin] = useState('');
-    const [password, setPassword] = useState('');
+    const {
+        control,
+        handleSubmit,
+        reset,
+        formState: { errors, isValid },
+    } = useForm<SigninFormData>({
+        resolver: zodResolver(signinSchema),
+        mode: 'onChange',
+        defaultValues: { username: '', password: '' },
+    });
 
-    const signin = useAuthStore(state => state.signin);
-
-    const handleResetButton = () => {
-        setLogin('');
-        setPassword('');
-    };
-
-    const handleLogin = async () => {
-        try {
-            const formData = new FormData();
-            formData.append('username', login);
-            formData.append('password', password);
-
-            await signin(formData);
-            
-            navigate(from, { replace: true }); 
-        } catch (error) {
-            throw error;
-        }
+    const handleFormSubmit = async (data: SigninFormData) => {
+        await signin(data);
+        navigate(from, { replace: true });
     };
 
     return (
         <BaseForm
             buttons={[
-                <Button title='Сбросить' onClick={handleResetButton} />,
-                <Button title='Войти' type='primary' actionType='submit' />,
+                <Button title='Сбросить' onClick={reset} />,
+                <Button title='Войти' type='primary' actionType='submit' disabled={!isValid} />,
             ]}
-            onSubmit={handleLogin}>
-            <InputLabel label='Логин' required>
-                <TextInput
-                    key={login}
-                    defaultValue={login}
-                    placeholder='username'
-                    onChange={setLogin}
-                />
-            </InputLabel>
-            <InputLabel label='Пароль' required>
-                <TextInput
-                    key={password}
-                    defaultValue={password}
-                    placeholder='my-password'
-                    onChange={setPassword}
-                />
-            </InputLabel>
+            onSubmit={handleSubmit(handleFormSubmit)}>
+            <Controller
+                name='username'
+                control={control}
+                render={({ field }) => (
+                    <InputLabel label='Логин' required error={errors.username?.message}>
+                        <TextInput {...field} placeholder='username' />
+                    </InputLabel>
+                )}
+            />
+            <Controller
+                name='password'
+                control={control}
+                render={({ field }) => (
+                    <InputLabel label='Пароль' required error={errors.password?.message}>
+                        <TextInput {...field} placeholder='my-password' password />
+                    </InputLabel>
+                )}
+            />
         </BaseForm>
     );
 };

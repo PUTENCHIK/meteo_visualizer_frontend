@@ -1,3 +1,5 @@
+@use '../../../styles/mixins.scss' as m;
+
 form.base-form {
     display: flex;
     flex-direction: column;
@@ -8,6 +10,10 @@ form.base-form {
     display: flex;
     flex-direction: column;
     gap: 16px;
+}
+
+.error-block {
+    @include m.error-block;
 }
 
 .buttons-box {

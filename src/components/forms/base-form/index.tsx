@@ -1,28 +1,42 @@
-import clsx from "clsx";
+import clsx from 'clsx';
 import s from './base-form.module.scss';
-import React from "react";
+import type { AxiosError } from 'axios';
+import React, { useState } from 'react';
+import type { ApiErrorResponse, ErrorCode } from '@utils/http';
 
-type FormAction = "POST" | "GET";
+type FormAction = 'POST' | 'GET';
 
 interface BaseFormProps {
     action?: FormAction;
     buttons?: React.ReactNode[];
-    onSubmit?: () => Promise<void> | void;
+    onSubmit?: (event: React.SubmitEvent<HTMLFormElement>) => Promise<void> | void;
     children: React.ReactNode;
 }
 
-export const BaseForm = ({action = "POST", buttons, onSubmit, children}: BaseFormProps) => {
+export const BaseForm = ({ action = 'POST', buttons, onSubmit, children }: BaseFormProps) => {
+    const [formError, setFormError] = useState<string | null>(null);
 
-    const handleSubmit = async (event: React.SubmitEvent) => {
+    const handleSubmit = async (event: React.SubmitEvent<HTMLFormElement>) => {
         event.preventDefault();
-        await onSubmit?.();
-    }
+        try {
+            await onSubmit?.(event);
+        } catch (e) {
+            const error = e as AxiosError<ApiErrorResponse>;
+            const detail = error.response?.data.detail;
+
+            if (detail) {
+                if ((['INVALID_CREDENTIALS', 'VALIDATION'] as ErrorCode[]).includes(detail.code)) {
+                    setFormError(detail.message);
+                }
+            }
+            throw e;
+        }
+    };
 
     return (
         <form action={action} className={clsx(s['base-form'])} onSubmit={handleSubmit}>
-            <div className={clsx(s['inputs-box'])}>
-                {children}
-            </div>
+            {formError && <div className={clsx(s['error-block'])}>{formError}</div>}
+            <div className={clsx(s['inputs-box'])}>{children}</div>
             {buttons && buttons.length > 0 && (
                 <div className={clsx(s['buttons-box'])}>
                     {buttons.map((btn, index) => (
@@ -32,4 +46,4 @@ export const BaseForm = ({action = "POST", buttons, onSubmit, children}: BaseFor
             )}
         </form>
     );
-}
+};

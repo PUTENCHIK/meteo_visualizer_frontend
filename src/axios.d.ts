@@ -4,7 +4,7 @@ declare module 'axios' {
     export interface AxiosRequestConfig {
         _retry?: boolean;
     }
-    export interface InternalAxiosRequestConfig  {
+    export interface InternalAxiosRequestConfig {
         _retry?: boolean;
     }
 }

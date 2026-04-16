@@ -2,94 +2,108 @@ import { Button } from '@components/button';
 import { InputLabel } from '@components/input-label';
 import { TextInput } from '@components/text-input';
 import { BaseForm } from '@forms/base-form';
-import { useEffect, useState } from 'react';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useForm, Controller } from 'react-hook-form';
+import { signupSchema, type SignupFormData } from './schema';
+import { useAuthStore } from '@stores/auth-store';
+import { useNavigate } from 'react-router-dom';
 
 export const SignupForm = () => {
-    const [lastname, setLastname] = useState('');
-    const [firstname, setFirstname] = useState('');
-    const [secondname, setSecondname] = useState('');
-    const [login, setLogin] = useState('');
-    const [password, setPassword] = useState('');
-    const [passwordAgain, setPasswordAgain] = useState('');
+    const navigate = useNavigate();
+    const signup = useAuthStore((state) => state.signup);
 
-    const [passwordError, setPasswordError] = useState<string | undefined>(undefined);
+    const {
+        control,
+        handleSubmit,
+        reset,
+        formState: { errors, isValid },
+    } = useForm<SignupFormData>({
+        resolver: zodResolver(signupSchema),
+        mode: 'onChange',
+        defaultValues: {
+            lastname: '',
+            firstname: '',
+            secondname: '',
+            login: '',
+            password: '',
+            passwordAgain: '',
+        },
+    });
 
-    useEffect(() => {
-        setPasswordError(password !== passwordAgain ? 'Пароль не совпадает' : undefined);
-    }, [password, passwordAgain]);
-
-    const handleResetButton = () => {
-        setLastname('');
-        setFirstname('');
-        setSecondname('');
-        setLogin('');
-        setPassword('');
-        setPasswordAgain('');
-    };
-
-    const handleSignupButton = () => {
-        console.log('signup');
+    const handleFormSubmit = async (data: SignupFormData) => {
+        await signup(data);
+        navigate('/');
     };
 
     return (
         <BaseForm
             buttons={[
-                <Button title='Сбросить' onClick={handleResetButton} />,
+                <Button title='Сбросить' onClick={reset} />,
                 <Button
                     title='Зарегистрироваться'
                     type='primary'
-                    disabled={!!passwordError}
-                    onClick={handleSignupButton}
+                    actionType='submit'
+                    disabled={!isValid}
                 />,
-            ]}>
-            <InputLabel label='Фамилия' required>
-                <TextInput
-                    key={lastname}
-                    defaultValue={lastname}
-                    placeholder='Иванов'
-                    onChange={setLastname}
-                />
-            </InputLabel>
-            <InputLabel label='Имя' required>
-                <TextInput
-                    key={firstname}
-                    defaultValue={firstname}
-                    placeholder='Иван'
-                    onChange={setFirstname}
-                />
-            </InputLabel>
-            <InputLabel label='Отчество' required>
-                <TextInput
-                    key={secondname}
-                    defaultValue={secondname}
-                    placeholder='Иванович'
-                    onChange={setSecondname}
-                />
-            </InputLabel>
-            <InputLabel label='Логин' required>
-                <TextInput
-                    key={login}
-                    defaultValue={login}
-                    placeholder='username'
-                    onChange={setLogin}
-                />
-            </InputLabel>
-            <InputLabel label='Пароль' required>
-                <TextInput
-                    key={password}
-                    defaultValue={password}
-                    placeholder='my-password'
-                    onChange={setPassword}
-                />
-            </InputLabel>
-            <InputLabel label='Повторите пароль' error={passwordError} required>
-                <TextInput
-                    key={passwordAgain}
-                    defaultValue={passwordAgain}
-                    placeholder='my-password'
-                    onChange={setPasswordAgain}
-                />
-            </InputLabel>
+            ]}
+            onSubmit={handleSubmit(handleFormSubmit)}>
+            <Controller
+                name='lastname'
+                control={control}
+                render={({ field }) => (
+                    <InputLabel label='Фамилия' required error={errors.lastname?.message}>
+                        <TextInput {...field} placeholder='Иванов' />
+                    </InputLabel>
+                )}
+            />
+            <Controller
+                name='firstname'
+                control={control}
+                render={({ field }) => (
+                    <InputLabel label='Имя' required error={errors.firstname?.message}>
+                        <TextInput {...field} placeholder='Иван' />
+                    </InputLabel>
+                )}
+            />
+            <Controller
+                name='secondname'
+                control={control}
+                render={({ field }) => (
+                    <InputLabel label='Отчество' required error={errors.secondname?.message}>
+                        <TextInput {...field} placeholder='Иванович' />
+                    </InputLabel>
+                )}
+            />
+            <Controller
+                name='login'
+                control={control}
+                render={({ field }) => (
+                    <InputLabel label='Логин' required error={errors.login?.message}>
+                        <TextInput {...field} placeholder='username' />
+                    </InputLabel>
+                )}
+            />
+            <Controller
+                name='password'
+                control={control}
+                render={({ field }) => (
+                    <InputLabel label='Пароль' required error={errors.password?.message}>
+                        <TextInput {...field} placeholder='my-password' password />
+                    </InputLabel>
+                )}
+            />
+            <Controller
+                name='passwordAgain'
+                control={control}
+                render={({ field }) => (
+                    <InputLabel
+                        label='Повторите пароль'
+                        required
+                        error={errors.passwordAgain?.message}>
+                        <TextInput {...field} placeholder='my-password' password />
+                    </InputLabel>
+                )}
+            />
         </BaseForm>
     );
 };

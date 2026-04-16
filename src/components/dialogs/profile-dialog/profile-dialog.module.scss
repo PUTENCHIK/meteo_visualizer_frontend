@@ -4,3 +4,16 @@
     column-gap: 12px;
     justify-content: end;
 }
+
+.fields {
+    display: flex;
+    flex-direction: column;
+    row-gap: 12px;
+}
+
+span.no-wrap {
+    white-space: nowrap;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}

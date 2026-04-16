@@ -9,7 +9,10 @@ export type IconName =
     | 'cross'
     | 'bin'
     | 'eye'
+    | 'eye-off'
     | 'settings'
-    | 'user';
+    | 'user'
+    | 'logout'
+    | 'pencil';
 
 export type IconSize = 48 | 36 | 28 | 24 | 20 | 16 | 12;

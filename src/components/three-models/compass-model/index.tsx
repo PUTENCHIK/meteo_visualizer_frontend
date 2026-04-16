@@ -116,7 +116,12 @@ export const CompassModel = () => {
             <Canvas
                 camera={{ position: [0, 0, 1], fov: 60 }}
                 style={{ width: `${compassSize}px`, height: `${compassSize}px` }}>
-                <Suspense fallback={<Html center><Loader /></Html>}>
+                <Suspense
+                    fallback={
+                        <Html center>
+                            <Loader />
+                        </Html>
+                    }>
                     <ambientLight intensity={1.5} />
                     <Compass />
                 </Suspense>

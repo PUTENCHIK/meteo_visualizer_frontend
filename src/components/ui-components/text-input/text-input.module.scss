@@ -1,5 +1,27 @@
 @use '../../../styles/mixins.scss' as m;
 
-.text-input {
+.input-container {
     @include m.input;
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: 100%;
+
+    &:focus-within {
+        outline: 1px solid var(--outline-color);
+    }
+}
+
+.text-input {
+    @include m.empty-input;
+    width: 100%;
+
+    &.password {
+        padding-right: 24px;
+    }
+}
+
+.icon-button {
+    position: absolute;
+    right: 8px;
 }

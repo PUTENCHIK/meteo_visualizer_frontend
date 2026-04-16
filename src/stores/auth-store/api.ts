@@ -40,7 +40,7 @@ api.interceptors.response.use(
 
                     return api(originalRequest);
                 } catch (refreshError) {
-                    useAuthStore.getState().logout();
+                    await useAuthStore.getState().logout();
                     window.location.href = '/auth';
                     return Promise.reject(refreshError);
                 }

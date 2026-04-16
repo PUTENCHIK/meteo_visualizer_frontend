@@ -8,8 +8,11 @@ import arrow from '@assets/arrow.svg?react';
 import cross from '@assets/cross.svg?react';
 import bin from '@assets/bin.svg?react';
 import eye from '@assets/eye.svg?react';
+import eyeOff from '@assets/eye-off.svg?react';
 import settings from '@assets/settings.svg?react';
 import user from '@assets/user.svg?react';
+import logout from '@assets/logout.svg?react';
+import pencil from '@assets/pencil.svg?react';
 import type { IconName, IconSize } from './types';
 
 export const iconFiles: Record<IconName, React.ComponentType<React.SVGProps<SVGSVGElement>>> = {
@@ -23,8 +26,11 @@ export const iconFiles: Record<IconName, React.ComponentType<React.SVGProps<SVGS
     cross: cross,
     bin: bin,
     eye: eye,
+    'eye-off': eyeOff,
     user: user,
     settings: settings,
+    logout: logout,
+    pencil: pencil,
 };
 
 export const sizesToStrokes: Record<IconSize, number> = {

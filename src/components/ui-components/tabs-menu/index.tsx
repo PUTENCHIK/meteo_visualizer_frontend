@@ -8,7 +8,12 @@ interface TabsMenuProps<T extends string> {
     onChange?: (value: T) => void;
 }
 
-export const TabsMenu = <T extends string>({ current, tabs, disabled = false, onChange }: TabsMenuProps<T>) => {
+export const TabsMenu = <T extends string>({
+    current,
+    tabs,
+    disabled = false,
+    onChange,
+}: TabsMenuProps<T>) => {
     const handleClick = (value: string, isCurrent: boolean) => {
         if (onChange && !disabled && !isCurrent) onChange(value as T);
     };

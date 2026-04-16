@@ -1,20 +1,26 @@
-import type { Guid } from "typescript-guid";
+import type { Guid } from 'typescript-guid';
 
-export interface Permission {
-    name: string
+export interface AuditableModel {
+    id: Guid;
+    created_at: Date;
+    updated_at: Date;
+    deleted_at: Date | null;
 }
 
-export interface Role {
+export interface Permission extends AuditableModel {
+    name: string;
+}
+
+export interface Role extends AuditableModel {
     name: string;
     permissions: Permission[];
 }
 
-export interface Complex {
+export interface Complex extends AuditableModel {
     name: string;
 }
 
-export interface User {
-    id: Guid;
+export interface User extends AuditableModel {
     login: string;
     lastname: string;
     firstname: string;

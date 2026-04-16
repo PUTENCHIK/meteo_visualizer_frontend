@@ -47,7 +47,7 @@ export const WebsocketApiPanel = () => {
             </InputLabel>
             <span>Адрес: {socketUrl}</span>
             <InputLabel label='Хост'>
-                <TextInput key={host} defaultValue={host} placeholder={host} onChange={setHost} />
+                <TextInput key={host} defaultValue={host} placeholder={host} onBlur={setHost} />
             </InputLabel>
             <InputLabel label='Порт'>
                 <NumberInput

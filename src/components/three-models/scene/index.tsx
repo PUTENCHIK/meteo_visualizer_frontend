@@ -82,7 +82,12 @@ export const Scene = () => {
 
     return (
         <Canvas camera={cameraProps} style={sceneStyle} shadows>
-            <Suspense fallback={<Html center><Loader /></Html>}>
+            <Suspense
+                fallback={
+                    <Html center>
+                        <Loader />
+                    </Html>
+                }>
                 {settings.scene.light.ambient.enable && (
                     <ambientLight
                         intensity={settings.scene.light.ambient.intensity}

@@ -1,0 +1,6 @@
+@use '../../../styles/mixins.scss' as m;
+
+.entity-label {
+    @include m.display-label;
+    cursor: default;
+}
