@@ -5,6 +5,7 @@ import { useState } from 'react';
 import { SettingsItem } from '@components/settings-item';
 import { useSettings } from '@context/use-settings';
 import { IconButton } from '@components/icon-button';
+import { ComponentHeader } from '@components/component-header';
 
 export const SettingsMenu = () => {
     const { raw: settings } = useSettings();
@@ -48,14 +49,16 @@ export const SettingsMenu = () => {
             </div>
             {currentSection && section && (
                 <div className={clsx(s['settings-menu'])}>
-                    <div className={clsx(s['menu-header'])}>
-                        <h2>{section.title}</h2>
-                        <IconButton
-                            iconName='cross'
-                            title='Закрыть'
-                            onClick={() => handleSectionClick(currentSection)}
-                        />
-                    </div>
+                    <ComponentHeader
+                        left={[<h2>{section.title}</h2>]}
+                        right={[
+                            <IconButton
+                                iconName='cross'
+                                title='Закрыть'
+                                onClick={() => handleSectionClick(currentSection)}
+                            />,
+                        ]}
+                    />
                     <div className={clsx(s['menu-content'])}>
                         {Object.entries(section.items).map(([key, item]) => (
                             <SettingsItem key={key} path={`${currentSection}.${key}`} item={item} />

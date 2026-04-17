@@ -1,4 +1,4 @@
-import type { User } from '@utils/http';
+import type { ActiveUserSchema } from '@utils/http';
 import { create } from 'zustand';
 import api from './api';
 import type { SigninFormData } from '@forms/signin-form/schema';
@@ -6,7 +6,7 @@ import type { SignupFormData } from '@forms/signup-form/schema';
 
 interface AuthState {
     accessToken: string | null;
-    user: User | null;
+    user: ActiveUserSchema | null;
     isAuthenticated: boolean;
     setAccessToken: (token: string | null) => void;
     signin: (payload: SigninFormData) => Promise<void>;
@@ -28,7 +28,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
         const formData = new FormData();
         formData.append('username', payload.username);
         formData.append('password', payload.password);
-        const response = await api.post('/api/auth/signin', formData);
+        const response = await api.post('/auth/signin', formData);
         const token = response.data.access_token;
 
         set({ accessToken: token });
@@ -37,7 +37,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     },
     signup: async (payload) => {
         const { passwordAgain, ...formData } = payload;
-        const response = await api.post('/api/auth/signup', formData);
+        const response = await api.post('/auth/signup', formData);
         const token = response.data.access_token;
 
         set({ accessToken: token });
@@ -45,11 +45,11 @@ export const useAuthStore = create<AuthState>((set, get) => ({
         await get().fetchUser();
     },
     fetchUser: async () => {
-        const response = await api.get<User>('/api/users/me');
+        const response = await api.get<ActiveUserSchema>('/users/me');
         set({ user: response.data });
     },
     logout: async () => {
-        await api.post('/api/auth/logout');
+        await api.post('/auth/logout');
         set({
             accessToken: null,
             isAuthenticated: false,

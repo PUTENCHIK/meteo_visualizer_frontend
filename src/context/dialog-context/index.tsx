@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useCallback } from 'react';
 
-export type DialogId = 'profile';
+export type DialogId = 'profile' | 'settings';
 
 interface DialogContextType {
     activeDialog: DialogId | null;

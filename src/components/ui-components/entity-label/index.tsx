@@ -1,25 +1,38 @@
 import clsx from 'clsx';
 import s from './entity-label.module.scss';
-import type { AuditableModel } from '@utils/http';
+import { useAuthStore } from '@stores/auth-store';
+import type { AuditableModelSchema } from '@utils/schemas';
 
-interface WithName extends AuditableModel {
+interface WithName extends AuditableModelSchema {
     name: string;
 }
-interface WithLogin extends AuditableModel {
+interface WithLogin extends AuditableModelSchema {
     login: string;
 }
 
-type DisplayableEntity = AuditableModel | WithName | WithLogin;
+type DisplayableEntity = AuditableModelSchema | WithName | WithLogin;
 
 interface EntityLabelProps<T extends DisplayableEntity> {
     entity: T;
+    id?: boolean;
 }
 
-export const EntityLabel = <T extends DisplayableEntity>({ entity }: EntityLabelProps<T>) => {
+export const EntityLabel = <T extends DisplayableEntity>({
+    entity,
+    id = false,
+}: EntityLabelProps<T>) => {
+    const user = useAuthStore((state) => state.user);
+    const entityId = entity.id.toString().slice(-8);
+
     const getLabel = (): string => {
-        if ('name' in entity) return entity.name;
-        else if ('login' in entity) return entity.login;
-        else return entity.id.toString().slice(-6);
+        if (user?.id === entity.id) {
+            return 'Вы';
+        }
+        if (!id) {
+            if ('name' in entity) return entity.name;
+            else if ('login' in entity) return entity.login;
+        }
+        return entityId;
     };
 
     const color = entity.id.toString().slice(-6);

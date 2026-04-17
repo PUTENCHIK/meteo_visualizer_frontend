@@ -20,10 +20,12 @@ import { FiberProvider } from 'its-fine';
 import { DevicesProvider } from '@context/devices-context';
 import { DialogProvider } from '@context/dialog-context';
 import { AuthProvider } from '@context/auth-context';
+import { QueryProvider } from '@context/query-context';
 
 const providers = [
     FiberProvider,
     ThemeProvider,
+    QueryProvider,
     AuthProvider,
     DialogProvider,
     PanelProvider,

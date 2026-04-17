@@ -40,3 +40,8 @@ h2 {
 h3 {
     font-size: var(--font-h3);
 }
+
+a.link-reset {
+    text-decoration: none;
+    color: inherit;
+}

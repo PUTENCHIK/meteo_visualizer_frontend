@@ -9,6 +9,11 @@
 
     &:focus-within {
         outline: 1px solid var(--outline-color);
+
+        &:has(button:focus) {
+            outline: initial;
+            border-color: initial;
+        }
     }
 }
 

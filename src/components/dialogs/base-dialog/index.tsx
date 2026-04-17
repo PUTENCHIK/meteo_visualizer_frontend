@@ -3,6 +3,7 @@ import s from './base-dialog.module.scss';
 import { useDialogs, type DialogId } from '@context/dialog-context';
 import { IconButton } from '@components/icon-button';
 import { useEffect, useRef } from 'react';
+import { ComponentHeader } from '@components/component-header';
 
 interface BaseDialogProps {
     dialogId: DialogId;
@@ -50,15 +51,17 @@ export const BaseDialog = ({ dialogId, title, children }: BaseDialogProps) => {
             onCancel={handleCancel}
             ref={dialogRef}>
             <div className={clsx(s['dialog'])}>
-                <div className={clsx(s['header'])}>
-                    <h2>{title}</h2>
-                    <IconButton
-                        iconName='cross'
-                        title='Закрыть'
-                        iconSize={24}
-                        onClick={closeDialog}
-                    />
-                </div>
+                <ComponentHeader
+                    left={[<h2>{title}</h2>]}
+                    right={[
+                        <IconButton
+                            iconName='cross'
+                            title='Закрыть'
+                            iconSize={24}
+                            onClick={closeDialog}
+                        />,
+                    ]}
+                />
                 <div className={clsx(s['content'])}>{children}</div>
             </div>
         </dialog>

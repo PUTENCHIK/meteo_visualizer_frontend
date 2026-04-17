@@ -1,3 +1,3 @@
 export * from './interfaces';
-export * from './schemas';
+export * from '../schemas/users';
 export * from './types';

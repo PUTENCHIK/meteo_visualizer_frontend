@@ -4,6 +4,7 @@ import { ComplexPage } from '@pages/complex-page';
 import { HomePage } from '@pages/home-page';
 import { AuthPage } from '@pages/auth-page';
 import { ProtectedRoute } from '@pages/protected-route';
+import { ComplexesPage } from '@pages/complexes-page';
 
 export const AppRouter = createBrowserRouter([
     {
@@ -25,6 +26,10 @@ export const AppRouter = createBrowserRouter([
                     {
                         path: '/complex',
                         element: <ComplexPage />,
+                    },
+                    {
+                        path: 'complexes',
+                        element: <ComplexesPage />,
                     },
                 ],
             },

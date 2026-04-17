@@ -5,10 +5,16 @@ import { IconButton } from '@components/icon-button';
 import { usePanels, type PanelId } from '@context/panel-context';
 import React from 'react';
 import { useSettings } from '@context/use-settings';
+import { ComponentHeader } from '@components/component-header';
 
 interface WindowSizeLimits {
     min?: number | null;
     max?: number | null;
+}
+
+interface NoContent {
+    cond: () => boolean;
+    label: string;
 }
 
 interface BasePanelProps {
@@ -17,6 +23,7 @@ interface BasePanelProps {
     buttons?: React.ReactNode[];
     widthLimits?: WindowSizeLimits;
     heightLimits?: WindowSizeLimits;
+    noContent?: NoContent;
     children?: React.ReactNode;
 }
 
@@ -26,6 +33,7 @@ export const BasePanel = ({
     buttons,
     widthLimits,
     heightLimits,
+    noContent,
     children,
 }: BasePanelProps) => {
     const { map: settings } = useSettings();
@@ -79,17 +87,29 @@ export const BasePanel = ({
             <div className={clsx(s['window-content'])}>
                 <div className='handle-area'>
                     <div className={clsx(s['window-title'])}>
-                        <h2 className={clsx(s['title'])}>{title}</h2>
-                        <IconButton
-                            iconName='cross'
-                            title='Закрыть'
-                            className='close-button'
-                            onClick={handleCloseClick}
+                        <ComponentHeader
+                            left={[<h2 className={clsx(s['title'])}>{title}</h2>]}
+                            right={[
+                                <IconButton
+                                    iconName='cross'
+                                    title='Закрыть'
+                                    className='close-button'
+                                    onClick={handleCloseClick}
+                                />,
+                            ]}
                         />
                     </div>
                 </div>
                 <div className={clsx(s['content'])}>
-                    <div className={clsx(s['children-wrapper'])}>{children}</div>
+                    <div className={clsx(s['children-wrapper'])}>
+                        {React.Children.count(children) === 0 || noContent?.cond() ? (
+                            <div className={clsx(s['no-content-box'])}>
+                                <span>{noContent?.label ?? 'Нет контента'}</span>
+                            </div>
+                        ) : (
+                            children
+                        )}
+                    </div>
                     {buttons && buttons.length > 0 && (
                         <div className={clsx(s['buttons-box'])}>
                             {buttons.map((btn, index) => (

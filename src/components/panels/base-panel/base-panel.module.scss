@@ -16,17 +16,13 @@
 }
 
 .window-title {
-    display: flex;
-    flex-wrap: nowrap;
-    column-gap: 20px;
-    align-items: center;
-
     padding: var(--window-padding) var(--window-padding) 0 var(--window-padding);
     cursor: move;
 }
 
 h2.title {
     width: 100%;
+    overflow-wrap: anywhere;
 }
 
 .content {
@@ -53,6 +49,16 @@ h2.title {
     flex-direction: column;
     row-gap: 12px;
     overflow-y: auto; 
+}
+
+.no-content-box {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-style: italic;
+    text-align: center;
 }
 
 .buttons-box {

@@ -11,7 +11,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     useEffect(() => {
         const initAuth = async () => {
             try {
-                const response = await api.post('/api/auth/refresh');
+                const response = await api.post('/auth/refresh');
                 setAccessToken(response.data.access_token);
                 await fetchUser();
             } catch (e) {

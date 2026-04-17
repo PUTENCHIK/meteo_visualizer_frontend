@@ -1,6 +1,5 @@
 import clsx from 'clsx';
 import s from './weather-stations-panel.module.scss';
-import sBoxes from '@styles/item-boxes.module.scss';
 import { GuidLabel } from '@components/guid-label';
 import { IconButton } from '@components/icon-button';
 import { BasePanel } from '@panels/base-panel';
@@ -11,6 +10,7 @@ import { measures } from '@utils/complexes';
 import { InputLabel } from '@components/input-label';
 import { Select } from '@components/select';
 import { useDevicesStore } from '@context/devices-context';
+import { ComponentHeader } from '@components/component-header';
 
 export const WeatherStationsPanel = () => {
     const { focusStation } = useFocus();
@@ -23,7 +23,14 @@ export const WeatherStationsPanel = () => {
     };
 
     return (
-        <BasePanel title='Метеостанции' panelId='weatherStations'>
+        <BasePanel
+            title='Метеостанции'
+            panelId='weatherStations'
+            widthLimits={{ min: 300 }}
+            noContent={{
+                cond: () => stations.length === 0,
+                label: 'Добавьте первую мачту',
+            }}>
             <InputLabel label='Визуализируемый параметр'>
                 <Select
                     defaultValue={store.measure}
@@ -31,31 +38,30 @@ export const WeatherStationsPanel = () => {
                     onChange={handleMeasureSelectChange}
                 />
             </InputLabel>
-            {stations.length === 0 && (
-                <div className={clsx(sBoxes['empty-label-wrapper'])}>
-                    <span className={clsx(sBoxes['empty-label'])}>Добавьте первую мачту</span>
-                </div>
-            )}
             {stations.map((station, sIndex) => (
                 <div key={sIndex} className={clsx(s['station-item'])}>
-                    <div className={clsx(sBoxes['header'])}>
-                        <div className={clsx(sBoxes['group'])}>
-                            <span className={clsx(sBoxes['number'])}>{sIndex + 1}. Станция</span>
-                            <GuidLabel value={station.id} objct='station' />
-                        </div>
-                        <div className={clsx(sBoxes['group'])}>
+                    <ComponentHeader
+                        left={[
+                            <h3>{sIndex + 1}. Станция</h3>,
+                            <GuidLabel value={station.id} objct='station' />,
+                        ]}
+                        right={[
                             <IconButton
                                 iconName='eye'
                                 title='Фокус'
                                 iconSize={20}
                                 onClick={() => focusStation(station.id)}
-                            />
-                        </div>
-                    </div>
-                    <div className={clsx(sBoxes['group'])}>
-                        <span>Мачта:</span>
-                        <GuidLabel value={station.mastId} objct='mast' />
-                    </div>
+                            />,
+                        ]}
+                        size='tiny'
+                    />
+                    <ComponentHeader
+                        left={[
+                            <span>Мачта:</span>,
+                            <GuidLabel value={station.mastId} objct='mast' />,
+                        ]}
+                        size='tiny'
+                    />
                     <span>
                         Высота: {station.height}м; Номер: {station.num}
                     </span>

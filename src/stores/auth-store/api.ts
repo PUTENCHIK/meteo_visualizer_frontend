@@ -3,7 +3,7 @@ import { useAuthStore } from '.';
 import type { ApiErrorResponse } from '@utils/http';
 
 const api = axios.create({
-    baseURL: 'http://localhost:5049',
+    baseURL: 'http://localhost:5049/api',
     withCredentials: true,
 });
 
@@ -28,11 +28,7 @@ api.interceptors.response.use(
             if (code === 'TOKEN_EXPIRED' && originalRequest && !originalRequest._retry) {
                 originalRequest._retry = true;
                 try {
-                    const res = await axios.post(
-                        '/api/auth/refresh',
-                        {},
-                        { withCredentials: true },
-                    );
+                    const res = await api.post('/auth/refresh', {}, { withCredentials: true });
                     const { access_token } = res.data;
 
                     useAuthStore.getState().setAccessToken(access_token);

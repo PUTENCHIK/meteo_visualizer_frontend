@@ -1,0 +1,42 @@
+.component-header {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    column-gap: 20px;
+}
+
+.group,
+.subgroup {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    
+    &.wrap {
+        flex-wrap: wrap;
+    }
+}
+
+.group {
+    &.tiny {
+        column-gap: 12px;
+    }
+    &.small {
+        column-gap: 20px;
+    }
+    &.big {
+        column-gap: 40px;
+    }
+}
+
+.subgroup {
+    &.tiny {
+        column-gap: 8px;
+    }
+    &.small {
+        column-gap: 12px;
+    }
+    &.big {
+        column-gap: 20px;
+    }
+}

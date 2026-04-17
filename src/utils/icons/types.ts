@@ -13,6 +13,8 @@ export type IconName =
     | 'settings'
     | 'user'
     | 'logout'
-    | 'pencil';
+    | 'pencil'
+    | 'star'
+    | 'star-off';
 
 export type IconSize = 48 | 36 | 28 | 24 | 20 | 16 | 12;
