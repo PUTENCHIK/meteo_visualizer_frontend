@@ -1,6 +1,6 @@
 import api from '@stores/auth-store/api';
 import { useQuery } from '@tanstack/react-query';
-import type { ComplexWithMastsSchema } from '@utils/schemas';
+import type { ComplexFullSchema } from '@utils/schemas';
 import type { Guid } from 'typescript-guid';
 
 export const useComplex = (complexId?: Guid) => {
@@ -8,7 +8,7 @@ export const useComplex = (complexId?: Guid) => {
         queryKey: ['complex', complexId],
         queryFn: async () => {
             if (!complexId) return undefined;
-            const response = await api.get<ComplexWithMastsSchema>(`/complexes/${complexId}`);
+            const response = await api.get<ComplexFullSchema>(`/complexes/${complexId}`);
             return response.data;
         },
         enabled: !!complexId,

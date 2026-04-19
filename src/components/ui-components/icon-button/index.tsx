@@ -44,7 +44,7 @@ export const IconButton = ({
     return (
         <button
             type='button'
-            className={clsx(s['button'], s[typeToStyles[type].className], className)}
+            className={clsx(s['icon-button'], s[typeToStyles[type].className], className)}
             title={title}
             disabled={disabled}
             onClick={onClick}>

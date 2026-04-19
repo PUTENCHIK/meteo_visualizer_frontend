@@ -41,7 +41,8 @@ export const ProfileDialog: React.FC<DialogProps<'profile'>> = () => {
                     <span className={clsx(s['no-wrap'])}>
                         Роль: <EntityLabel entity={user.role} />
                     </span>
-                    <span>Доступно комплексов: {user.complexes.length}</span>
+                    <span>Доступно комплексов: {user.accessible_complexes.length}</span>
+                    <span>Избранных комплексов: {user.favorite_complexes.length}</span>
                     <span>Добавлено комплексов: {user.created_complexes.length}</span>
                     <span>Зарегистрирован: {dateFormatter.format(new Date(user.created_at))}</span>
                 </div>

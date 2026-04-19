@@ -2,21 +2,21 @@ import type { ScaleInterval } from '@utils/common';
 import { z } from 'zod';
 
 const NAME: ScaleInterval = { min: 6, max: 255 };
-const PASSWORD: ScaleInterval = { min: 6, max: 255 };
+const SECRETKEY: ScaleInterval = { min: 6, max: 255 };
 
 export const complexSchema = z.object({
     name: z
         .string()
         .min(NAME.min, `Минимальная длина - ${NAME.min}`)
         .max(NAME.max, `Максимальная длина - ${NAME.max}`),
-    password: z
+    secretkey: z
         .union([
             z.literal(''),
             z.null(),
             z
                 .string()
-                .min(PASSWORD.min, `Минимальная длина - ${PASSWORD.min}`)
-                .max(PASSWORD.max, `Максимальная длина - ${PASSWORD.max}`)
+                .min(SECRETKEY.min, `Минимальная длина - ${SECRETKEY.min}`)
+                .max(SECRETKEY.max, `Максимальная длина - ${SECRETKEY.max}`)
                 .regex(
                     /^[a-zA-Z0-9_!@#$%^&*()[\]{}.,:;\-?*'"]+$/,
                     'Допустимы только латинские буквы, цифры и спец. символы',

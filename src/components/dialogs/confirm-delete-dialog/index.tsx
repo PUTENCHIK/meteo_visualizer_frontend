@@ -8,13 +8,14 @@ import { useDialogs } from '@context/dialog-context';
 import type { DialogProps } from '@context/dialog-context/dialogs';
 import { BaseDialog } from '@dialogs/base-dialog';
 import { BaseForm } from '@forms/base-form';
+import { ComponentRowBox } from '@components/component-row-box';
 
 export type DeleteMode = 'soft' | 'hard' | 'both';
 
 export const ConfirmDeleteDialog: React.FC<DialogProps<'confirm-delete'>> = ({ data }) => {
     const { closeDialog } = useDialogs();
     const { mode, onSubmit, extra } = data;
-    const [force, setForce] = useState(false);
+    const [force, setForce] = useState(mode === 'hard');
 
     const handleSubmit = async () => {
         await onSubmit(force);
@@ -29,8 +30,18 @@ export const ConfirmDeleteDialog: React.FC<DialogProps<'confirm-delete'>> = ({ d
                     <Button title='Подтвердить' type='danger' actionType='submit' />,
                 ]}
                 onSubmit={handleSubmit}>
-                <span>Вы точно хотите удалить{extra ? ` ${extra.entityName}` : ''}?</span>
-                {extra ? <EntityLabel entity={extra.entity} size='big' /> : <></>}
+                <span>Вы точно хотите удалить?</span>
+                {extra ? (
+                    <ComponentRowBox
+                        left={[
+                            <span>{extra.entityName}:</span>,
+                            <EntityLabel entity={extra.entity} size='big' />,
+                        ]}
+                        size='tiny'
+                    />
+                ) : (
+                    <></>
+                )}
                 {mode === 'both' && (
                     <InputLabel label='Жёсткое удаление' orientation='horizontal'>
                         <input

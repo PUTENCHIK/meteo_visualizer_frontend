@@ -15,6 +15,7 @@ import logout from '@assets/logout.svg?react';
 import pencil from '@assets/pencil.svg?react';
 import star from '@assets/star.svg?react';
 import starOff from '@assets/star-off.svg?react';
+import plus from '@assets/plus.svg?react';
 import type { IconName, IconSize } from './types';
 
 export const iconFiles: Record<IconName, React.ComponentType<React.SVGProps<SVGSVGElement>>> = {
@@ -35,6 +36,7 @@ export const iconFiles: Record<IconName, React.ComponentType<React.SVGProps<SVGS
     pencil: pencil,
     star: star,
     'star-off': starOff,
+    plus: plus,
 };
 
 export const sizesToStrokes: Record<IconSize, number> = {

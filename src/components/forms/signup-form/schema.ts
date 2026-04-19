@@ -40,7 +40,7 @@ export const signupSchema = z
         passwordAgain: z.string().min(1, 'Повторите пароль'),
     })
     .refine((data) => data.password === data.passwordAgain, {
-        message: 'Пароли не совпадают',
+        error: 'Пароли не совпадают',
         path: ['passwordAgain'],
     });
 

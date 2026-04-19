@@ -16,10 +16,10 @@ export const ComplexesPage = () => {
                 left={[<h1>Комплексы МАМКА</h1>]}
                 right={[
                     <Button
-                        title='Добавить'
+                        title='Добавить комплекс'
                         type='primary'
                         disabled={isLoading}
-                        onClick={() => openDialog('complex')}
+                        onClick={() => openDialog('edit-complex')}
                     />,
                 ]}
             />

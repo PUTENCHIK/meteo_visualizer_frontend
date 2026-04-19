@@ -4,19 +4,23 @@ import s from './select.module.scss';
 type SelectType = number | string;
 
 interface SelectProps<T extends SelectType> {
-    defaultValue?: T;
+    value?: T;
     options: readonly T[];
     labels?: Partial<Record<T, string>>;
+    name?: string;
     disabled?: boolean;
     onChange?: (value: T) => void;
+    onBlur?: () => void;
 }
 
 export const Select = <T extends SelectType>({
-    defaultValue,
+    value,
     options,
     labels,
+    name,
     disabled,
     onChange,
+    onBlur,
 }: SelectProps<T>) => {
     const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
         onChange?.(event.target.value as T);
@@ -25,9 +29,11 @@ export const Select = <T extends SelectType>({
     return (
         <select
             className={clsx(s['select'])}
-            defaultValue={defaultValue}
+            name={name}
+            value={value}
+            disabled={disabled}
             onChange={handleChange}
-            disabled={disabled}>
+            onBlur={onBlur}>
             {options.map((item, index) => {
                 const label = labels?.[item] ?? item;
 

@@ -12,6 +12,7 @@ export interface UserSchema extends AuditableModelSchema {
 
 export interface ActiveUserSchema extends UserSchema {
     role: RoleWithPermissionsSchema;
-    complexes: ComplexSchema[];
+    accessible_complexes: ComplexSchema[];
+    favorite_complexes: ComplexSchema[];
     created_complexes: ComplexSchema[];
 }

@@ -5,14 +5,14 @@ import { BaseDialog } from '@dialogs/base-dialog';
 import { ComplexForm } from '@forms/complex-form';
 import { useComplex } from '@hooks/api-data/use-complex';
 
-export const ComplexDialog: React.FC<DialogProps<'complex'>> = ({ data }) => {
+export const EditComplexDialog: React.FC<DialogProps<'edit-complex'>> = ({ data }) => {
     const isUpdate = !!data?.complexId;
 
     const { data: complex, isLoading, isError } = useComplex(data?.complexId);
 
     return (
         <BaseDialog
-            dialogId='complex'
+            dialogId='edit-complex'
             title={
                 isUpdate ? (
                     <>

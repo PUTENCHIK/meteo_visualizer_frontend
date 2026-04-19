@@ -1,4 +1,4 @@
-button.button {
+button.icon-button {
     width: min-content;
     height: min-content;
     padding: 6px;
@@ -21,6 +21,14 @@ button.button {
 
         &:hover {
             background-color: color-mix(in srgb, var(--icon-default-color), transparent 80%);
+        }
+    }
+
+    &.primary {
+        background-color: var(--main-color);
+
+        &:hover {
+            background-color: color-mix(in srgb, var(--main-color), transparent 20%);
         }
     }
 }

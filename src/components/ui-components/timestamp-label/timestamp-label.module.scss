@@ -1,0 +1,10 @@
+@use '../../../styles/mixins.scss' as m;
+
+.timestamp-label {
+    @include m.display-label;
+    font-family: monospace;
+    cursor: default;
+
+    background-color: color-mix(in srgb, var(--text-primary), transparent 90%);
+    color: var(--text-primary);
+}

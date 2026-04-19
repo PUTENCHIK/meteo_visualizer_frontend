@@ -1,0 +1,18 @@
+@use '../../../styles/mixins.scss' as m;
+
+.status-label {
+    @include m.display-label;
+    font-family: monospace;
+    text-transform: uppercase;
+    cursor: default;
+
+    &.public {
+        background-color: color-mix(in srgb, var(--access-color), transparent 80%);
+        color: var(--access-color);
+    }
+
+    &.private {
+        background-color: color-mix(in srgb, var(--danger-color), transparent 80%);
+        color: var(--danger-color);
+    }
+}
