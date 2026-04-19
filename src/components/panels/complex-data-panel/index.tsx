@@ -60,7 +60,7 @@ export const ComplexDataPanel = () => {
                 <Button title='Сбросить' onClick={handleReset} />,
                 <Button title='Сохранить' type='primary' onClick={handleSave} />,
             ]}>
-            <InputLabel label='Широта'>
+            <InputLabel label='Широта' notLabel>
                 <VectorInput
                     value={latitude}
                     postfixes={{ x: '°', y: "'", z: "''" }}
@@ -71,7 +71,7 @@ export const ComplexDataPanel = () => {
                     ref={latRef}
                 />
             </InputLabel>
-            <InputLabel label='Долгота'>
+            <InputLabel label='Долгота' notLabel>
                 <VectorInput
                     value={longitude}
                     postfixes={{ x: '°', y: "'", z: "''" }}

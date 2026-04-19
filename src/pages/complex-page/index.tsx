@@ -13,11 +13,9 @@ import { MastsPanel } from '@panels/masts-panel';
 import { WeatherStationsPanel } from '@panels/weather-stations-panel';
 import { ChartsPanel } from '@panels/charts-panel';
 import { SceneStats } from '@components/scene-stats';
-import { ProfileDialog } from '@dialogs/profile-dialog';
 import { useDialogs } from '@context/dialog-context';
-import { SettingsDialog } from '@dialogs/settings-dialog';
 import { useEffect } from 'react';
-import { ComponentHeader } from '@components/component-header';
+import { ComponentRowBox } from '@components/component-row-box';
 
 export const ComplexPage = () => {
     const navigate = useNavigate();
@@ -35,7 +33,7 @@ export const ComplexPage = () => {
     return (
         <>
             <div className={clsx(s['header-menu-wrapper'])}>
-                <ComponentHeader
+                <ComponentRowBox
                     left={[
                         [
                             <IconButton
@@ -104,9 +102,6 @@ export const ComplexPage = () => {
             <MastsPanel />
             <WeatherStationsPanel />
             <ChartsPanel />
-
-            <ProfileDialog />
-            <SettingsDialog />
         </>
     );
 };

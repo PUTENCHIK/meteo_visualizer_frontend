@@ -5,7 +5,7 @@ import { useState } from 'react';
 import { SettingsItem } from '@components/settings-item';
 import { useSettings } from '@context/use-settings';
 import { IconButton } from '@components/icon-button';
-import { ComponentHeader } from '@components/component-header';
+import { ComponentRowBox } from '@components/component-row-box';
 
 export const SettingsMenu = () => {
     const { raw: settings } = useSettings();
@@ -49,7 +49,7 @@ export const SettingsMenu = () => {
             </div>
             {currentSection && section && (
                 <div className={clsx(s['settings-menu'])}>
-                    <ComponentHeader
+                    <ComponentRowBox
                         left={[<h2>{section.title}</h2>]}
                         right={[
                             <IconButton

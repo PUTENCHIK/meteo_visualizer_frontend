@@ -1,6 +1,8 @@
 :root {
     --main-color: #e95420;
     --text-primary: #121212;
+    --danger-color: red;
+    --warning-color: #ff7b00;
     --background-color: white;
     --disabled-color: gray;
     --menu-background-color: #f0f0f0;

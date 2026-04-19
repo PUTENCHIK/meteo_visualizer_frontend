@@ -1,4 +1,3 @@
-import type { Guid } from 'typescript-guid';
 import type { AuditableModelSchema } from './base';
 
 export interface PermissionSchema extends AuditableModelSchema {
@@ -7,7 +6,7 @@ export interface PermissionSchema extends AuditableModelSchema {
 
 export interface RoleSchema extends AuditableModelSchema {
     name: string;
-    parent_id: Guid | null;
+    parent_id: string | null;
     permissions: PermissionSchema[];
 }
 

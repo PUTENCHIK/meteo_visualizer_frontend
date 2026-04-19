@@ -6,7 +6,7 @@ export interface UserSchema extends AuditableModelSchema {
     login: string;
     lastname: string;
     firstname: string;
-    secondname: string;
+    secondname: string | null;
     role: RoleSchema;
 }
 

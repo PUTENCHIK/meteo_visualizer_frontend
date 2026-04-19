@@ -7,12 +7,15 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { signinSchema, type SigninFormData } from './schema';
+import { useState } from 'react';
 
 export const SigninForm = () => {
     const navigate = useNavigate();
     const location = useLocation();
     const from = location.state?.from?.pathname || '/';
     const signin = useAuthStore((state) => state.signin);
+
+    const [counter, setCounter] = useState(0);
 
     const {
         control,
@@ -30,10 +33,16 @@ export const SigninForm = () => {
         navigate(from, { replace: true });
     };
 
+    const handleReset = () => {
+        reset();
+        setCounter((prev) => prev + 1);
+    };
+
     return (
         <BaseForm
+            key={counter}
             buttons={[
-                <Button title='Сбросить' onClick={reset} />,
+                <Button title='Сбросить' onClick={handleReset} />,
                 <Button title='Войти' type='primary' actionType='submit' disabled={!isValid} />,
             ]}
             onSubmit={handleSubmit(handleFormSubmit)}>

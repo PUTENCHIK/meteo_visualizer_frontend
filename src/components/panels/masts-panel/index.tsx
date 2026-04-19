@@ -13,7 +13,7 @@ import { useFocus } from '@hooks/use-focus';
 import { useComplexStore } from '@stores/complex-store';
 import { PolarPosition } from '@utils/coordinate-systems';
 import { Select } from '@components/select';
-import { ComponentHeader } from '@components/component-header';
+import { ComponentRowBox } from '@components/component-row-box';
 
 export const MastsPanel = () => {
     const { focusMast } = useFocus();
@@ -34,7 +34,7 @@ export const MastsPanel = () => {
             buttons={[<Button title='Добавить мачту' type='primary' onClick={addMast} />]}>
             {masts.map((mast, index) => (
                 <div key={index} className={clsx(s['mast-item'])}>
-                    <ComponentHeader
+                    <ComponentRowBox
                         left={[
                             <h3>{index + 1}. Мачта</h3>,
                             <GuidLabel value={mast.id} objct='mast' />,
@@ -69,7 +69,7 @@ export const MastsPanel = () => {
                             onBlur={(value) => updateMast(mast.id, { description: value })}
                         />
                     </InputLabel>
-                    <InputLabel label='Положение'>
+                    <InputLabel label='Положение' notLabel>
                         <PolarSystemInput
                             value={mast.position}
                             maxRadius={Mast.MAX_POS_RADIUS}

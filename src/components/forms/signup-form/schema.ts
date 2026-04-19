@@ -3,7 +3,7 @@ import { z } from 'zod';
 
 const LASTNAME: ScaleInterval = { min: 2, max: 255 };
 const FIRSTNAME: ScaleInterval = { min: 2, max: 255 };
-const SECONDNAME: ScaleInterval = { min: 2, max: 255 };
+const SECONDNAME: ScaleInterval = { min: 0, max: 255 };
 const LOGIN: ScaleInterval = { min: 4, max: 20 };
 const PASSWORD: ScaleInterval = { min: 6, max: 100 };
 
@@ -31,12 +31,12 @@ export const signupSchema = z
             .min(PASSWORD.min, `Минимальная длина - ${PASSWORD.min}`)
             .max(PASSWORD.max, `Максимальная длина - ${PASSWORD.max}`)
             .regex(
-                /^[a-zA-Z0-9_!@#$%^&*()[]{}.,:;?-]+$/,
+                /^[a-zA-Z0-9_!@#$%^&*()[\]{}.,:;\-?*'"]+$/,
                 'Допустимы только латинские буквы, цифры и спец. символы',
             )
             .regex(/[A-Z]/, 'Нужна хотя бы одна заглавная буква')
             .regex(/[0-9]/, 'Нужна хотя бы одна цифра')
-            .regex(/[_!@#$%^&*()[]{}.,:;?-]/, 'Нужен хотя бы один спец. символ'),
+            .regex(/[_!@#$%^&*()[\]{}.,:;\-?*'"]/, 'Нужен хотя бы один спец. символ'),
         passwordAgain: z.string().min(1, 'Повторите пароль'),
     })
     .refine((data) => data.password === data.passwordAgain, {

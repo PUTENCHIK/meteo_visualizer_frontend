@@ -1,9 +1,10 @@
 import clsx from 'clsx';
 import s from './number-input.module.scss';
-import { forwardRef, useImperativeHandle, useState } from 'react';
+import { forwardRef, useEffect, useImperativeHandle, useState } from 'react';
 
 interface NumberInputProps {
-    defaultValue: number;
+    value?: number;
+    defaultValue?: number;
     placeholder?: string;
     className?: string;
     postfix?: string;
@@ -14,6 +15,7 @@ interface NumberInputProps {
     decimal?: number;
     disabled?: boolean;
     onChange?: (value: number) => void;
+    onBlur?: () => void;
 }
 
 export interface NumberInputRef {
@@ -23,7 +25,8 @@ export interface NumberInputRef {
 export const NumberInput = forwardRef<NumberInputRef, NumberInputProps>(
     (
         {
-            defaultValue,
+            value: controlledValue,
+            defaultValue = 0,
             placeholder,
             className,
             postfix,
@@ -34,44 +37,54 @@ export const NumberInput = forwardRef<NumberInputRef, NumberInputProps>(
             decimal,
             disabled = false,
             onChange,
+            onBlur,
         }: NumberInputProps,
         ref,
     ) => {
-        const [value, setValue] = useState<string>(`${defaultValue}`);
+        const [localValue, setLocalValue] = useState(`${controlledValue ?? defaultValue}`);
+
+        useEffect(() => {
+            const currentNum = parseFloat(localValue);
+            if (controlledValue !== undefined && controlledValue !== currentNum) {
+                setLocalValue(controlledValue.toString());
+            }
+        }, [controlledValue]);
 
         const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-            const v = event.target.value;
-            const num = Number(v);
+            const v = event.target.value.replace(',', '.');
+            if (v !== '' && v !== '-' && isNaN(Number(v))) return;
+            if (maxLength && v.length > maxLength) return;
 
-            if (isNaN(num) && v.length > 0 && v !== '-') {
-                return;
+            setLocalValue(v);
+
+            const num = parseFloat(v);
+            if (!isNaN(num)) {
+                onChange?.(num);
             }
-            if (maxLength && v.length > maxLength) {
-                return;
-            }
-            setValue(v);
         };
 
         const handleBlur = () => {
-            let num = parseFloat(value);
+            let num = parseFloat(localValue);
+            const baseValue = controlledValue ?? defaultValue;
 
             if (isNaN(num)) {
-                setValue(defaultValue.toString());
-                onChange?.(defaultValue);
-                return;
+                setLocalValue(baseValue.toString());
+                onChange?.(baseValue);
+            } else {
+                if (decimal !== undefined && decimal >= 0) num = Number(num.toFixed(decimal));
+                if (min !== undefined) num = Math.max(num, min);
+                if (max !== undefined) num = Math.min(num, max);
+
+                setLocalValue(num.toString());
+                onChange?.(num);
             }
-            if (decimal !== undefined && decimal >= 0) num = Number(num.toFixed(decimal));
 
-            num = Math.max(num, min !== undefined ? min : num);
-            num = Math.min(num, max !== undefined ? max : num);
-
-            setValue(num.toString());
-            onChange?.(num);
+            onBlur?.();
         };
 
         useImperativeHandle(ref, () => ({
             update: () => {
-                setValue(defaultValue.toString());
+                setLocalValue(defaultValue.toString());
             },
         }));
 
@@ -80,7 +93,7 @@ export const NumberInput = forwardRef<NumberInputRef, NumberInputProps>(
                 <input
                     type='text'
                     className={clsx(s['number-input'], className)}
-                    value={value}
+                    value={localValue}
                     placeholder={placeholder}
                     step={step}
                     disabled={disabled}

@@ -6,6 +6,19 @@ export const geographicToNumber = (coords: Vector3): number => {
     return coords.x + coords.y / 60 + coords.z / 3600;
 };
 
+export const numberToGeographic = (decimal: number): Vector3 => {
+    const absDecimal = Math.abs(decimal);
+
+    const degrees = Math.floor(absDecimal);
+
+    const minutesFloat = (absDecimal - degrees) * 60;
+    const minutes = Math.floor(minutesFloat);
+
+    const seconds = Number(((minutesFloat - minutes) * 60).toFixed(3));
+
+    return new Vector3(degrees, minutes, seconds);
+};
+
 export const getSunPosition = (
     position: GeographicSystemPosition,
     date?: Date,

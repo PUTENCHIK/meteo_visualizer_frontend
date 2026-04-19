@@ -36,7 +36,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
         await get().fetchUser();
     },
     signup: async (payload) => {
-        const { passwordAgain, ...formData } = payload;
+        const { passwordAgain: _, ...formData } = payload;
         const response = await api.post('/auth/signup', formData);
         const token = response.data.access_token;
 

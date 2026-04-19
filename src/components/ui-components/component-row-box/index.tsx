@@ -1,22 +1,22 @@
 import clsx from 'clsx';
-import s from './component-header.module.scss';
+import s from './component-row-box.module.scss';
 import React from 'react';
 
 type GroupType = (React.ReactNode | React.ReactNode[])[];
 
 type SizeType = 'tiny' | 'small' | 'big';
 
-interface ComponentHeaderProps {
+interface ComponentRowBoxProps {
     left?: GroupType;
     right?: GroupType;
     size?: SizeType;
 }
 
-export const ComponentHeader = ({
+export const ComponentRowBox = ({
     left = [],
     right = [],
     size = 'small',
-}: ComponentHeaderProps) => {
+}: ComponentRowBoxProps) => {
     const renderItems = (items: GroupType) => {
         return items.map((item, index) => (
             <React.Fragment key={index}>
@@ -34,7 +34,7 @@ export const ComponentHeader = ({
     };
 
     return (
-        <div className={clsx(s['component-header'])}>
+        <div className={clsx(s['component-row-box'])}>
             <div className={clsx(s['group'], s['wrap'], s[size])}>{renderItems(left)}</div>
             <div className={clsx(s['group'], s[size])}>{renderItems(right)}</div>
         </div>

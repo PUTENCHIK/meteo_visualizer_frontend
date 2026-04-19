@@ -5,26 +5,39 @@ import { BaseDialog } from '@dialogs/base-dialog';
 import { useAuthStore } from '@stores/auth-store';
 import { EntityLabel } from '@components/entity-label';
 import { dateFormatter } from '@utils/common';
-import { ComponentHeader } from '@components/component-header';
+import { ComponentRowBox } from '@components/component-row-box';
+import type { DialogProps } from '@context/dialog-context/dialogs';
+import { useDialogs } from '@context/dialog-context';
 
-export const ProfileDialog = () => {
+export const ProfileDialog: React.FC<DialogProps<'profile'>> = () => {
     const { user, logout } = useAuthStore();
+    const { closeAllDialogs } = useDialogs();
+
+    const handleLogout = async () => {
+        await logout();
+        closeAllDialogs();
+    };
 
     return (
         <BaseDialog dialogId='profile' title='Профиль'>
-            <ComponentHeader
-                right={[
-                    <IconButton iconName='pencil' title='Изменить' iconSize={16} />,
-                    <IconButton iconName='logout' title='Выйти' onClick={logout} iconSize={16} />,
-                ]}
-                size='tiny'
-            />
             {user ? (
                 <div className={clsx(s['fields'])}>
+                    <ComponentRowBox
+                        left={[<EntityLabel entity={user} size='big' field='login' />]}
+                        right={[
+                            <IconButton iconName='pencil' title='Изменить' iconSize={16} />,
+                            <IconButton
+                                iconName='logout'
+                                title='Выйти'
+                                onClick={handleLogout}
+                                iconSize={16}
+                            />,
+                        ]}
+                        size='tiny'
+                    />
                     <span>
                         ФИО: {user.lastname} {user.firstname} {user.secondname}
                     </span>
-                    <span>Логин: {user.login}</span>
                     <span className={clsx(s['no-wrap'])}>
                         Роль: <EntityLabel entity={user.role} />
                     </span>

@@ -29,6 +29,15 @@
         }
     }
 
+    &.danger {
+        background-color: var(--danger-color);
+        color: white;
+
+        &:hover {
+            background-color: color-mix(in srgb, var(--danger-color), transparent 20%);
+        }
+    }
+
     &:disabled,
     &:disabled:hover {
         background-color: color-mix(in srgb, var(--disabled-color), transparent 30%);

@@ -5,7 +5,7 @@ import { IconButton } from '@components/icon-button';
 import { usePanels, type PanelId } from '@context/panel-context';
 import React from 'react';
 import { useSettings } from '@context/use-settings';
-import { ComponentHeader } from '@components/component-header';
+import { ComponentRowBox } from '@components/component-row-box';
 
 interface WindowSizeLimits {
     min?: number | null;
@@ -87,7 +87,7 @@ export const BasePanel = ({
             <div className={clsx(s['window-content'])}>
                 <div className='handle-area'>
                     <div className={clsx(s['window-title'])}>
-                        <ComponentHeader
+                        <ComponentRowBox
                             left={[<h2 className={clsx(s['title'])}>{title}</h2>]}
                             right={[
                                 <IconButton

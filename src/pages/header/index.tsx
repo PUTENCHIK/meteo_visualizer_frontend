@@ -2,11 +2,9 @@ import clsx from 'clsx';
 import s from './header.module.scss';
 import { IconButton } from '@components/icon-button';
 import { useDialogs } from '@context/dialog-context';
-import { ProfileDialog } from '@dialogs/profile-dialog';
-import { SettingsDialog } from '@dialogs/settings-dialog';
 import { Link, useLocation } from 'react-router-dom';
 import { headerNavItems } from '@utils/nav';
-import { ComponentHeader } from '@components/component-header';
+import { ComponentRowBox } from '@components/component-row-box';
 
 export const Header = () => {
     const { openDialog } = useDialogs();
@@ -16,7 +14,7 @@ export const Header = () => {
         <>
             <div className={clsx(s['header'])}>
                 <div className={clsx(s['content'])}>
-                    <ComponentHeader
+                    <ComponentRowBox
                         left={[
                             <h3>
                                 <Link className={clsx('link-reset')} to={'/'}>
@@ -59,8 +57,6 @@ export const Header = () => {
                     />
                 </div>
             </div>
-            <ProfileDialog />
-            <SettingsDialog />
         </>
     );
 };

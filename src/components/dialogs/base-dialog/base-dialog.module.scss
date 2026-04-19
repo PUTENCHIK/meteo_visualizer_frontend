@@ -1,10 +1,22 @@
 @use '../../../styles/mixins.scss' as m;
 
-.base-dialog {
+dialog.base-dialog {
+    height: 100%;
     padding: 20px;
+    box-sizing: border-box;
+
+    display: none;
+
     background-color: transparent;
     border: 0;
     outline: 0;
+    overflow-y: hidden;
+
+    &[open] {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
 
     &::backdrop {
         background-color: var(--backdrop-color);
@@ -12,13 +24,28 @@
 }
 
 .dialog {
-    @include m.dialog-window;
+    @include m.window;
+
+    max-height: 100%;
+    box-sizing: border-box;
+
     display: flex;
     flex-direction: column;
     row-gap: 16px;
 }
 
+.header-wrapper {
+    padding: 20px 20px 0 20px;
+}
+
+.content-wrapper {
+    box-sizing: border-box;
+    padding: 1px;
+    overflow-y: auto;
+}
+
 .content {
+    padding: 0 20px 20px 20px;
     display: flex;
     flex-direction: column;
     row-gap: 12px;

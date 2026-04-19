@@ -1,9 +1,10 @@
 import { InputLabel } from '@components/input-label';
 import { Toggle } from '@components/toggle';
+import type { DialogProps } from '@context/dialog-context/dialogs';
 import { useTheme } from '@context/theme-context';
 import { BaseDialog } from '@dialogs/base-dialog';
 
-export const SettingsDialog = () => {
+export const SettingsDialog: React.FC<DialogProps<'settings'>> = () => {
     const { theme, toggleTheme } = useTheme();
 
     return (

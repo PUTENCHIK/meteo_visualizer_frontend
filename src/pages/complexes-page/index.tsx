@@ -1,18 +1,27 @@
 import { Button } from '@components/button';
 import { ComplexItem } from '@components/complex-item';
-import { ComponentHeader } from '@components/component-header';
+import { ComponentRowBox } from '@components/component-row-box';
 import { Loader } from '@components/loader';
+import { useDialogs } from '@context/dialog-context';
 import { useComplexes } from '@hooks/api-data/use-complexes';
 import { HolyGrailLayout } from '@pages/holy-grail-layout';
 
 export const ComplexesPage = () => {
+    const { openDialog } = useDialogs();
     const { data: complexes, isLoading, isError } = useComplexes();
 
     return (
         <HolyGrailLayout>
-            <ComponentHeader
+            <ComponentRowBox
                 left={[<h1>Комплексы МАМКА</h1>]}
-                right={[<Button title='Добавить' type='primary' />]}
+                right={[
+                    <Button
+                        title='Добавить'
+                        type='primary'
+                        disabled={isLoading}
+                        onClick={() => openDialog('complex')}
+                    />,
+                ]}
             />
 
             {isLoading && <Loader />}

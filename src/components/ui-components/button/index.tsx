@@ -1,7 +1,7 @@
 import clsx from 'clsx';
 import s from './button.module.scss';
 
-type ButtonType = 'tertiary' | 'secondary' | 'primary';
+type ButtonType = 'tertiary' | 'secondary' | 'primary' | 'danger';
 
 type ButtonActionType = 'button' | 'submit' | 'reset';
 

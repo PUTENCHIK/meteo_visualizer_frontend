@@ -6,12 +6,6 @@
     overflow: hidden;
 }
 
-@mixin dialog-window {
-    @include window;
-
-    padding: 20px;
-}
-
 @mixin item-box {
     box-sizing: border-box;
     padding: var(--box-padding);
@@ -24,11 +18,11 @@
     border: 1px solid var(--outline-color);
 }
 
-@mixin no-autofill-styles {
+@mixin no-autofill {
     :-webkit-autofill,
     :-webkit-autofill:hover,
     :-webkit-autofill:focus { 
-        -webkit-box-shadow: 0 0 0 1000px var(--input-background) inset;
+        -webkit-box-shadow: 0 0 0 1000px inherit inset;
         -webkit-text-fill-color: var(--text-primary);
         caret-color: var(--text-primary);
         transition: background-color 0s 50000s;
@@ -36,7 +30,7 @@
 }
 
 @mixin input {
-    @include no-autofill-styles();
+    @include no-autofill();
 
     padding: 0.375rem 0.75rem;
     box-sizing: border-box;
@@ -57,7 +51,7 @@
 }
 
 @mixin empty-input {
-    @include no-autofill-styles();
+    @include no-autofill();
 
     border: 0;
     outline: 0;
@@ -75,9 +69,15 @@
     font-size: 0.75rem;
     color: white;
     cursor: pointer;
+
+    &.big {
+        font-size: 1rem;
+        padding: 3px 6px;
+        border-radius: 6px;
+    }
 }
 
-@mixin error-block {
+@mixin colored-block {
     width: 100%;
     box-sizing: border-box;
     padding: 0.3rem;
@@ -86,6 +86,16 @@
     align-items: center;
 
     border-radius: 0.25rem;
-    background-color: color-mix(in srgb, red, transparent 80%);
-    color: red;
+}
+
+@mixin warning-block {
+    @include colored-block();
+    background-color: color-mix(in srgb, var(--warning-color), transparent 80%);
+    color: var(--warning-color);
+}
+
+@mixin error-block {
+    @include colored-block();
+    background-color: color-mix(in srgb, var(--danger-color), transparent 80%);
+    color: var(--danger-color);
 }

@@ -3,6 +3,8 @@ import s from './entity-label.module.scss';
 import { useAuthStore } from '@stores/auth-store';
 import type { AuditableModelSchema } from '@utils/schemas';
 
+type LabelSize = 'small' | 'big';
+
 interface WithName extends AuditableModelSchema {
     name: string;
 }
@@ -14,32 +16,35 @@ type DisplayableEntity = AuditableModelSchema | WithName | WithLogin;
 
 interface EntityLabelProps<T extends DisplayableEntity> {
     entity: T;
-    id?: boolean;
+    field?: keyof T;
+    size?: LabelSize;
 }
 
 export const EntityLabel = <T extends DisplayableEntity>({
     entity,
-    id = false,
+    field,
+    size = 'small',
 }: EntityLabelProps<T>) => {
     const user = useAuthStore((state) => state.user);
-    const entityId = entity.id.toString().slice(-8);
+    const entityId = entity.id.toString().slice(0, 8);
 
     const getLabel = (): string => {
+        if (field) {
+            return field === 'id' ? entityId : String(entity[field]);
+        }
         if (user?.id === entity.id) {
             return 'Вы';
         }
-        if (!id) {
-            if ('name' in entity) return entity.name;
-            else if ('login' in entity) return entity.login;
-        }
-        return entityId;
+        if ('name' in entity) return entity.name;
+        else if ('login' in entity) return entity.login;
+        else return entityId;
     };
 
     const color = entity.id.toString().slice(-6);
 
     return (
         <div
-            className={clsx(s['entity-label'])}
+            className={clsx(s['entity-label'], s[size])}
             style={{
                 backgroundColor: `#${color}`,
                 color: `contrast-color(#${color})`,

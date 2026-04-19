@@ -12,5 +12,5 @@ export interface AuditableModelSchema extends BaseModelSchema {
 }
 
 export interface ManyToManyModelSchema extends BaseModelSchema {
-    creator_id: Guid;
+    creator_id: string;
 }

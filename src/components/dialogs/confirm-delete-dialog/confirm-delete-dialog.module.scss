@@ -1,0 +1,6 @@
+@use '../../../styles/mixins.scss' as m;
+
+span.warning {
+    @include m.warning-block;
+    font-size: 0.75rem;
+}

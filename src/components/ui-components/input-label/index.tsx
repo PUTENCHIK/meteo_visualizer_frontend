@@ -8,6 +8,7 @@ interface InputLabelProps {
     orientation?: InputLabelOrientation;
     error?: string;
     required?: boolean;
+    notLabel?: boolean;
     children: React.ReactNode;
 }
 
@@ -16,10 +17,13 @@ export const InputLabel = ({
     orientation = 'vertical',
     error,
     required = false,
+    notLabel = false,
     children,
 }: InputLabelProps) => {
+    const Component = notLabel ? 'div' : 'label';
+
     return (
-        <div className={clsx(s['label'], s[orientation])}>
+        <Component className={clsx(s['label'], s[orientation])}>
             <div className={clsx(s['label-box'])}>
                 <span>{label}:</span>
                 {required && <span className={clsx(s['required-mark'])}>*</span>}
@@ -28,6 +32,6 @@ export const InputLabel = ({
                 {children}
                 {error && <span className={clsx(s['error'])}>{error}</span>}
             </div>
-        </div>
+        </Component>
     );
 };

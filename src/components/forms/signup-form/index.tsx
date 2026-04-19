@@ -7,10 +7,13 @@ import { useForm, Controller } from 'react-hook-form';
 import { signupSchema, type SignupFormData } from './schema';
 import { useAuthStore } from '@stores/auth-store';
 import { useNavigate } from 'react-router-dom';
+import { useState } from 'react';
 
 export const SignupForm = () => {
     const navigate = useNavigate();
     const signup = useAuthStore((state) => state.signup);
+
+    const [counter, setCounter] = useState(0);
 
     const {
         control,
@@ -35,10 +38,16 @@ export const SignupForm = () => {
         navigate('/');
     };
 
+    const handleReset = () => {
+        reset();
+        setCounter((prev) => prev + 1);
+    };
+
     return (
         <BaseForm
+            key={counter}
             buttons={[
-                <Button title='Сбросить' onClick={reset} />,
+                <Button title='Сбросить' onClick={handleReset} />,
                 <Button
                     title='Зарегистрироваться'
                     type='primary'
@@ -69,7 +78,7 @@ export const SignupForm = () => {
                 name='secondname'
                 control={control}
                 render={({ field }) => (
-                    <InputLabel label='Отчество' required error={errors.secondname?.message}>
+                    <InputLabel label='Отчество' error={errors.secondname?.message}>
                         <TextInput {...field} placeholder='Иванович' />
                     </InputLabel>
                 )}

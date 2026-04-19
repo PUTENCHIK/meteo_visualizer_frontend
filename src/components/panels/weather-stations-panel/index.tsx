@@ -10,7 +10,7 @@ import { measures } from '@utils/complexes';
 import { InputLabel } from '@components/input-label';
 import { Select } from '@components/select';
 import { useDevicesStore } from '@context/devices-context';
-import { ComponentHeader } from '@components/component-header';
+import { ComponentRowBox } from '@components/component-row-box';
 
 export const WeatherStationsPanel = () => {
     const { focusStation } = useFocus();
@@ -40,7 +40,7 @@ export const WeatherStationsPanel = () => {
             </InputLabel>
             {stations.map((station, sIndex) => (
                 <div key={sIndex} className={clsx(s['station-item'])}>
-                    <ComponentHeader
+                    <ComponentRowBox
                         left={[
                             <h3>{sIndex + 1}. Станция</h3>,
                             <GuidLabel value={station.id} objct='station' />,
@@ -55,7 +55,7 @@ export const WeatherStationsPanel = () => {
                         ]}
                         size='tiny'
                     />
-                    <ComponentHeader
+                    <ComponentRowBox
                         left={[
                             <span>Мачта:</span>,
                             <GuidLabel value={station.mastId} objct='mast' />,
