@@ -63,7 +63,7 @@ export const RangeInput = ({
                 />
                 {showTooltip && (
                     <span
-                        className={clsx(s['tooltip'])}
+                        className={clsx(s['tooltip'], disabled && s['disabled'])}
                         style={{
                             left: `${thumbOffset}%`,
                         }}>

@@ -38,10 +38,5 @@
         }
     }
 
-    &:disabled,
-    &:disabled:hover {
-        background-color: color-mix(in srgb, var(--disabled-color), transparent 30%);
-        color: var(disabled-color);
-        cursor: default;
-    }
+    @include m.disableable;
 }

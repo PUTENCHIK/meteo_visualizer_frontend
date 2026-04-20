@@ -7,10 +7,13 @@ export interface UserSchema extends AuditableModelSchema {
     lastname: string;
     firstname: string;
     secondname: string | null;
+}
+
+export interface UserWithRoleSchema extends UserSchema {
     role: RoleSchema;
 }
 
-export interface ActiveUserSchema extends UserSchema {
+export interface ActiveUserSchema extends UserWithRoleSchema {
     role: RoleWithPermissionsSchema;
     accessible_complexes: ComplexSchema[];
     favorite_complexes: ComplexSchema[];

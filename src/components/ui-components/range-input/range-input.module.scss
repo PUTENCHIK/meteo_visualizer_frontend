@@ -1,3 +1,5 @@
+@use '../../../styles/mixins.scss' as m;
+
 .range-input-wrapper {
     display: inline-flex;
     align-items: center;
@@ -27,15 +29,6 @@ input.range-input {
     // -webkit-appearance: none;
     // -webkit-tap-highlight-color: transparent;
 
-    &:disabled {
-        background-color: gray;
-
-        &+span.tooltip {
-            background-color: #d4d4d4;
-            cursor: default;
-        }
-    }
-
     &::-webkit-slider-thumb {
     //     width: 1.5em;
     //     height: 1.5em;
@@ -57,6 +50,14 @@ input.range-input {
     //     border-radius: 50%;
     //     background-color: white;
     }
+
+    @include m.disableable;
+    // &:disabled {
+    //     &+span.tooltip {
+    //         background-color: #d4d4d4;
+    //         cursor: default;
+    //     }
+    // }
 }
 
 span.limit {
@@ -64,6 +65,8 @@ span.limit {
 }
 
 span.tooltip {
+    @include m.disableable;
+    
     padding: 4px 8px;
     box-sizing: border-box;
 

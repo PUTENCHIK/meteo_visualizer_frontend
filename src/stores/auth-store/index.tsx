@@ -3,6 +3,7 @@ import { create } from 'zustand';
 import api from './api';
 import type { SigninFormData } from '@forms/signin-form/schema';
 import type { SignupFormData } from '@forms/signup-form/schema';
+import { queryClient } from '@context/query-context/query-client';
 
 interface AuthState {
     accessToken: string | null;
@@ -50,6 +51,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     },
     logout: async () => {
         await api.post('/auth/logout');
+        queryClient.clear();
         set({
             accessToken: null,
             isAuthenticated: false,

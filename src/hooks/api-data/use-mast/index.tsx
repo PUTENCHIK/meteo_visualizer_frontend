@@ -12,6 +12,5 @@ export const useMast = (mastId?: Guid) => {
             return response.data;
         },
         enabled: !!mastId,
-        staleTime: 5 * 60 * 1000,
     });
 };

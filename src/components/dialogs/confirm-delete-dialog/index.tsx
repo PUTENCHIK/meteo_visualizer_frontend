@@ -30,7 +30,7 @@ export const ConfirmDeleteDialog: React.FC<DialogProps<'confirm-delete'>> = ({ d
                     <Button title='Подтвердить' type='danger' actionType='submit' />,
                 ]}
                 onSubmit={handleSubmit}>
-                <span>Вы точно хотите удалить?</span>
+                <span>Вы точно хотите удалить сущность?</span>
                 {extra ? (
                     <ComponentRowBox
                         left={[

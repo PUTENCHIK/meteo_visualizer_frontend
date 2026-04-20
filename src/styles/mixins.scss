@@ -35,23 +35,24 @@
 
 @mixin input {
     @include no-autofill();
-
+    
     padding: 0.375rem 0.75rem;
     box-sizing: border-box;
-
+    
     border: 0;
     outline: 0;
     border-radius: 12px;
     background-color: var(--input-background);
     color: var(--text-primary);
-
+    
     &:focus-visible {
         outline: 1px solid var(--outline-color);
     }
-
+    
     &:hover {
         background-color: color-mix(in srgb, var(--input-background), transparent 30%);
     }
+    @include disableable();
 }
 
 @mixin empty-input {
@@ -102,4 +103,20 @@
     @include colored-block();
     background-color: color-mix(in srgb, var(--danger-color), transparent 80%);
     color: var(--danger-color);
+}
+
+@mixin disableable {
+    &:disabled,
+    &:disabled:hover {
+        background-color: color-mix(in srgb, var(--disabled-color), transparent 50%);
+        color: var(--disabled-color);
+        cursor: default;
+    }
+
+    &.disabled,
+    &.disabled:hover {
+        background-color: var(--disabled-color);
+        color: white;
+        cursor: default;
+    }
 }

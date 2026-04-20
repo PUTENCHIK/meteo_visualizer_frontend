@@ -7,4 +7,9 @@
 
     background-color: color-mix(in srgb, var(--text-primary), transparent 90%);
     color: var(--text-primary);
+
+    &.deleted {
+        background-color: color-mix(in srgb, var(--danger-color), transparent 80%);
+        color: var(--danger-color);
+    }
 }

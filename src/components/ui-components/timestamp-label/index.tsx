@@ -4,8 +4,13 @@ import { formatTimespamp } from '@utils/common';
 
 interface TimestampLabelProps {
     value: string;
+    deleted?: boolean;
 }
 
-export const TimestampLabel = ({ value }: TimestampLabelProps) => {
-    return <div className={clsx(s['timestamp-label'])}>{formatTimespamp(value)}</div>;
+export const TimestampLabel = ({ value, deleted = false }: TimestampLabelProps) => {
+    return (
+        <div className={clsx(s['timestamp-label'], deleted && s['deleted'])}>
+            {formatTimespamp(value)}
+        </div>
+    );
 };

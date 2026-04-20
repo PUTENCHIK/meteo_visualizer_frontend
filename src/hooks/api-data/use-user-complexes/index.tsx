@@ -9,6 +9,5 @@ export const useUserComplexes = () => {
             const response = await api.get<ComplexAccessSchema[]>('/users/me/complexes');
             return response.data;
         },
-        staleTime: 5 * 60 * 1000,
     });
 };

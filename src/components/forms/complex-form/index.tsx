@@ -5,14 +5,14 @@ import { BaseForm } from '@forms/base-form';
 import { Button } from '@components/button';
 import { InputLabel } from '@components/input-label';
 import { TextInput } from '@components/text-input';
-import type { ComplexFullSchema } from '@utils/schemas';
+import type { ComplexWithSecretkeySchema } from '@utils/schemas';
 import { useDialogs } from '@context/dialog-context';
 import { useUpdateComplex } from '@hooks/api-data/use-update-complex';
 import { NumberInput } from '@components/number-input';
 import { useCreateComplex } from '@hooks/api-data/use-create-complex';
 
 interface ComplexFormProps {
-    complex?: ComplexFullSchema;
+    complex?: ComplexWithSecretkeySchema;
 }
 
 export const ComplexForm = ({ complex }: ComplexFormProps) => {

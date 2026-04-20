@@ -1,7 +1,7 @@
 import { Button } from '@components/button';
 import { BaseForm } from '@forms/base-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import type { ComplexSchema, MastConfigSchema, MastSchema } from '@utils/schemas';
+import type { ComplexWithCreatorSchema, MastConfigSchema, MastSchema } from '@utils/schemas';
 import { Controller, useForm } from 'react-hook-form';
 import { mastSchema, type MastFormData } from './schema';
 import { useDialogs } from '@context/dialog-context';
@@ -14,7 +14,7 @@ import { EntityLabel } from '@components/entity-label';
 import { Select } from '@components/select';
 
 interface MastFormProps {
-    complex: ComplexSchema;
+    complex: ComplexWithCreatorSchema;
     mast?: MastSchema;
     mastConfigs: MastConfigSchema[];
 }

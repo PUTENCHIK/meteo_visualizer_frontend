@@ -16,6 +16,8 @@ export type IconName =
     | 'pencil'
     | 'star'
     | 'star-off'
-    | 'plus';
+    | 'plus'
+    | 'restore'
+    | 'star-full';
 
 export type IconSize = 48 | 36 | 28 | 24 | 20 | 16 | 12;

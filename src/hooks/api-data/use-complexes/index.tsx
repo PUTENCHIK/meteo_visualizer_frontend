@@ -1,14 +1,15 @@
 import api from '@stores/auth-store/api';
 import { useQuery } from '@tanstack/react-query';
-import type { ComplexWithMastsSchema } from '@utils/schemas';
+import type { ComplexWithFavoriteInfoSchema } from '@utils/schemas';
 
-export const useComplexes = () => {
+export const useComplexes = (includeDeleted: boolean) => {
     return useQuery({
-        queryKey: ['complexes'],
+        queryKey: ['complexes', includeDeleted],
         queryFn: async () => {
-            const response = await api.get<ComplexWithMastsSchema[]>('/complexes');
+            const response = await api.get<ComplexWithFavoriteInfoSchema[]>('/complexes', {
+                params: { include_deleted: includeDeleted },
+            });
             return response.data;
         },
-        staleTime: 5 * 60 * 1000,
     });
 };

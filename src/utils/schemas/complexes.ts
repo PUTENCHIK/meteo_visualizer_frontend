@@ -1,5 +1,5 @@
 import type { AuditableModelSchema } from './base';
-import type { UserSchema } from './users';
+import type { UserWithRoleSchema } from './users';
 
 export interface MastYardSchema extends AuditableModelSchema {
     height: number;
@@ -27,14 +27,20 @@ export interface ComplexSchema extends AuditableModelSchema {
     longitude: number | string;
     address: string | null;
     is_secreted: boolean;
-
-    creator: UserSchema | null;
 }
 
-export interface ComplexWithMastsSchema extends ComplexSchema {
+export interface ComplexWithCreatorSchema extends ComplexSchema {
+    creator: UserWithRoleSchema | null;
+}
+
+export interface ComplexWithMastsSchema extends ComplexWithCreatorSchema {
     masts: MastSchema[];
 }
 
-export interface ComplexFullSchema extends ComplexWithMastsSchema {
+export interface ComplexWithSecretkeySchema extends ComplexWithMastsSchema {
     secretkey: string | null;
+}
+
+export interface ComplexWithFavoriteInfoSchema extends ComplexWithMastsSchema {
+    is_favorite: boolean;
 }

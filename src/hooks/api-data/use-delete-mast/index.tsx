@@ -10,8 +10,9 @@ export const useDeleteMast = () => {
             const response = await api.delete<void>(`/masts/${id}`);
             return response.data;
         },
-        onSuccess: () => {
+        onSuccess: (_, { id }) => {
             queryClient.invalidateQueries({ queryKey: ['complexes'] });
+            queryClient.invalidateQueries({ queryKey: ['mast', id] });
         },
     });
 };

@@ -1,6 +1,6 @@
 import clsx from 'clsx';
 import s from './mast-item.module.scss';
-import type { ComplexSchema, MastSchema } from '@utils/schemas';
+import type { ComplexWithCreatorSchema, MastSchema } from '@utils/schemas';
 import { ComponentRowBox } from '@components/component-row-box';
 import { EntityLabel } from '@components/entity-label';
 import { IconButton } from '@components/icon-button';
@@ -10,7 +10,7 @@ import { useDeleteMast } from '@hooks/api-data/use-delete-mast';
 
 interface MastItemProps {
     data: MastSchema;
-    complex: ComplexSchema;
+    complex: ComplexWithCreatorSchema;
 }
 
 export const MastItem = ({ data, complex }: MastItemProps) => {

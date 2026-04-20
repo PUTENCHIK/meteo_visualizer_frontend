@@ -2,19 +2,16 @@ import api from '@stores/auth-store/api';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import type { Guid } from 'typescript-guid';
 
-export const useDeleteComplex = () => {
+export const useDeleteComplexFromFavorites = () => {
     const queryClient = useQueryClient();
 
     return useMutation({
-        mutationFn: async ({ id, force }: { id: Guid; force: boolean }) => {
-            const response = await api.delete<void>(`/complexes/${id}`, {
-                params: { force },
-            });
+        mutationFn: async ({ complexId }: { complexId: Guid }) => {
+            const response = await api.delete<void>(`/complexes/${complexId}/favorite`);
             return response.data;
         },
-        onSuccess: (_, { id }) => {
+        onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['complexes'] });
-            queryClient.invalidateQueries({ queryKey: ['complex', id] });
         },
     });
 };

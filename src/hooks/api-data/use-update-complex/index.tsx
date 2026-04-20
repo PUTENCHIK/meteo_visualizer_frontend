@@ -12,8 +12,9 @@ export const useUpdateComplex = () => {
             const response = await api.patch<ComplexWithMastsSchema>(`/complexes/${id}`, data);
             return response.data;
         },
-        onSuccess: () => {
+        onSuccess: (_, { id }) => {
             queryClient.invalidateQueries({ queryKey: ['complexes'] });
+            queryClient.invalidateQueries({ queryKey: ['complex', id] });
         },
     });
 };

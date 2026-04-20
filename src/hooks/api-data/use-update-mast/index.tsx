@@ -12,9 +12,9 @@ export const useUpdateMast = () => {
             const response = await api.patch<MastSchema>(`/masts/${id}`, data);
             return response.data;
         },
-        onSuccess: (updatedMast) => {
+        onSuccess: (_, { id }) => {
             queryClient.invalidateQueries({ queryKey: ['complexes'] });
-            queryClient.invalidateQueries({ queryKey: ['mast', updatedMast.id] });
+            queryClient.invalidateQueries({ queryKey: ['mast', id] });
         },
     });
 };

@@ -9,6 +9,5 @@ export const useMastConfigs = () => {
             const response = await api.get<MastConfigSchema[]>('/mast-configs');
             return response.data;
         },
-        staleTime: 5 * 60 * 1000,
     });
 };

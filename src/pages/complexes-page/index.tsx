@@ -1,20 +1,27 @@
 import { Button } from '@components/button';
 import { ComplexItem } from '@components/complex-item';
 import { ComponentRowBox } from '@components/component-row-box';
+import { InputLabel } from '@components/input-label';
 import { Loader } from '@components/loader';
+import { Toggle } from '@components/toggle';
 import { useDialogs } from '@context/dialog-context';
 import { useComplexes } from '@hooks/api-data/use-complexes';
 import { HolyGrailLayout } from '@pages/holy-grail-layout';
+import { useState } from 'react';
 
 export const ComplexesPage = () => {
     const { openDialog } = useDialogs();
-    const { data: complexes, isLoading, isError } = useComplexes();
+    const [includeDeleted, setIncludeDeleted] = useState(false);
+    const { data: complexes, isLoading, isError } = useComplexes(includeDeleted);
 
     return (
         <HolyGrailLayout>
             <ComponentRowBox
                 left={[<h1>Комплексы МАМКА</h1>]}
                 right={[
+                    <InputLabel label='удалённые' orientation='horizontal'>
+                        <Toggle value={includeDeleted} onChange={setIncludeDeleted} />
+                    </InputLabel>,
                     <Button
                         title='Добавить комплекс'
                         type='primary'
@@ -22,6 +29,7 @@ export const ComplexesPage = () => {
                         onClick={() => openDialog('edit-complex')}
                     />,
                 ]}
+                size='big'
             />
 
             {isLoading && <Loader />}

@@ -1,3 +1,5 @@
+@use '../../../styles/mixins.scss' as m;
+
 button.icon-button {
     width: min-content;
     height: min-content;
@@ -31,4 +33,6 @@ button.icon-button {
             background-color: color-mix(in srgb, var(--main-color), transparent 20%);
         }
     }
+
+    @include m.disableable;
 }

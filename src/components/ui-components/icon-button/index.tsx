@@ -27,6 +27,7 @@ interface IconButtonProps {
     title: string;
     type?: IconButtonType;
     iconSize?: IconSize;
+    iconColor?: string;
     className?: string;
     disabled?: boolean;
     onClick?: () => void;
@@ -37,6 +38,7 @@ export const IconButton = ({
     title,
     type = 'default',
     iconSize = 24,
+    iconColor,
     className,
     disabled = false,
     onClick,
@@ -52,7 +54,7 @@ export const IconButton = ({
                 iconName={iconName}
                 size={iconSize}
                 disabled={disabled}
-                color={typeToStyles[type].iconColor}
+                color={iconColor ?? typeToStyles[type].iconColor}
             />
         </button>
     );
