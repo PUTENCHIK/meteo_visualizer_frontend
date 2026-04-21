@@ -72,36 +72,36 @@ export const ComplexItem = ({ data }: ComplexItemProps) => {
                 right={[
                     [
                         data.is_secreted && <SecretedLabel />,
-                        [<ComplexStatusLabel isPrivate={data.is_private} />],
-                        [
-                            !isDeleted ? (
-                                <>
-                                    <IconButton
-                                        iconName={isFavorite ? 'star-full' : 'star'}
-                                        title={isFavorite ? 'Не отслеживать' : 'Отслеживать'}
-                                        iconColor={isFavorite ? 'yellow' : undefined}
-                                        disabled={favPending || unfavPending}
-                                        onClick={handleFavoriteClick}
-                                    />
-                                    <IconButton
-                                        iconName='pencil'
-                                        title='Редактировать'
-                                        onClick={updateComplex}
-                                    />
-                                    <IconButton
-                                        iconName='bin'
-                                        title='Удалить'
-                                        onClick={deleteComplex}
-                                    />
-                                </>
-                            ) : (
+                        <ComplexStatusLabel isPrivate={data.is_private} />,
+                    ],
+                    [
+                        !isDeleted ? (
+                            <>
                                 <IconButton
-                                    iconName='restore'
-                                    title='Восстановить'
-                                    onClick={restoreComplex}
+                                    iconName={isFavorite ? 'star-full' : 'star'}
+                                    title={isFavorite ? 'Не отслеживать' : 'Отслеживать'}
+                                    iconColor={isFavorite ? 'yellow' : undefined}
+                                    disabled={favPending || unfavPending}
+                                    onClick={handleFavoriteClick}
                                 />
-                            ),
-                        ],
+                                <IconButton
+                                    iconName='pencil'
+                                    title='Редактировать'
+                                    onClick={updateComplex}
+                                />
+                                <IconButton
+                                    iconName='bin'
+                                    title='Удалить'
+                                    onClick={deleteComplex}
+                                />
+                            </>
+                        ) : (
+                            <IconButton
+                                iconName='restore'
+                                title='Восстановить'
+                                onClick={restoreComplex}
+                            />
+                        ),
                     ],
                 ]}
             />

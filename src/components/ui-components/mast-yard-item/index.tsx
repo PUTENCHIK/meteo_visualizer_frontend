@@ -1,72 +1,63 @@
 import clsx from 'clsx';
-import s from './mast-item.module.scss';
-import type { ComplexWithCreatorSchema, MastSchema } from '@utils/schemas';
+import s from './mast-yard-item.module.scss';
+import type { MastConfigSchema, MastYardSchema } from '@utils/schemas';
 import { ComponentRowBox } from '@components/component-row-box';
 import { EntityLabel } from '@components/entity-label';
 import { IconButton } from '@components/icon-button';
 import { TimestampLabel } from '@components/timestamp-label';
 import { useDialogs } from '@context/dialog-context';
-import { useDeleteMast } from '@hooks/api-data/use-delete-mast';
+import { useDeleteMastYard } from '@hooks/api-data/use-delete-mast-yard';
 
-interface MastItemProps {
-    data: MastSchema;
-    complex: ComplexWithCreatorSchema;
+interface MastYardItemProps {
+    data: MastYardSchema;
+    config: MastConfigSchema;
 }
 
-export const MastItem = ({ data, complex }: MastItemProps) => {
+export const MastYardItem = ({ data, config }: MastYardItemProps) => {
     const { openDialog } = useDialogs();
 
-    const deleteMutation = useDeleteMast();
+    const deleteMutation = useDeleteMastYard();
 
-    const updateMast = () => {
-        openDialog('edit-mast', { complex: complex, mastId: data.id });
+    const updateMastYard = () => {
+        openDialog('edit-mast-yard', { config, mastYardId: data.id });
     };
 
-    const deleteMast = () => {
+    const deleteMastYard = () => {
         openDialog('confirm-delete', {
             mode: 'hard',
             onSubmit: async () => {
                 await deleteMutation.mutateAsync({ id: data.id });
             },
             extra: {
-                entityName: 'Мачта',
+                entityName: 'Рея мачты',
                 entity: data,
             },
         });
     };
 
     return (
-        <div className={clsx(s['mast-item'])}>
+        <div className={clsx(s['mast-yard-item'])}>
             <ComponentRowBox
-                left={[<span>Мачта</span>, <EntityLabel entity={data} />]}
+                left={[<span>Рея</span>, <EntityLabel entity={data} />]}
                 right={[
                     <IconButton
                         iconName='pencil'
                         title='Редактировать'
                         iconSize={16}
-                        onClick={updateMast}
+                        onClick={updateMastYard}
                     />,
                     <IconButton
                         iconName='bin'
                         title='Удалить'
                         iconSize={16}
-                        onClick={deleteMast}
+                        onClick={deleteMastYard}
                     />,
                 ]}
                 size='tiny'
             />
+            <span>Высота размещения: {data.height} м</span>
             <ComponentRowBox
-                left={[
-                    <span>Конфиг:</span>,
-                    <EntityLabel entity={data.config} type='mast-config' linkable />,
-                ]}
-                size='tiny'
-            />
-            <span>
-                Расположение: {data.latitude} {data.longitude}
-            </span>
-            <ComponentRowBox
-                left={[<span>Угол поворота: {data.rotation}</span>]}
+                left={[<span>Количество станций: {data.amount}</span>]}
                 right={[
                     <TimestampLabel value={data.created_at} />,
                     <TimestampLabel value={data.updated_at} />,

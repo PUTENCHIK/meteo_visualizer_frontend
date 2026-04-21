@@ -1,12 +1,20 @@
 import type { DeleteMode } from '@dialogs/confirm-delete-dialog';
-import type { AuditableModelSchema, ComplexWithCreatorSchema } from '@utils/schemas';
+import type { EntityType } from '@dialogs/entity-dialog/queries';
+import type {
+    AuditableModelSchema,
+    ComplexWithCreatorSchema,
+    MastConfigSchema,
+} from '@utils/schemas';
 import type { Guid } from 'typescript-guid';
 
 export type DialogPayloads = {
     profile: undefined;
     settings: undefined;
+    entity: { entityId: Guid; type: EntityType };
     'edit-complex': { complexId: Guid } | undefined;
     'edit-mast': { complex: ComplexWithCreatorSchema; mastId?: Guid };
+    'edit-mast-config': { configId: Guid } | undefined;
+    'edit-mast-yard': { config: MastConfigSchema; mastYardId?: Guid };
     'confirm-delete': {
         mode: DeleteMode;
         onSubmit: (force: boolean) => Promise<void>;

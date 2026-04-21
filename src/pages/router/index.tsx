@@ -5,6 +5,7 @@ import { HomePage } from '@pages/home-page';
 import { AuthPage } from '@pages/auth-page';
 import { ProtectedRoute } from '@pages/protected-route';
 import { ComplexesPage } from '@pages/complexes-page';
+import { MastConfigsPage } from '@pages/mast-configs-page';
 
 export const AppRouter = createBrowserRouter([
     {
@@ -30,6 +31,10 @@ export const AppRouter = createBrowserRouter([
                     {
                         path: 'complexes',
                         element: <ComplexesPage />,
+                    },
+                    {
+                        path: 'mast-configs',
+                        element: <MastConfigsPage />,
                     },
                 ],
             },

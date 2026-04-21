@@ -1,9 +1,11 @@
+import type { Guid } from 'typescript-guid';
 import type { AuditableModelSchema } from './base';
 import type { UserWithRoleSchema } from './users';
 
 export interface MastYardSchema extends AuditableModelSchema {
     height: number;
     amount: number;
+    config_id: Guid;
 }
 
 export interface MastConfigSchema extends AuditableModelSchema {
@@ -17,7 +19,7 @@ export interface MastSchema extends AuditableModelSchema {
     longitude: number;
     rotation: number;
 
-    config: MastConfigSchema;
+    config: MastConfigSchema | null;
 }
 
 export interface ComplexSchema extends AuditableModelSchema {
