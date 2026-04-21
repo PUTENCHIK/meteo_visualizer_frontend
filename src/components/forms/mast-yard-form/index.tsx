@@ -8,8 +8,8 @@ import { InputLabel } from '@components/input-label';
 import { NumberInput } from '@components/number-input';
 import { ComponentRowBox } from '@components/component-row-box';
 import { EntityLabel } from '@components/entity-label';
-import { useCreateMastYard } from '@hooks/api-data/use-create-mast-yard';
-import { useUpdateMastYard } from '@hooks/api-data/use-update-mast-yard';
+import { useCreateMastYard } from '@hooks/mast-yards/use-create-mast-yard';
+import { useUpdateMastYard } from '@hooks/mast-yards/use-update-mast-yard';
 import { mastYardSchema, type MastYardFormData } from './schema';
 
 interface MastYardFormProps {

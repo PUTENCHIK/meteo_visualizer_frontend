@@ -45,6 +45,7 @@ export default defineConfig({
             '@stores': path.resolve(__dirname, './src/stores'),
             '@forms': path.resolve(__dirname, './src/components/forms'),
             '@dialogs': path.resolve(__dirname, './src/components/dialogs'),
+            '@entity-items': path.resolve(__dirname, './src/components/entity-items'),
         },
     },
     server: {

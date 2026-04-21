@@ -16,7 +16,7 @@ interface DialogContextType {
             ? [data?: DialogPayloads[K]]
             : [data: DialogPayloads[K]]
     ) => void;
-    closeDialog: () => void;
+    closeDialog: (amount?: number) => void;
     closeAllDialogs: () => void;
 }
 
@@ -29,8 +29,8 @@ export const DialogProvider = ({ children }: { children: React.ReactNode }) => {
         setActiveDialogs((prev) => [...prev, { id, data }]);
     }, []);
 
-    const closeDialog = useCallback(() => {
-        setActiveDialogs((prev) => prev.slice(0, -1));
+    const closeDialog = useCallback((amount?: number) => {
+        setActiveDialogs((prev) => prev.slice(0, -(amount ?? 1)));
     }, []);
 
     const closeAllDialogs = useCallback(() => {

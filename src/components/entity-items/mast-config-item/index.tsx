@@ -1,14 +1,13 @@
-import clsx from 'clsx';
-import s from './mast-config-item.module.scss';
 import type { MastConfigSchema } from '@utils/schemas';
 import { useDialogs } from '@context/dialog-context';
-import { useDeleteMastConfig } from '@hooks/api-data/use-delete-mast-config';
-import { useRestoreMastConfig } from '@hooks/api-data/use-restore-mast-config';
+import { useDeleteMastConfig } from '@hooks/mast-configs/use-delete-mast-config';
+import { useRestoreMastConfig } from '@hooks/mast-configs/use-restore-mast-config';
 import { ComponentRowBox } from '@components/component-row-box';
 import { EntityLabel } from '@components/entity-label';
 import { IconButton } from '@components/icon-button';
 import { TimestampLabel } from '@components/timestamp-label';
-import { MastYardItem } from '@components/mast-yard-item';
+import { MastYardItem } from '@entity-items/mast-yard-item';
+import { BaseEntityItem } from '@entity-items/base-entity-item';
 
 interface MastConfigItemProps {
     data: MastConfigSchema;
@@ -51,7 +50,7 @@ export const MastConfigItem = ({ data }: MastConfigItemProps) => {
     };
 
     return (
-        <div className={clsx(s['mast-config-item'])}>
+        <BaseEntityItem>
             <ComponentRowBox
                 left={[<h2>{data.name}</h2>, <EntityLabel entity={data} field='id' />]}
                 right={[
@@ -109,6 +108,6 @@ export const MastConfigItem = ({ data }: MastConfigItemProps) => {
                         ))}
                 </>
             )}
-        </div>
+        </BaseEntityItem>
     );
 };

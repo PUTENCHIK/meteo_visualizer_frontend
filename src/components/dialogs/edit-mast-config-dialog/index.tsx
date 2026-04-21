@@ -3,7 +3,7 @@ import { Loader } from '@components/loader';
 import type { DialogProps } from '@context/dialog-context/dialogs';
 import { BaseDialog } from '@dialogs/base-dialog';
 import { MastConfigForm } from '@forms/mast-config-form';
-import { useMastConfig } from '@hooks/api-data/use-mast-config';
+import { useMastConfig } from '@hooks/mast-configs/use-mast-config';
 
 export const EditMastConfigDialog: React.FC<DialogProps<'edit-mast-config'>> = ({ data }) => {
     const isUpdate = !!data?.configId;

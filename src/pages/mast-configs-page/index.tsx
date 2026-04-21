@@ -2,10 +2,10 @@ import { Button } from '@components/button';
 import { ComponentRowBox } from '@components/component-row-box';
 import { InputLabel } from '@components/input-label';
 import { Loader } from '@components/loader';
-import { MastConfigItem } from '@components/mast-config-item';
+import { MastConfigItem } from '@entity-items/mast-config-item';
 import { Toggle } from '@components/toggle';
 import { useDialogs } from '@context/dialog-context';
-import { useMastConfigs } from '@hooks/api-data/use-mast-configs';
+import { useMastConfigs } from '@hooks/mast-configs/use-mast-configs';
 import { HolyGrailLayout } from '@pages/holy-grail-layout';
 import { useState } from 'react';
 

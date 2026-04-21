@@ -10,8 +10,9 @@ export const useDeleteComplexFromFavorites = () => {
             const response = await api.delete<void>(`/complexes/${complexId}/favorite`);
             return response.data;
         },
-        onSuccess: () => {
+        onSuccess: (_, { complexId }) => {
             queryClient.invalidateQueries({ queryKey: ['complexes'] });
+            queryClient.invalidateQueries({ queryKey: ['complex', complexId] });
         },
     });
 };

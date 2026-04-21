@@ -1,18 +1,17 @@
-import clsx from 'clsx';
-import s from './complex-item.module.scss';
 import { EntityLabel } from '@components/entity-label';
 import type { ComplexWithFavoriteInfoSchema } from '@utils/schemas';
 import { IconButton } from '@components/icon-button';
 import { ComponentRowBox } from '@components/component-row-box';
 import { useDialogs } from '@context/dialog-context';
-import { useDeleteComplex } from '@hooks/api-data/use-delete-complex';
+import { useDeleteComplex } from '@hooks/complexes/use-delete-complex';
 import { ComplexStatusLabel } from '@components/complex-status-label';
 import { TimestampLabel } from '@components/timestamp-label';
-import { MastItem } from '@components/mast-item';
-import { useRestoreComplex } from '@hooks/api-data/use-restore-complex';
+import { MastItem } from '@entity-items/mast-item';
+import { useRestoreComplex } from '@hooks/complexes/use-restore-complex';
 import { SecretedLabel } from '@components/secreted-label';
-import { useAddComplexToFavorites } from '@hooks/api-data/use-add-complex-to-favorites';
-import { useDeleteComplexFromFavorites } from '@hooks/api-data/use-delete-complex-from-favorites';
+import { useAddComplexToFavorites } from '@hooks/complexes/use-add-complex-to-favorites';
+import { useDeleteComplexFromFavorites } from '@hooks/complexes/use-delete-complex-from-favorites';
+import { BaseEntityItem } from '@entity-items/base-entity-item';
 
 interface ComplexItemProps {
     data: ComplexWithFavoriteInfoSchema;
@@ -66,7 +65,7 @@ export const ComplexItem = ({ data }: ComplexItemProps) => {
     };
 
     return (
-        <div className={clsx(s['complex-item'])}>
+        <BaseEntityItem>
             <ComponentRowBox
                 left={[<h2>{data.name}</h2>, <EntityLabel entity={data} field='id' />]}
                 right={[
@@ -144,6 +143,6 @@ export const ComplexItem = ({ data }: ComplexItemProps) => {
                         ))}
                 </>
             )}
-        </div>
+        </BaseEntityItem>
     );
 };

@@ -11,8 +11,9 @@ export const useCreateMast = () => {
             const response = await api.post<MastSchema>(`/masts`, data);
             return response.data;
         },
-        onSuccess: () => {
+        onSuccess: (_, { data }) => {
             queryClient.invalidateQueries({ queryKey: ['complexes'] });
+            queryClient.invalidateQueries({ queryKey: ['complex', data.complex_id] });
         },
     });
 };

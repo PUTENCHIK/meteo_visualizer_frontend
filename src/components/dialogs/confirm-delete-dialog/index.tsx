@@ -19,7 +19,7 @@ export const ConfirmDeleteDialog: React.FC<DialogProps<'confirm-delete'>> = ({ d
 
     const handleSubmit = async () => {
         await onSubmit(force);
-        closeDialog();
+        closeDialog(2);
     };
 
     return (

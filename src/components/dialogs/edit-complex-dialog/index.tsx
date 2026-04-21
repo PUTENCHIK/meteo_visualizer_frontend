@@ -3,7 +3,7 @@ import { Loader } from '@components/loader';
 import type { DialogProps } from '@context/dialog-context/dialogs';
 import { BaseDialog } from '@dialogs/base-dialog';
 import { ComplexForm } from '@forms/complex-form';
-import { useComplex } from '@hooks/api-data/use-complex';
+import { useComplex } from '@hooks/complexes/use-complex';
 
 export const EditComplexDialog: React.FC<DialogProps<'edit-complex'>> = ({ data }) => {
     const isUpdate = !!data?.complexId;

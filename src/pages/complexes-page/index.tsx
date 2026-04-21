@@ -1,11 +1,11 @@
 import { Button } from '@components/button';
-import { ComplexItem } from '@components/complex-item';
+import { ComplexItem } from '@entity-items/complex-item';
 import { ComponentRowBox } from '@components/component-row-box';
 import { InputLabel } from '@components/input-label';
 import { Loader } from '@components/loader';
 import { Toggle } from '@components/toggle';
 import { useDialogs } from '@context/dialog-context';
-import { useComplexes } from '@hooks/api-data/use-complexes';
+import { useComplexes } from '@hooks/complexes/use-complexes';
 import { HolyGrailLayout } from '@pages/holy-grail-layout';
 import { useState } from 'react';
 

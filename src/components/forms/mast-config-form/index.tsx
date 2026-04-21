@@ -7,8 +7,8 @@ import { TextInput } from '@components/text-input';
 import type { MastConfigSchema } from '@utils/schemas';
 import { useDialogs } from '@context/dialog-context';
 import { NumberInput } from '@components/number-input';
-import { useCreateMastConfig } from '@hooks/api-data/use-create-mast-config';
-import { useUpdateMastConfig } from '@hooks/api-data/use-update-mast-config';
+import { useCreateMastConfig } from '@hooks/mast-configs/use-create-mast-config';
+import { useUpdateMastConfig } from '@hooks/mast-configs/use-update-mast-config';
 import { mastConfigSchema, type MastConfigFormData } from './schema';
 
 interface MastConfigFormProps {

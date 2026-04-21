@@ -1,12 +1,11 @@
-import clsx from 'clsx';
-import s from './mast-item.module.scss';
 import type { ComplexWithCreatorSchema, MastSchema } from '@utils/schemas';
 import { ComponentRowBox } from '@components/component-row-box';
 import { EntityLabel } from '@components/entity-label';
 import { IconButton } from '@components/icon-button';
 import { TimestampLabel } from '@components/timestamp-label';
 import { useDialogs } from '@context/dialog-context';
-import { useDeleteMast } from '@hooks/api-data/use-delete-mast';
+import { useDeleteMast } from '@hooks/masts/use-delete-mast';
+import { BaseEntityItem } from '@entity-items/base-entity-item';
 
 interface MastItemProps {
     data: MastSchema;
@@ -36,7 +35,7 @@ export const MastItem = ({ data, complex }: MastItemProps) => {
     };
 
     return (
-        <div className={clsx(s['mast-item'])}>
+        <BaseEntityItem>
             <ComponentRowBox
                 left={[<span>Мачта</span>, <EntityLabel entity={data} />]}
                 right={[
@@ -73,6 +72,6 @@ export const MastItem = ({ data, complex }: MastItemProps) => {
                 ]}
                 size='tiny'
             />
-        </div>
+        </BaseEntityItem>
     );
 };

@@ -24,6 +24,7 @@
             "@stores/*": ["./src/stores/*"],
             "@forms/*": ["./src/components/forms/*"],
             "@dialogs/*": ["./src/components/dialogs/*"],
+            "@entity-items/*": ["./src/components/entity-items/*"],
         },
 
         /* Bundler mode */

@@ -1,12 +1,11 @@
-import clsx from 'clsx';
-import s from './mast-yard-item.module.scss';
 import type { MastConfigSchema, MastYardSchema } from '@utils/schemas';
 import { ComponentRowBox } from '@components/component-row-box';
 import { EntityLabel } from '@components/entity-label';
 import { IconButton } from '@components/icon-button';
 import { TimestampLabel } from '@components/timestamp-label';
 import { useDialogs } from '@context/dialog-context';
-import { useDeleteMastYard } from '@hooks/api-data/use-delete-mast-yard';
+import { useDeleteMastYard } from '@hooks/mast-yards/use-delete-mast-yard';
+import { BaseEntityItem } from '@entity-items/base-entity-item';
 
 interface MastYardItemProps {
     data: MastYardSchema;
@@ -36,7 +35,7 @@ export const MastYardItem = ({ data, config }: MastYardItemProps) => {
     };
 
     return (
-        <div className={clsx(s['mast-yard-item'])}>
+        <BaseEntityItem>
             <ComponentRowBox
                 left={[<span>Рея</span>, <EntityLabel entity={data} />]}
                 right={[
@@ -64,6 +63,6 @@ export const MastYardItem = ({ data, config }: MastYardItemProps) => {
                 ]}
                 size='tiny'
             />
-        </div>
+        </BaseEntityItem>
     );
 };

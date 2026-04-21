@@ -39,10 +39,7 @@ export interface ComplexWithMastsSchema extends ComplexWithCreatorSchema {
     masts: MastSchema[];
 }
 
-export interface ComplexWithSecretkeySchema extends ComplexWithMastsSchema {
-    secretkey: string | null;
-}
-
 export interface ComplexWithFavoriteInfoSchema extends ComplexWithMastsSchema {
     is_favorite: boolean;
+    secretkey: string | null;
 }

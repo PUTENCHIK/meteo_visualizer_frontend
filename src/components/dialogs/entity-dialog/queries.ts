@@ -1,5 +1,5 @@
-import { useComplex } from '@hooks/api-data/use-complex';
-import { useMastConfig } from '@hooks/api-data/use-mast-config';
+import { useComplex } from '@hooks/complexes/use-complex';
+import { useMastConfig } from '@hooks/mast-configs/use-mast-config';
 
 export const entityQueryHooks = {
     'mast-config': useMastConfig,

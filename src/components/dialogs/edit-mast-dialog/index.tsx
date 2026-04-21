@@ -3,8 +3,8 @@ import { Loader } from '@components/loader';
 import type { DialogProps } from '@context/dialog-context/dialogs';
 import { BaseDialog } from '@dialogs/base-dialog';
 import { MastForm } from '@forms/mast-form';
-import { useMast } from '@hooks/api-data/use-mast';
-import { useMastConfigs } from '@hooks/api-data/use-mast-configs';
+import { useMast } from '@hooks/masts/use-mast';
+import { useMastConfigs } from '@hooks/mast-configs/use-mast-configs';
 
 export const EditMastDialog: React.FC<DialogProps<'edit-mast'>> = ({ data }) => {
     const isUpdate = !!data?.mastId;

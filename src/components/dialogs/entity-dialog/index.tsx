@@ -20,7 +20,11 @@ export const EntityDialog: React.FC<DialogProps<'entity'>> = ({ data }) => {
         <BaseDialog dialogId='entity' title={entityTitles[type]}>
             {isLoading && <Loader />}
             {isError && <span>Ошибка при загрузке</span>}
-            {entity ? <Component data={entity} /> : <span>Не удалось получить сущность</span>}
+            {entity && !isError ? (
+                <Component data={entity} />
+            ) : (
+                <span>Не удалось загрузить сущность</span>
+            )}
         </BaseDialog>
     );
 };

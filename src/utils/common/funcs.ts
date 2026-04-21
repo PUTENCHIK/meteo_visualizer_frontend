@@ -13,5 +13,13 @@ export const joinWithSeparator = (
 };
 
 export const formatTimespamp = (value: string) => {
-    return dateFormatter.format(new Date(value)).replace(' г.', ',').replace('в ', '');
+    if (!value) return 'N/A';
+
+    const date = new Date(value);
+
+    if (isNaN(date.getTime())) {
+        return 'N/A';
+    }
+
+    return dateFormatter.format(date).replace(' г.', ',').replace('в ', '');
 };
