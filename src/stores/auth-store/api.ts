@@ -1,6 +1,7 @@
 import axios, { AxiosError } from 'axios';
 import { useAuthStore } from '.';
-import type { ApiErrorResponse } from '@utils/http';
+import type { ApiErrorResponse, ErrorCode } from '@utils/http';
+import { showError } from '@components/toast/funcs';
 
 const api = axios.create({
     baseURL: 'http://localhost:5049/api',
@@ -40,6 +41,10 @@ api.interceptors.response.use(
                     window.location.href = '/auth';
                     return Promise.reject(refreshError);
                 }
+            }
+            const isToastError = (['HTTP_ERROR', 'INTERNAL_ERROR'] as ErrorCode[]).includes(code);
+            if (isToastError) {
+                showError({ error: errorData, statusCode: error.response?.status });
             }
         }
 
