@@ -11,13 +11,12 @@ import '@fontsource/roboto/700.css';
 import { Suspense } from 'react';
 import { Loader } from '@components/loader';
 import { WebSocketProvider } from '@context/websocket-context';
-import { ComplexDataProvider } from '@context/complex-data-context';
 import { PanelProvider } from '@context/panel-context';
 import { ProviderComposer } from '@context/provider-composer';
 import { SceneProvider } from '@context/scene-context';
 import { BridgeProvider } from '@context/bridge-context';
 import { FiberProvider } from 'its-fine';
-import { DevicesProvider } from '@context/devices-context';
+// import { DevicesProvider } from '@context/devices-context';
 import { DialogProvider } from '@context/dialog-context';
 import { AuthProvider } from '@context/auth-context';
 import { QueryProvider } from '@context/query-context';
@@ -29,8 +28,7 @@ const providers = [
     AuthProvider,
     DialogProvider,
     PanelProvider,
-    ComplexDataProvider,
-    DevicesProvider,
+    // DevicesProvider,
     WebSocketProvider,
     SceneProvider,
     BridgeProvider,

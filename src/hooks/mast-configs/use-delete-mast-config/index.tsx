@@ -13,7 +13,7 @@ export const useDeleteMastConfig = () => {
         onSuccess: (_, { id }) => {
             queryClient.invalidateQueries({ queryKey: ['complexes'] });
             queryClient.invalidateQueries({ queryKey: ['mast-configs'] });
-            queryClient.invalidateQueries({ queryKey: ['mast-config', id] });
+            queryClient.invalidateQueries({ queryKey: ['mast-config', id.toString()] });
         },
     });
 };

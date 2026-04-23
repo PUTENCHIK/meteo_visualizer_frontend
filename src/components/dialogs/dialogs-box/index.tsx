@@ -10,7 +10,12 @@ export const DialogsBox = () => {
                 const Component = dialogComponents[dialog.id] as React.FC<DialogProps<any>>;
                 if (!Component) return null;
 
-                return <Component key={`${dialog.id}-${index}`} data={dialog.data} />;
+                return (
+                    <Component
+                        key={`${dialog.id}-${index}`}
+                        data={dialog.data}
+                    />
+                );
             })}
         </>
     );

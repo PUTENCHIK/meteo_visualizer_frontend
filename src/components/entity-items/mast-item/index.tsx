@@ -6,6 +6,7 @@ import { TimestampLabel } from '@components/timestamp-label';
 import { useDialogs } from '@context/dialog-context';
 import { useDeleteMast } from '@hooks/masts/use-delete-mast';
 import { BaseEntityItem } from '@entity-items/base-entity-item';
+import { GeographicInput } from '@components/geographic-input';
 
 interface MastItemProps {
     data: MastSchema;
@@ -61,9 +62,17 @@ export const MastItem = ({ data, complex }: MastItemProps) => {
                 ]}
                 size='tiny'
             />
-            <span>
-                Расположение: {data.latitude} {data.longitude}
-            </span>
+            <ComponentRowBox
+                left={[
+                    <span>Расположение:</span>,
+                ]}
+                right={[
+                    <GeographicInput value={data.latitude} param='lat' readOnly />,
+                    <GeographicInput value={data.longitude} param='lon' readOnly />,
+                ]}
+                size='tiny'
+                // wrap={false}
+            />
             <ComponentRowBox
                 left={[<span>Угол поворота: {data.rotation}</span>]}
                 right={[

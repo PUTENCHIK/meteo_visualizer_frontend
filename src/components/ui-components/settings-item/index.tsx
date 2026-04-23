@@ -96,7 +96,7 @@ export const SettingsItem = ({ item, path, parentDisabled = false }: SettingsIte
             component = (
                 <Select
                     key={path}
-                    defaultValue={item.value}
+                    value={item.value}
                     options={item.options.map((value) => value)}
                     onChange={handleChange}
                     disabled={disabled}

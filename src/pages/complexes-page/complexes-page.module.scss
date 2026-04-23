@@ -1,0 +1,11 @@
+.complexes-list {
+    display: flex;
+    flex-direction: column;
+    row-gap: 40px;
+}
+
+.complex-container {
+    display: flex;
+    flex-direction: column;
+    row-gap: 16px;
+}

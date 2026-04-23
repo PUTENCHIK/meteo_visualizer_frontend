@@ -3,11 +3,12 @@ import { InputLabel } from '@components/input-label';
 import { NumberInput } from '@components/number-input';
 import { TextInput } from '@components/text-input';
 import { Toggle } from '@components/toggle';
+import type { PanelProps } from '@context/panel-context/panels';
 import { useSocket } from '@context/websocket-context';
 import { BasePanel } from '@panels/base-panel';
 import { useState } from 'react';
 
-export const WebsocketApiPanel = () => {
+export const WebsocketApiPanel: React.FC<PanelProps<'websocketApi'>> = () => {
     const {
         connectionEnabled,
         isConnecting,

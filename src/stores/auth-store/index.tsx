@@ -1,4 +1,4 @@
-import type { ActiveUserSchema } from '@utils/http';
+import type { ActiveUserSchema } from '@utils/schemas';
 import { create } from 'zustand';
 import api from './api';
 import type { SigninFormData } from '@forms/signin-form/schema';

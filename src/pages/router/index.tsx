@@ -25,7 +25,7 @@ export const AppRouter = createBrowserRouter([
                         element: <HomePage />,
                     },
                     {
-                        path: '/complex',
+                        path: '/complexes/:id',
                         element: <ComplexPage />,
                     },
                     {

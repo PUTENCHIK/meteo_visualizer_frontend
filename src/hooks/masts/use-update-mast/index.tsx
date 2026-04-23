@@ -14,8 +14,8 @@ export const useUpdateMast = () => {
         },
         onSuccess: (_, { id, data }) => {
             queryClient.invalidateQueries({ queryKey: ['complexes'] });
-            queryClient.invalidateQueries({ queryKey: ['complex', data.complex_id] });
-            queryClient.invalidateQueries({ queryKey: ['mast', id] });
+            queryClient.invalidateQueries({ queryKey: ['complex', data.complex_id.toString()] });
+            queryClient.invalidateQueries({ queryKey: ['mast', id.toString()] });
         },
     });
 };

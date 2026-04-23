@@ -12,6 +12,7 @@ import { useUpdateMast } from '@hooks/masts/use-update-mast';
 import { ComponentRowBox } from '@components/component-row-box';
 import { EntityLabel } from '@components/entity-label';
 import { Select } from '@components/select';
+import { GeographicInput } from '@components/geographic-input';
 
 interface MastFormProps {
     complex: ComplexWithCreatorSchema;
@@ -90,8 +91,8 @@ export const MastForm = ({ complex, mast, mastConfigs }: MastFormProps) => {
                 name='latitude'
                 control={control}
                 render={({ field }) => (
-                    <InputLabel label='Широта' required error={errors.latitude?.message}>
-                        <NumberInput {...field} />
+                    <InputLabel label='Широта' required error={errors.latitude?.message} notLabel>
+                        <GeographicInput {...field} param='lat' />
                     </InputLabel>
                 )}
             />
@@ -99,8 +100,8 @@ export const MastForm = ({ complex, mast, mastConfigs }: MastFormProps) => {
                 name='longitude'
                 control={control}
                 render={({ field }) => (
-                    <InputLabel label='Долгота' required error={errors.longitude?.message}>
-                        <NumberInput {...field} />
+                    <InputLabel label='Долгота' required error={errors.longitude?.message} notLabel>
+                        <GeographicInput {...field} param='lon' />
                     </InputLabel>
                 )}
             />

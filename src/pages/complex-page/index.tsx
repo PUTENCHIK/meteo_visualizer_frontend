@@ -1,33 +1,50 @@
 import clsx from 'clsx';
 import s from './complex-page.module.scss';
 import { CompassModel } from '@models_/compass-model';
-import { Scene } from '@models_/scene';
+import { ComplexScene } from '@models_/complex-scene';
 import { SettingsMenu } from '@components/settings-menu';
 import { IconButton } from '@components/icon-button';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { usePanels } from '@context/panel-context';
-import { ComplexDataPanel } from '@panels/complex-data-panel';
-import { WebsocketApiPanel } from '@panels/websocket-api-panel';
+// import { ComplexDataPanel } from '@panels/complex-data-panel';
+// import { WebsocketApiPanel } from '@panels/websocket-api-panel';
 import { Button } from '@components/button';
-import { MastsPanel } from '@panels/masts-panel';
-import { WeatherStationsPanel } from '@panels/weather-stations-panel';
-import { ChartsPanel } from '@panels/charts-panel';
+// import { MastsPanel } from '@panels/masts-panel';
+// import { WeatherStationsPanel } from '@panels/weather-stations-panel';
+// import { ChartsPanel } from '@panels/charts-panel';
 import { SceneStats } from '@components/scene-stats';
 import { useDialogs } from '@context/dialog-context';
-import { useEffect } from 'react';
+import { useEffect, useMemo } from 'react';
 import { ComponentRowBox } from '@components/component-row-box';
+import { useComplex } from '@hooks/complexes/use-complex';
+import { Guid } from 'typescript-guid';
+import { Loader } from '@components/loader';
+import { useComplexStore } from '@stores/complex-store';
 
 export const ComplexPage = () => {
     const navigate = useNavigate();
-    const { togglePanel } = usePanels();
-    const { openDialog, closeDialog } = useDialogs();
+    const { openPanel } = usePanels();
+    const { openDialog } = useDialogs();
+    const { complex, setComplex } = useComplexStore();
+    const { id: complexId } = useParams<{ id: string }>();
+
+    const isIdValid = Guid.isGuid(complexId ?? '');
+
+    const parsedId = useMemo(() => {
+        return isIdValid && complexId ? Guid.parse(complexId) : undefined;
+    }, [complexId, isIdValid]);
+
+    const { data: loadedComplex, isLoading, isError } = useComplex(parsedId);
 
     useEffect(() => {
-        closeDialog();
-    }, [closeDialog]);
+        if (loadedComplex) {
+            setComplex(loadedComplex);
+        }
+        return () => setComplex(null);
+    }, [loadedComplex, setComplex]);
 
-    const handleBackToHomePageClick = () => {
-        navigate('/');
+    const handleBackClick = () => {
+        navigate('/complexes');
     };
 
     return (
@@ -38,36 +55,30 @@ export const ComplexPage = () => {
                         [
                             <IconButton
                                 iconName='arrow'
-                                title='Назад на главную'
-                                onClick={handleBackToHomePageClick}
+                                title='На страницу комплексов'
+                                onClick={handleBackClick}
                             />,
-                            <h2>Комплекс МАМКА №1243</h2>,
+                            complex && (
+                                <h2 className={clsx(s['page-title'])} title={complex.name}>
+                                    {complex.name}
+                                </h2>
+                            ),
                         ],
-                        [
+                        complex && [
                             <Button
                                 title={'Данные комплекса'}
                                 type='tertiary'
-                                onClick={() => togglePanel('complexData')}
+                                onClick={() => openPanel('complex')}
                             />,
                             <Button
                                 title={'Веб-сокет'}
                                 type='tertiary'
-                                onClick={() => togglePanel('websocketApi')}
-                            />,
-                            <Button
-                                title={'Мачты'}
-                                type='tertiary'
-                                onClick={() => togglePanel('masts')}
-                            />,
-                            <Button
-                                title={'Метеостанции'}
-                                type='tertiary'
-                                onClick={() => togglePanel('weatherStations')}
+                                onClick={() => openPanel('websocketApi')}
                             />,
                             <Button
                                 title={'График'}
                                 type='tertiary'
-                                onClick={() => togglePanel('charts')}
+                                onClick={() => openPanel('charts')}
                             />,
                         ],
                     ]}
@@ -90,18 +101,35 @@ export const ComplexPage = () => {
                     size='big'
                 />
             </div>
+            <div className={clsx(s['loading-container'])}>
+                {isLoading ? (
+                    <Loader />
+                ) : (
+                    <>
+                        {!isIdValid ? (
+                            <span>Не удалось распарсить ID: '{complexId}'</span>
+                        ) : (
+                            isError && <span>Не удалось получить комплекс: '{complexId}'</span>
+                        )}
+                    </>
+                )}
+            </div>
 
-            <Scene />
-            <SettingsMenu />
+            {complex && (
+                <>
+                    <ComplexScene />
+                    <SettingsMenu />
 
-            <CompassModel />
-            <SceneStats />
+                    <CompassModel />
+                    <SceneStats />
 
-            <ComplexDataPanel />
-            <WebsocketApiPanel />
-            <MastsPanel />
-            <WeatherStationsPanel />
-            <ChartsPanel />
+                    {/* <ComplexDataPanel />
+                    <WebsocketApiPanel />
+                    <MastsPanel />
+                    <WeatherStationsPanel />
+                    <ChartsPanel /> */}
+                </>
+            )}
         </>
     );
 };

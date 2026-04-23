@@ -6,20 +6,21 @@ import { TelescopeModel } from '@models_/telescope-model';
 import { MastModel } from '@models_/mast-model';
 import { Suspense, useEffect, useMemo, useState } from 'react';
 import { Loader } from '@components/loader';
-import { AtmosphereModel } from '@models_/atmosphere-model';
+// import { AtmosphereModel } from '@models_/atmosphere-model';
 import { SceneReporter } from '@helpers/scene-reporter';
 import { degToRad } from 'three/src/math/MathUtils.js';
 import { useSettings } from '@context/use-settings';
-import { Heatmap } from '@models_/heatmap';
-import { Pillarmap } from '@models_/pillarmap';
+// import { Heatmap } from '@models_/heatmap';
+// import { Pillarmap } from '@models_/pillarmap';
 import { SunModel } from '@models_/sun-model';
 import { useScene } from '@context/scene-context';
+import { geographicToPolar } from '@utils/coordinate-systems';
 import { useComplexStore } from '@stores/complex-store';
 
-export const Scene = () => {
+export const ComplexScene = () => {
     const { map: settings } = useSettings();
-    const masts = useComplexStore((state) => state.masts);
     const { controlsRef } = useScene();
+    const { complex } = useComplexStore();
 
     const [controls, setControls] = useState<CameraControls | null>(null);
 
@@ -34,16 +35,28 @@ export const Scene = () => {
     const basePlateSize = useMemo(() => {
         const size = new Vector3(20, settings.model.basePlate.height, 20);
 
-        masts.forEach((mast) => {
-            size.x = Math.max(size.x, 2 * Math.abs(mast.position.x));
-            size.z = Math.max(size.z, 2 * Math.abs(mast.position.y));
+        complex?.masts.forEach((mast) => {
+            const pos = geographicToPolar(mast.latitude, mast.longitude, complex.latitude);
+
+            size.x = Math.max(size.x, 2 * Math.abs(pos.x));
+            size.z = Math.max(size.z, 2 * Math.abs(pos.y));
         });
 
         size.x += settings.model.basePlate.padding;
         size.z += settings.model.basePlate.padding;
 
+        if (settings.model.basePlate.square) {
+            size.x = Math.max(size.x, size.z);
+            size.z = Math.max(size.x, size.z);
+        }
+
         return size;
-    }, [settings.model.basePlate.height, settings.model.basePlate.padding, masts]);
+    }, [
+        settings.model.basePlate.height,
+        settings.model.basePlate.padding,
+        settings.model.basePlate.square,
+        complex,
+    ]);
 
     const cameraProps = {
         position: new Vector3(
@@ -107,10 +120,8 @@ export const Scene = () => {
                     />
                 )}
 
-                {masts.map((item, index) => (
-                    <MastModel key={index} data={item} />
-                ))}
-                {settings.atmosphere.enable && (
+                {complex && complex.masts.map((item) => <MastModel data={item} />)}
+                {/* {settings.atmosphere.enable && (
                     <>
                         {settings.atmosphere.model.value === 'particles' && (
                             <AtmosphereModel
@@ -131,7 +142,7 @@ export const Scene = () => {
                             />
                         )}
                     </>
-                )}
+                )} */}
             </Suspense>
 
             {settings.scene.grid.enable && <gridHelper args={[basePlateSize.x, basePlateSize.z]} />}

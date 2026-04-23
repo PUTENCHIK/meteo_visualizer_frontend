@@ -13,7 +13,7 @@ export const useCreateMast = () => {
         },
         onSuccess: (_, { data }) => {
             queryClient.invalidateQueries({ queryKey: ['complexes'] });
-            queryClient.invalidateQueries({ queryKey: ['complex', data.complex_id] });
+            queryClient.invalidateQueries({ queryKey: ['complex', data.complex_id.toString()] });
         },
     });
 };

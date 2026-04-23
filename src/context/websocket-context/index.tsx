@@ -1,4 +1,4 @@
-import { useDevicesStore } from '@context/devices-context';
+// import { useDevicesStore } from '@context/devices-context';
 import { storageManager } from '@managers/local-storage-manager';
 import {
     createContext,
@@ -60,7 +60,7 @@ interface SocketContextType {
 const SocketContext = createContext<SocketContextType | undefined>(undefined);
 
 export const WebSocketProvider = ({ children }: { children: ReactNode }) => {
-    const { addData } = useDevicesStore();
+    // const { addData } = useDevicesStore();
 
     const [connectionEnabled, setConnectionEnabled] = useState(false);
     const [config, setConfig] = useState<SocketConfig>(storageManager.getItem('socketContext'));
@@ -82,9 +82,9 @@ export const WebSocketProvider = ({ children }: { children: ReactNode }) => {
         onMessage: (event) => {
             try {
                 const message: ServerMessage = JSON.parse(event.data);
-                if (message.poll_result) {
-                    addData(message.pollable_name, message.poll_result);
-                }
+                // if (message.poll_result) {
+                //     addData(message.pollable_name, message.poll_result);
+                // }
                 messagesCountRef.current += 1;
             } catch (error) {
                 console.error(`Parsing error: ${error}`);

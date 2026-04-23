@@ -1,3 +1,3 @@
-import type { WeatherDevice } from '@utils/complexes';
+// import type { WeatherDevice } from '@utils/complexes';
 
-export type DevicesData = Record<string, WeatherDevice[]>;
+// export type DevicesData = Record<string, WeatherDevice[]>;

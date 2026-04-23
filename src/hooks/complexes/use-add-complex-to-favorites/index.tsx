@@ -15,7 +15,7 @@ export const useAddComplexToFavorites = () => {
         },
         onSuccess: (_, { complexId }) => {
             queryClient.invalidateQueries({ queryKey: ['complexes'] });
-            queryClient.invalidateQueries({ queryKey: ['complex', complexId] });
+            queryClient.invalidateQueries({ queryKey: ['complex', complexId.toString()] });
         },
     });
 };

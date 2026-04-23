@@ -12,6 +12,7 @@ import { SecretedLabel } from '@components/secreted-label';
 import { useAddComplexToFavorites } from '@hooks/complexes/use-add-complex-to-favorites';
 import { useDeleteComplexFromFavorites } from '@hooks/complexes/use-delete-complex-from-favorites';
 import { BaseEntityItem } from '@entity-items/base-entity-item';
+import { GeographicInput } from '@components/geographic-input';
 
 interface ComplexItemProps {
     data: ComplexWithFavoriteInfoSchema;
@@ -105,9 +106,17 @@ export const ComplexItem = ({ data }: ComplexItemProps) => {
                 ]}
             />
             <span>Адрес TCP: {data.address ?? '-'}</span>
-            <span>
-                Расположение: {data.latitude} {data.longitude}
-            </span>
+            <ComponentRowBox
+                left={[
+                    <span>Расположение:</span>,
+                ]}
+                right={[
+                    <GeographicInput value={data.latitude} param='lat' readOnly />,
+                    <GeographicInput value={data.longitude} param='lon' readOnly />,
+                ]}
+                size='tiny'
+                wrap={false}
+            />
             <ComponentRowBox
                 left={[
                     [

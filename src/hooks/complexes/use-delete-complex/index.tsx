@@ -14,7 +14,7 @@ export const useDeleteComplex = () => {
         },
         onSuccess: (_, { id }) => {
             queryClient.invalidateQueries({ queryKey: ['complexes'] });
-            queryClient.invalidateQueries({ queryKey: ['complex', id] });
+            queryClient.invalidateQueries({ queryKey: ['complex', id.toString()] });
         },
     });
 };

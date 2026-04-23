@@ -25,8 +25,8 @@ export interface MastSchema extends AuditableModelSchema {
 export interface ComplexSchema extends AuditableModelSchema {
     name: string;
     is_private: boolean;
-    latitude: number | string;
-    longitude: number | string;
+    latitude: number;
+    longitude: number;
     address: string | null;
     is_secreted: boolean;
 }

@@ -1,40 +1,38 @@
 import clsx from 'clsx';
 import s from './charts-panel.module.scss';
 import { LineChart } from '@components/line-chart';
-import { useDevicesOfMast } from '@stores/devices-store';
 import { BasePanel } from '@panels/base-panel';
-import { useMemo, useState } from 'react';
 import { InputLabel } from '@components/input-label';
-import { useComplexStore } from '@stores/complex-store';
 import { Select } from '@components/select';
+import type { PanelProps } from '@context/panel-context/panels';
 
-export const ChartsPanel = () => {
-    const masts = useComplexStore((state) => state.masts);
-    const [currentMast, setCurrentMast] = useState<string>('');
+export const ChartsPanel: React.FC<PanelProps<'charts'>> = () => {
+    // const masts = useComplexStore((state) => state.masts);
+    // const [currentMast, setCurrentMast] = useState<string>('');
 
-    const devices = useDevicesOfMast(currentMast);
+    // const devices = useDevicesOfMast(currentMast);
 
-    const [currentDevice, setCurrentDevice] = useState<string>('');
-    const [currentMeasure, setCurrentMeasure] = useState<string>('');
+    // const [currentDevice, setCurrentDevice] = useState<string>('');
+    // const [currentMeasure, setCurrentMeasure] = useState<string>('');
 
-    const deviceData = useMemo(() => {
-        return devices.find((d) => d.fullName === currentDevice)?.data;
-    }, [devices, currentDevice]);
+    // const deviceData = useMemo(() => {
+    //     return devices.find((d) => d.fullName === currentDevice)?.data;
+    // }, [devices, currentDevice]);
 
-    const handleMastChange = (value: string) => {
-        setCurrentMast(value);
-        setCurrentDevice('');
-        setCurrentMeasure('');
-    };
+    // const handleMastChange = (value: string) => {
+    //     setCurrentMast(value);
+    //     setCurrentDevice('');
+    //     setCurrentMeasure('');
+    // };
 
-    const handleDeviceChange = (value: string) => {
-        setCurrentDevice(value);
-        setCurrentMeasure('');
-    };
+    // const handleDeviceChange = (value: string) => {
+    //     setCurrentDevice(value);
+    //     setCurrentMeasure('');
+    // };
 
-    const handleMeasureChange = (value: string) => {
-        setCurrentMeasure(value);
-    };
+    // const handleMeasureChange = (value: string) => {
+    //     setCurrentMeasure(value);
+    // };
 
     return (
         <BasePanel
@@ -42,7 +40,7 @@ export const ChartsPanel = () => {
             title='График'
             widthLimits={{ min: 400, max: null }}
             heightLimits={{ min: 400 }}>
-            {masts.length ? (
+            {/* {masts.length ? (
                 <>
                     <div className={clsx(s['filters-box'])}>
                         <InputLabel label='Мачта'>
@@ -95,7 +93,7 @@ export const ChartsPanel = () => {
                 </>
             ) : (
                 <span>Добавьте первую мачту</span>
-            )}
+            )} */}
         </BasePanel>
     );
 };

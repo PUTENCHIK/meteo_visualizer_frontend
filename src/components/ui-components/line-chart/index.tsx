@@ -1,6 +1,5 @@
 import { useEffect, useRef, useMemo } from 'react';
 import ReactECharts from 'echarts-for-react';
-import { useDevicesStore } from '@context/devices-context';
 
 interface LineChartProps {
     deviceName: string;
@@ -8,7 +7,6 @@ interface LineChartProps {
 }
 
 export const LineChart = ({ deviceName, measure }: LineChartProps) => {
-    const store = useDevicesStore();
     const chartRef = useRef<ReactECharts>(null);
 
     const options = useMemo(
@@ -48,25 +46,25 @@ export const LineChart = ({ deviceName, measure }: LineChartProps) => {
     );
 
     useEffect(() => {
-        const updateChart = () => {
-            const chartInstance = chartRef.current?.getEchartsInstance();
-            if (!chartInstance) return;
+        // const updateChart = () => {
+        //     const chartInstance = chartRef.current?.getEchartsInstance();
+        //     if (!chartInstance) return;
 
-            const rawData = store.getChartData(deviceName, measure);
-            const formattedData = rawData.map((d) => [d.timestamp, d.value]);
+        //     const rawData = store.getChartData(deviceName, measure);
+        //     const formattedData = rawData.map((d) => [d.timestamp, d.value]);
 
-            chartInstance.setOption({
-                series: [{ data: formattedData }],
-            });
-        };
+        //     chartInstance.setOption({
+        //         series: [{ data: formattedData }],
+        //     });
+        // };
 
-        updateChart();
+        // updateChart();
 
-        const unsubscribe = store.subscribe(updateChart);
-        return () => {
-            unsubscribe();
-        };
-    }, [store, deviceName, measure]);
+        // const unsubscribe = store.subscribe(updateChart);
+        // return () => {
+        //     unsubscribe();
+        // };
+    }, [deviceName, measure]);
 
     return (
         <div style={{ width: '100%', height: 500 }}>

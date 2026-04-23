@@ -1,7 +1,7 @@
-import { useComplexData } from '@context/complex-data-context';
 import { useSettings } from '@context/use-settings';
 import { useFpsFrame } from '@hooks/use-fps-frame';
 import { SphereMesh } from '@models_/sphere-mesh';
+import { useComplexStore } from '@stores/complex-store';
 import { getSunPosition, sunPosToLocal } from '@utils/coordinate-systems';
 import { useEffect, useRef } from 'react';
 import { type DirectionalLight, type Mesh, type Vector3 } from 'three';
@@ -12,7 +12,7 @@ interface SunModelProps {
 
 export const SunModel = ({ basePlateSize }: SunModelProps) => {
     const { map: settings } = useSettings();
-    const { position: complexPosition } = useComplexData();
+    const { complex } = useComplexStore();
 
     const sunRef = useRef<Mesh>(null);
     const directionalLightRef = useRef<DirectionalLight>(null);
@@ -22,7 +22,10 @@ export const SunModel = ({ basePlateSize }: SunModelProps) => {
     useFpsFrame(() => {
         if (!sunRef.current && !directionalLightRef.current) return;
 
-        const { azimuth: a, elevation: e } = getSunPosition(complexPosition);
+        const { azimuth: a, elevation: e } = getSunPosition(
+            complex?.latitude ?? 0,
+            complex?.longitude ?? 0,
+        );
         const targetPos = sunPosToLocal(a, e, settings.model.sun.orbitalRadius);
         sunRef.current?.position.copy(targetPos);
         directionalLightRef.current?.position.copy(targetPos);

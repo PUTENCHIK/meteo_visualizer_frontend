@@ -11,9 +11,10 @@ export const useDeleteMastYard = () => {
             return response.data;
         },
         onSuccess: (_, { id }) => {
+            queryClient.invalidateQueries({ queryKey: ['complex'] });
             queryClient.invalidateQueries({ queryKey: ['mast-configs'] });
             queryClient.invalidateQueries({ queryKey: ['mast-config'] });
-            queryClient.invalidateQueries({ queryKey: ['mast-yard', id] });
+            queryClient.invalidateQueries({ queryKey: ['mast-yard', id.toString()] });
         },
     });
 };

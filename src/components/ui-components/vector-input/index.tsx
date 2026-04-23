@@ -1,14 +1,22 @@
 import clsx from 'clsx';
 import s from './vector-input.module.scss';
-import { NumberInput, type NumberInputRef } from '@components/number-input';
+import { NumberInput } from '@components/number-input';
 import { Vector3, Vector4, Vector2 } from 'three';
-import { forwardRef, useImperativeHandle, useRef, type ReactElement } from 'react';
+import { type ComponentPropsWithoutRef } from 'react';
 
 type VectorAxes<T> = Extract<keyof T, 'x' | 'y' | 'z' | 'w'>;
 
 type VectorInputType = Vector2 | Vector3 | Vector4;
 
-interface VectorInputProps<T extends VectorInputType> {
+interface SharedInputProps {
+    disabled?: boolean;
+    readOnly?: boolean;
+}
+
+interface VectorInputProps<T extends VectorInputType>
+    extends
+        Omit<ComponentPropsWithoutRef<'div'>, 'value' | 'onChange'>,
+        SharedInputProps {
     value: T;
     axisLabels?: Partial<Record<VectorAxes<T>, string>>;
     postfixes?: Partial<Record<VectorAxes<T>, string>>;
@@ -17,82 +25,61 @@ interface VectorInputProps<T extends VectorInputType> {
     maxLength?: Partial<Record<VectorAxes<T>, number>>;
     step?: Partial<Record<VectorAxes<T>, number>>;
     decimal?: Partial<Record<VectorAxes<T>, number>>;
-    disabled?: boolean;
+    placeholder?: Partial<Record<VectorAxes<T>, string>>;
     onChange?: (value: T) => void;
+    onBlur?: (event: React.FocusEvent<HTMLInputElement>) => void;
 }
 
-export interface VectorInputRef {
-    update: () => void;
-}
-
-const InnerVectorInput = <T extends VectorInputType>(
-    {
-        value,
-        axisLabels,
-        postfixes,
-        min,
-        max,
-        maxLength,
-        step,
-        decimal,
-        disabled = false,
-        onChange,
-    }: VectorInputProps<T>,
-    ref: React.ForwardedRef<VectorInputRef>,
-) => {
-    const inputRefs = useRef<Record<string, NumberInputRef | null>>({});
+export const VectorInput = <T extends VectorInputType>({
+    value,
+    axisLabels,
+    postfixes,
+    min,
+    max,
+    maxLength,
+    step,
+    decimal,
+    disabled,
+    readOnly,
+    placeholder,
+    onChange,
+    onBlur,
+    className,
+    ...rest
+}: VectorInputProps<T>) => {
     const axes: string[] =
         'w' in value ? ['x', 'y', 'z', 'w'] : 'z' in value ? ['x', 'y', 'z'] : ['x', 'y'];
 
-    const handleChange = (axis: keyof T, newValue: number) => {
-        let vectorType: any = Vector2;
-        if ('w' in value) vectorType = Vector4;
-        else if ('z' in value) vectorType = Vector3;
-
-        const v = new vectorType().copy(value);
-        (v[axis] as number) = newValue;
-        onChange?.(v);
+    const handleChange = (axis: VectorAxes<T>, newValue: number) => {
+        const nextValue = value.clone() as T;
+        (nextValue[axis] as number) = newValue;
+        onChange?.(nextValue);
     };
 
-    useImperativeHandle(ref, () => ({
-        update: () => {
-            for (const el of Object.values(inputRefs.current)) {
-                el?.update();
-            }
-        },
-    }));
-
     return (
-        <div className={clsx(s['vector-input'])}>
-            {axes.map((axis, index) => (
-                <div key={index} className={clsx(s['axis-wrapper'])}>
+        <div className={clsx(s['vector-input'], className)} {...rest}>
+            {axes.map((axis) => (
+                <div key={axis as string} className={s['axis-wrapper']}>
                     <NumberInput
-                        key={`${value}`}
-                        defaultValue={value[axis as keyof T] as number}
+                        value={value[axis as VectorAxes<T>] as number}
                         className={s['axis-input']}
-                        postfix={postfixes && postfixes[axis as keyof T]}
-                        min={min && min[axis as keyof T]}
-                        max={max && max[axis as keyof T]}
-                        maxLength={maxLength && maxLength[axis as keyof T]}
-                        step={step && step[axis as keyof T]}
-                        decimal={decimal && decimal[axis as keyof T]}
+                        postfix={postfixes?.[axis as VectorAxes<T>]}
+                        min={min?.[axis as VectorAxes<T>]}
+                        max={max?.[axis as VectorAxes<T>]}
+                        maxLength={maxLength?.[axis as VectorAxes<T>]}
+                        decimal={decimal?.[axis as VectorAxes<T>]}
+                        step={step?.[axis as VectorAxes<T>]}
+                        placeholder={placeholder?.[axis as VectorAxes<T>]}
                         disabled={disabled}
-                        onChange={(v: number) => handleChange(axis as keyof T, v)}
-                        ref={(el) => {
-                            inputRefs.current[axis] = el;
-                        }}
+                        readOnly={readOnly}
+                        onChange={(v) => handleChange(axis as VectorAxes<T>, v)}
+                        onBlur={onBlur}
                     />
-                    {axisLabels && (
-                        <span className={clsx(s['axis-label'])}>
-                            {axisLabels[axis as keyof T] ?? ''}
-                        </span>
+                    {axisLabels?.[axis as VectorAxes<T>] && (
+                        <span className={s['axis-label']}>{axisLabels[axis as VectorAxes<T>]}</span>
                     )}
                 </div>
             ))}
         </div>
     );
 };
-
-export const VectorInput = forwardRef(InnerVectorInput) as <T extends VectorInputType>(
-    props: VectorInputProps<T> & { ref?: React.ForwardedRef<VectorInputRef> },
-) => ReactElement;

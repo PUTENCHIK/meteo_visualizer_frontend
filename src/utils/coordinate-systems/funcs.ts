@@ -1,30 +1,57 @@
 import { Vector3 } from 'three';
 import { degToRad, radToDeg } from 'three/src/math/MathUtils.js';
-import type { GeographicSystemPosition } from './interfaces';
+import { PolarPosition } from './classes';
 
-export const geographicToNumber = (coords: Vector3): number => {
-    return coords.x + coords.y / 60 + coords.z / 3600;
+export const geographicToNumber = (coords: Vector3, sign: -1 | 1): number => {
+    return sign * (Math.abs(coords.x) + Math.abs(coords.y) / 60 + Math.abs(coords.z) / 3600);
 };
 
 export const numberToGeographic = (decimal: number): Vector3 => {
     const absDecimal = Math.abs(decimal);
 
-    const degrees = Math.floor(absDecimal);
+    let degrees = Math.floor(absDecimal);
 
     const minutesFloat = (absDecimal - degrees) * 60;
-    const minutes = Math.floor(minutesFloat);
+    let minutes = Math.floor(minutesFloat);
 
-    const seconds = Number(((minutesFloat - minutes) * 60).toFixed(3));
+    let seconds = Number(((minutesFloat - minutes) * 60).toFixed(1));
+    if (seconds >= 60) {
+        seconds = 0;
+        minutes += 1;
+    }
+    
+    if (minutes >= 60) {
+        minutes = 0;
+        degrees += 1;
+    }
 
     return new Vector3(degrees, minutes, seconds);
 };
 
+export const geographicToPolar = (
+    mastLat: number,
+    mastLon: number,
+    complexLat: number,
+): PolarPosition => {
+    const M_IN_LAT = 111133
+    const M_IN_LON = 111320 * Math.cos(degToRad(complexLat));
+
+    const dx = (mastLon) * M_IN_LON;
+    const dy = (mastLat) * M_IN_LAT;
+
+    const d = Math.sqrt(dx * dx + dy * dy);
+    let a = radToDeg(Math.atan2(-dx, dy));
+    if (a < 0)
+        a += 360;
+
+    return new PolarPosition(d, a);
+};
+
 export const getSunPosition = (
-    position: GeographicSystemPosition,
+    lat: number,
+    lon: number,
     date?: Date,
 ): { azimuth: number; elevation: number } => {
-    const lat = geographicToNumber(position.lat);
-    const lon = geographicToNumber(position.lon);
     const now = date ?? new Date();
 
     // дата начала года

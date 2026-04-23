@@ -48,6 +48,7 @@ const rawSettings = {
             enable: createBoolean('Отображение', true),
             height: createRange('Высота', 5, 1, 30, 1),
             padding: createRange('Отступ от мачт', 100, 20, 200, 1),
+            square: createBoolean('Всегда квадрат', false),
             color: createColor('Цвет', 'rgba(116, 116, 116, 1)'),
         }),
         telescope: createChapter('КСТ-3', {

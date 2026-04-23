@@ -27,9 +27,10 @@ export const BaseForm = ({ action = 'POST', buttons, onSubmit, children }: BaseF
             if (detail) {
                 if ((['INVALID_CREDENTIALS', 'VALIDATION'] as ErrorCode[]).includes(detail.code)) {
                     setFormError(detail.message);
+                } else {
+                    throw e;
                 }
             }
-            throw e;
         }
     };
 
