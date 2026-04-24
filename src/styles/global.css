@@ -45,3 +45,7 @@ a.link-reset {
     text-decoration: none;
     color: inherit;
 }
+
+span.no-wrap {
+    white-space: nowrap;
+}

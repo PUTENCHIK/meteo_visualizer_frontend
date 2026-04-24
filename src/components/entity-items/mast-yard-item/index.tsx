@@ -6,6 +6,7 @@ import { TimestampLabel } from '@components/timestamp-label';
 import { useDialogs } from '@context/dialog-context';
 import { useDeleteMastYard } from '@hooks/mast-yards/use-delete-mast-yard';
 import { BaseEntityItem } from '@entity-items/base-entity-item';
+import { HasPermission } from '@pages/has-permission';
 
 interface MastYardItemProps {
     data: MastYardSchema;
@@ -39,18 +40,22 @@ export const MastYardItem = ({ data, config }: MastYardItemProps) => {
             <ComponentRowBox
                 left={[<span>Рея</span>, <EntityLabel entity={data} />]}
                 right={[
-                    <IconButton
-                        iconName='pencil'
-                        title='Редактировать'
-                        iconSize={16}
-                        onClick={updateMastYard}
-                    />,
-                    <IconButton
-                        iconName='bin'
-                        title='Удалить'
-                        iconSize={16}
-                        onClick={deleteMastYard}
-                    />,
+                    <HasPermission permission='mast_yard:update'>
+                        <IconButton
+                            iconName='pencil'
+                            title='Редактировать'
+                            iconSize={16}
+                            onClick={updateMastYard}
+                        />
+                    </HasPermission>,
+                    <HasPermission permission='mast_yard:delete'>
+                        <IconButton
+                            iconName='bin'
+                            title='Удалить'
+                            iconSize={16}
+                            onClick={deleteMastYard}
+                        />
+                    </HasPermission>
                 ]}
                 size='tiny'
             />

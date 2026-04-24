@@ -4,10 +4,10 @@ import { IconButton } from '@components/icon-button';
 import { BaseDialog } from '@dialogs/base-dialog';
 import { useAuthStore } from '@stores/auth-store';
 import { EntityLabel } from '@components/entity-label';
-import { dateFormatter } from '@utils/common';
 import { ComponentRowBox } from '@components/component-row-box';
 import type { DialogProps } from '@context/dialog-context/dialogs';
 import { useDialogs } from '@context/dialog-context';
+import { TimestampLabel } from '@components/timestamp-label';
 
 export const ProfileDialog: React.FC<DialogProps<'profile'>> = () => {
     const { user, logout } = useAuthStore();
@@ -38,13 +38,35 @@ export const ProfileDialog: React.FC<DialogProps<'profile'>> = () => {
                     <span>
                         ФИО: {user.lastname} {user.firstname} {user.secondname}
                     </span>
-                    <span className={clsx(s['no-wrap'])}>
-                        Роль: <EntityLabel entity={user.role} />
-                    </span>
+                    <ComponentRowBox
+                        left={[
+                            <span>Роль:</span>,
+                            <EntityLabel entity={user.role} />
+                        ]}
+                        size='tiny'
+                    />
                     <span>Доступно комплексов: {user.accessible_complexes.length}</span>
                     <span>Избранных комплексов: {user.favorite_complexes.length}</span>
                     <span>Добавлено комплексов: {user.created_complexes.length}</span>
-                    <span>Зарегистрирован: {dateFormatter.format(new Date(user.created_at))}</span>
+                    <ComponentRowBox
+                        left={[
+                            <span>Зарегистрирован:</span>,
+                            <TimestampLabel value={user.created_at} />
+                        ]}
+                        size='tiny'
+                    />
+                    <h3>Разрешения:</h3>
+                    {user.role.permissions.length > 0 ? (
+                        <ol>
+                            {
+                                user.role.permissions.map((p) => (
+                                    <li>{p.name}</li>
+                                ))
+                            }
+                        </ol>
+                    ): (
+                        <span>Разрешений нет</span>
+                    )}
                 </div>
             ) : (
                 <span>Профиль не загружен</span>

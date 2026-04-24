@@ -54,6 +54,7 @@ interface SocketContextType {
     isConnecting: boolean;
     isConnected: boolean;
     toggleConnection: () => void;
+    disableConnection: () => void;
     messagesCount: number;
 }
 
@@ -144,6 +145,7 @@ export const WebSocketProvider = ({ children }: { children: ReactNode }) => {
             isConnecting,
             isConnected,
             toggleConnection: () => setConnectionEnabled((prev) => !prev),
+            disableConnection: () => setConnectionEnabled(false),
             messagesCount: messagesCount,
         }),
         [

@@ -10,6 +10,7 @@ import { useDialogs } from '@context/dialog-context';
 import { useComplexes } from '@hooks/complexes/use-complexes';
 import { HolyGrailLayout } from '@pages/holy-grail-layout';
 import { useState } from 'react';
+import { HasPermission } from '@pages/has-permission';
 
 export const ComplexesPage = () => {
     const { openDialog } = useDialogs();
@@ -24,12 +25,14 @@ export const ComplexesPage = () => {
                     <InputLabel label='удалённые' orientation='horizontal'>
                         <Toggle value={includeDeleted} onChange={setIncludeDeleted} />
                     </InputLabel>,
-                    <Button
-                        title='Добавить комплекс'
-                        type='primary'
-                        disabled={isLoading}
-                        onClick={() => openDialog('edit-complex')}
-                    />,
+                    <HasPermission permission='complex:create'>
+                        <Button
+                            title='Добавить комплекс'
+                            type='primary'
+                            disabled={isLoading}
+                            onClick={() => openDialog('edit-complex')}
+                        />
+                    </HasPermission>
                 ]}
                 size='big'
             />

@@ -8,6 +8,7 @@ import { useDialogs } from '@context/dialog-context';
 import { useMastConfigs } from '@hooks/mast-configs/use-mast-configs';
 import { HolyGrailLayout } from '@pages/holy-grail-layout';
 import { useState } from 'react';
+import { HasPermission } from '@pages/has-permission';
 
 export const MastConfigsPage = () => {
     const { openDialog } = useDialogs();
@@ -22,12 +23,14 @@ export const MastConfigsPage = () => {
                     <InputLabel label='удалённые' orientation='horizontal'>
                         <Toggle value={includeDeleted} onChange={setIncludeDeleted} />
                     </InputLabel>,
-                    <Button
-                        title='Добавить конфиг'
-                        type='primary'
-                        disabled={isLoading}
-                        onClick={() => openDialog('edit-mast-config')}
-                    />,
+                    <HasPermission permission='mast_config:create'>
+                        <Button
+                            title='Добавить конфиг'
+                            type='primary'
+                            disabled={isLoading}
+                            onClick={() => openDialog('edit-mast-config')}
+                        />
+                    </HasPermission>
                 ]}
                 size='big'
             />

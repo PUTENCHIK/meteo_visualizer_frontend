@@ -2,7 +2,10 @@ import clsx from 'clsx';
 import s from './number-input.module.scss';
 import React, { forwardRef, useEffect, useState, type ComponentPropsWithoutRef } from 'react';
 
-interface NumberInputProps extends Omit<ComponentPropsWithoutRef<'input'>, 'value' | 'defaultValue' | 'onChange'> {
+interface NumberInputProps extends Omit<
+    ComponentPropsWithoutRef<'input'>,
+    'value' | 'defaultValue' | 'onChange'
+> {
     value?: number;
     defaultValue?: number;
     postfix?: string;
@@ -29,7 +32,9 @@ export const NumberInput = forwardRef<HTMLInputElement, NumberInputProps>(
         }: NumberInputProps,
         ref,
     ) => {
-        const [inputValue, setInputValue] = useState<string>(value?.toString() ?? defaultValue.toString());
+        const [inputValue, setInputValue] = useState<string>(
+            value?.toString() ?? defaultValue.toString(),
+        );
 
         useEffect(() => {
             if (value !== undefined) {
@@ -41,7 +46,7 @@ export const NumberInput = forwardRef<HTMLInputElement, NumberInputProps>(
         }, [value]);
 
         const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-            let v = event.target.value.replace(',', '.');  
+            let v = event.target.value.replace(',', '.');
 
             let isPartial = v === '';
             if (min && Number(min) < 0) {
@@ -51,7 +56,7 @@ export const NumberInput = forwardRef<HTMLInputElement, NumberInputProps>(
             if (decimal && decimal > 0) {
                 isPartial ||= v.endsWith('.');
             }
-            
+
             if (!isPartial && isNaN(Number(v))) return;
 
             if (maxLength) {
@@ -69,7 +74,7 @@ export const NumberInput = forwardRef<HTMLInputElement, NumberInputProps>(
 
         const handleBlur = (event: React.FocusEvent<HTMLInputElement>) => {
             let num = parseFloat(inputValue);
-            
+
             if (isNaN(num)) {
                 num = value ?? defaultValue;
             } else {

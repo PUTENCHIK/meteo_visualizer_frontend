@@ -6,12 +6,7 @@ import { SettingsMenu } from '@components/settings-menu';
 import { IconButton } from '@components/icon-button';
 import { useNavigate, useParams } from 'react-router-dom';
 import { usePanels } from '@context/panel-context';
-// import { ComplexDataPanel } from '@panels/complex-data-panel';
-// import { WebsocketApiPanel } from '@panels/websocket-api-panel';
 import { Button } from '@components/button';
-// import { MastsPanel } from '@panels/masts-panel';
-// import { WeatherStationsPanel } from '@panels/weather-stations-panel';
-// import { ChartsPanel } from '@panels/charts-panel';
 import { SceneStats } from '@components/scene-stats';
 import { useDialogs } from '@context/dialog-context';
 import { useEffect, useMemo } from 'react';
@@ -26,7 +21,7 @@ export const ComplexPage = () => {
     const navigate = useNavigate();
     const { openPanel } = usePanels();
     const { openDialog } = useDialogs();
-    const { toggleConnection } = useSocket();
+    const { disableConnection } = useSocket();
     const { complex, setComplex } = useComplexStore();
     const { id: complexId } = useParams<{ id: string }>();
 
@@ -39,6 +34,10 @@ export const ComplexPage = () => {
     const { data: loadedComplex, isLoading, isError } = useComplex(parsedId);
 
     useEffect(() => {
+        return () => disableConnection();
+    }, []);
+
+    useEffect(() => {
         if (loadedComplex) {
             setComplex(loadedComplex);
         }
@@ -46,7 +45,6 @@ export const ComplexPage = () => {
     }, [loadedComplex, setComplex]);
 
     const handleBackClick = () => {
-        toggleConnection();
         navigate('/complexes');
     };
 
@@ -74,7 +72,7 @@ export const ComplexPage = () => {
                                 onClick={() => openPanel('complex')}
                             />,
                             <Button
-                                title={'Веб-сокет'}
+                                title={'Соединение'}
                                 type='tertiary'
                                 onClick={() => openPanel('websocketApi')}
                             />,
@@ -125,12 +123,6 @@ export const ComplexPage = () => {
 
                     <CompassModel />
                     <SceneStats />
-
-                    {/* <ComplexDataPanel />
-                    <WebsocketApiPanel />
-                    <MastsPanel />
-                    <WeatherStationsPanel />
-                    <ChartsPanel /> */}
                 </>
             )}
         </>

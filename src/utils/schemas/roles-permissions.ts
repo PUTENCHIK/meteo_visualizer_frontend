@@ -2,6 +2,7 @@ import type { AuditableModelSchema } from './base';
 
 export interface PermissionSchema extends AuditableModelSchema {
     name: string;
+    description: string;
 }
 
 export interface RoleSchema extends AuditableModelSchema {

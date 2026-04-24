@@ -7,6 +7,7 @@ import { useDialogs } from '@context/dialog-context';
 import { useDeleteMast } from '@hooks/masts/use-delete-mast';
 import { BaseEntityItem } from '@entity-items/base-entity-item';
 import { GeographicInput } from '@components/geographic-input';
+import { HasPermission } from '@pages/has-permission';
 
 interface MastItemProps {
     data: MastSchema;
@@ -40,18 +41,22 @@ export const MastItem = ({ data, complex }: MastItemProps) => {
             <ComponentRowBox
                 left={[<span>Мачта</span>, <EntityLabel entity={data} />]}
                 right={[
-                    <IconButton
-                        iconName='pencil'
-                        title='Редактировать'
-                        iconSize={16}
-                        onClick={updateMast}
-                    />,
-                    <IconButton
-                        iconName='bin'
-                        title='Удалить'
-                        iconSize={16}
-                        onClick={deleteMast}
-                    />,
+                    <HasPermission permission='mast:update'>
+                        <IconButton
+                            iconName='pencil'
+                            title='Редактировать'
+                            iconSize={16}
+                            onClick={updateMast}
+                        />
+                    </HasPermission>,
+                    <HasPermission permission='mast:delete'>
+                        <IconButton
+                            iconName='bin'
+                            title='Удалить'
+                            iconSize={16}
+                            onClick={deleteMast}
+                        />
+                    </HasPermission>,
                 ]}
                 size='tiny'
             />
@@ -71,7 +76,6 @@ export const MastItem = ({ data, complex }: MastItemProps) => {
                     <GeographicInput value={data.longitude} param='lon' readOnly />,
                 ]}
                 size='tiny'
-                // wrap={false}
             />
             <ComponentRowBox
                 left={[<span>Угол поворота: {data.rotation}</span>]}

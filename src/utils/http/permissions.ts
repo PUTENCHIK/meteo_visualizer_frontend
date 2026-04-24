@@ -1,5 +1,4 @@
 export type SystemPermission =
-    | 'user:read'
     | 'role:read'
     | 'role:create'
     | 'role:update'
@@ -17,6 +16,7 @@ export type SystemPermission =
     | 'complex:restore'
     | 'complex:update'
     | 'complex:delete'
+    | 'complex:websocket'
     | 'mast:read'
     | 'mast:create'
     | 'mast:update'
@@ -29,4 +29,6 @@ export type SystemPermission =
     | 'mast_yard:read'
     | 'mast_yard:create'
     | 'mast_yard:update'
-    | 'mast_yard:delete';
+    | 'mast_yard:delete'
+    | 'complex_favorite:create'
+    | 'complex_favorite:delete';
