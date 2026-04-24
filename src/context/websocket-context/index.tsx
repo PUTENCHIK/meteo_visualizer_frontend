@@ -1,5 +1,8 @@
 // import { useDevicesStore } from '@context/devices-context';
-import { storageManager } from '@managers/local-storage-manager';
+import { showError } from '@components/toast/funcs';
+import { useAuthStore } from '@stores/auth-store';
+import api from '@stores/auth-store/api';
+import { useComplexStore } from '@stores/complex-store';
 import {
     createContext,
     useCallback,
@@ -51,9 +54,6 @@ interface SocketContextType {
     isConnecting: boolean;
     isConnected: boolean;
     toggleConnection: () => void;
-    config: SocketConfig;
-    updateConfig: (host: string, port: number) => void;
-    socketUrl: string;
     messagesCount: number;
 }
 
@@ -61,33 +61,61 @@ const SocketContext = createContext<SocketContextType | undefined>(undefined);
 
 export const WebSocketProvider = ({ children }: { children: ReactNode }) => {
     // const { addData } = useDevicesStore();
+    const { complex } = useComplexStore();
+    const { logout } = useAuthStore();
 
     const [connectionEnabled, setConnectionEnabled] = useState(false);
-    const [config, setConfig] = useState<SocketConfig>(storageManager.getItem('socketContext'));
 
     const messagesCountRef = useRef<number>(0);
     const [messagesCount, setMessagesCount] = useState<number>(0);
 
+    const reconnectRef = useRef<boolean>(false);
+
     const getSocketUrl = useCallback(
-        () => `ws://${config.host}:${config.port}/ws`,
-        [config.host, config.port],
+        async (): Promise<string> => {
+            if (!complex) return '';
+
+            if (reconnectRef.current) {
+                try {
+                    await api.get('/users/status');
+                    reconnectRef.current = false;
+                } catch (error) {
+                    await logout();
+                    showError({error: error as Error});
+                    window.location.href = '/auth';
+                    throw error;
+                }
+            }
+
+            const { accessToken } = useAuthStore.getState();
+            return `ws://localhost:5049/api/complexes/${complex.id}/ws?token=${accessToken}`;
+        },
+        [complex],
     );
 
-    const socketUrl = useMemo(
-        () => (connectionEnabled ? getSocketUrl() : null),
-        [connectionEnabled, getSocketUrl],
-    );
+    const socketUrl = useMemo(() => {
+        if (!connectionEnabled || !complex) return null;
+        return getSocketUrl;
+    }, [connectionEnabled, getSocketUrl, complex]);
 
     const { sendJsonMessage, readyState } = useWebSocket<ServerMessage>(socketUrl, {
         onMessage: (event) => {
             try {
                 const message: ServerMessage = JSON.parse(event.data);
-                // if (message.poll_result) {
-                //     addData(message.pollable_name, message.poll_result);
-                // }
+                if (message.poll_result) {
+                    // addData(message.pollable_name, message.poll_result);
+                    console.log(message.pollable_name);
+                }
                 messagesCountRef.current += 1;
             } catch (error) {
-                console.error(`Parsing error: ${error}`);
+                showError({ error: error as Error });
+            }
+        },
+        onClose: (event) => {
+            if (event.code === 4001) {
+                console.log(4001);
+                
+                reconnectRef.current = true;
             }
         },
         shouldReconnect: () => true,
@@ -108,12 +136,6 @@ export const WebSocketProvider = ({ children }: { children: ReactNode }) => {
     const isConnecting =
         connectionEnabled && !isConnected && readyState !== ReadyState.UNINSTANTIATED;
 
-    const updateConfig = (host: string, port: number) => {
-        const newConfig = { host, port };
-        setConfig(newConfig);
-        storageManager.setItem('socketContext', newConfig);
-    };
-
     const contextValue = useMemo(
         () => ({
             sendMessage: sendJsonMessage,
@@ -122,9 +144,6 @@ export const WebSocketProvider = ({ children }: { children: ReactNode }) => {
             isConnecting,
             isConnected,
             toggleConnection: () => setConnectionEnabled((prev) => !prev),
-            config,
-            updateConfig: updateConfig,
-            socketUrl: getSocketUrl(),
             messagesCount: messagesCount,
         }),
         [
@@ -133,8 +152,6 @@ export const WebSocketProvider = ({ children }: { children: ReactNode }) => {
             connectionEnabled,
             isConnecting,
             isConnected,
-            config,
-            getSocketUrl,
             messagesCount,
         ],
     );

@@ -18,7 +18,7 @@ export const Layout = () => {
     useEffect(() => {
         closeAllDialogs();
         closeAllPanels();
-    }, [closeAllDialogs, closeAllPanels]);
+    }, [pathname, closeAllDialogs, closeAllPanels]);
 
     return (
         <>

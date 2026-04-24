@@ -33,10 +33,10 @@ export const MastConfigsPage = () => {
             />
 
             {isLoading && <Loader />}
-            {isError && <p>Не удалось загрузить комплексы</p>}
+            {isError && <p>Не удалось загрузить конфиги</p>}
             {configs && (
                 <>
-                    {configs.length === 0 && <p>Нет комплексов в базе</p>}
+                    {configs.length === 0 && <p>Нет конфигов в базе</p>}
                     {configs &&
                         configs.map((config, index) => (
                             <MastConfigItem key={index} data={config} />

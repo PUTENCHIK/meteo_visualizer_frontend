@@ -20,11 +20,13 @@ import { useComplex } from '@hooks/complexes/use-complex';
 import { Guid } from 'typescript-guid';
 import { Loader } from '@components/loader';
 import { useComplexStore } from '@stores/complex-store';
+import { useSocket } from '@context/websocket-context';
 
 export const ComplexPage = () => {
     const navigate = useNavigate();
     const { openPanel } = usePanels();
     const { openDialog } = useDialogs();
+    const { toggleConnection } = useSocket();
     const { complex, setComplex } = useComplexStore();
     const { id: complexId } = useParams<{ id: string }>();
 
@@ -44,6 +46,7 @@ export const ComplexPage = () => {
     }, [loadedComplex, setComplex]);
 
     const handleBackClick = () => {
+        toggleConnection();
         navigate('/complexes');
     };
 
