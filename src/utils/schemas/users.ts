@@ -13,9 +13,12 @@ export interface UserWithRoleSchema extends UserSchema {
     role: RoleSchema;
 }
 
-export interface ActiveUserSchema extends UserWithRoleSchema {
-    role: RoleWithPermissionsSchema;
+export interface UserWithComplexesSchema extends UserWithRoleSchema {
     accessible_complexes: ComplexSchema[];
     favorite_complexes: ComplexSchema[];
     created_complexes: ComplexSchema[];
+}
+
+export interface ActiveUserSchema extends UserWithComplexesSchema {
+    role: RoleWithPermissionsSchema;
 }

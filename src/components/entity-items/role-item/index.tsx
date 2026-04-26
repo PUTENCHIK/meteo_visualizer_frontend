@@ -2,7 +2,10 @@ import { ComponentRowBox } from '@components/component-row-box';
 import { EntityLabel } from '@components/entity-label';
 import { IconButton } from '@components/icon-button';
 import { TimestampLabel } from '@components/timestamp-label';
+import { useDialogs } from '@context/dialog-context';
 import { BaseEntityItem } from '@entity-items/base-entity-item';
+import { useDeleteRole } from '@hooks/roles/use-delete-role';
+import { useRestoreRole } from '@hooks/roles/use-restore-role';
 import { HasPermission } from '@pages/has-permission';
 import type { RoleWithPermissionsSchema } from '@utils/schemas';
 
@@ -11,10 +14,43 @@ interface RoleItemProps {
 }
 
 export const RoleItem = ({ data }: RoleItemProps) => {
+    const { openDialog } = useDialogs();
+    const deleteMutation = useDeleteRole();
+    const restoreMutation = useRestoreRole();
+
     const isDeleted = data.deleted_at !== null;
 
+    const updateRole = () => {
+        openDialog('edit-role', { roleId: data.id });
+    };
+
+    const deleteMast = () => {
+        openDialog('confirm-delete', {
+            mode: 'both',
+            onSubmit: async (force) => {
+                await deleteMutation.mutateAsync({ id: data.id, force });
+            },
+            extra: {
+                entityName: 'Роль',
+                entity: data,
+            },
+        });
+    };
+
+    const restoreComplex = () => {
+        openDialog('confirm-restore', {
+            extra: {
+                entityName: 'Роль',
+                entity: data,
+            },
+            onSubmit: async () => {
+                await restoreMutation.mutateAsync({ id: data.id });
+            },
+        });
+    };
+
     return (
-        <BaseEntityItem>
+        <BaseEntityItem isDeleted={isDeleted}>
             <ComponentRowBox
                 left={[<EntityLabel entity={data} size='big' />]}
                 right={[
@@ -22,15 +58,27 @@ export const RoleItem = ({ data }: RoleItemProps) => {
                         !isDeleted ? (
                             [
                                 <HasPermission permission='role:update'>
-                                    <IconButton iconName='pencil' title='Редактировать' />
+                                    <IconButton
+                                        iconName='pencil'
+                                        title='Редактировать'
+                                        onClick={updateRole}
+                                    />
                                 </HasPermission>,
                                 <HasPermission permission='role:delete'>
-                                    <IconButton iconName='bin' title='Удалить' />
+                                    <IconButton
+                                        iconName='bin'
+                                        title='Удалить'
+                                        onClick={deleteMast}
+                                    />
                                 </HasPermission>,
                             ]
                         ) : (
                             <HasPermission permission='role:restore'>
-                                <IconButton iconName='restore' title='Восстановить' />
+                                <IconButton
+                                    iconName='restore'
+                                    title='Восстановить'
+                                    onClick={restoreComplex}
+                                />
                             </HasPermission>
                         ),
                     ],
@@ -39,7 +87,10 @@ export const RoleItem = ({ data }: RoleItemProps) => {
             <ComponentRowBox
                 left={
                     data.parent !== null
-                        ? [<span>Родительская роль:</span>, <EntityLabel entity={data.parent} />]
+                        ? [
+                              <span>Родительская роль:</span>,
+                              <EntityLabel entity={data.parent} type='role' linkable />,
+                          ]
                         : undefined
                 }
                 right={[
@@ -50,12 +101,14 @@ export const RoleItem = ({ data }: RoleItemProps) => {
                 size='tiny'
             />
             <h3>Разрешения</h3>
-            {data.permissions.length > 0 && (
+            {data.permissions.length > 0 ? (
                 <ol>
                     {data.permissions.map((permission, index) => (
                         <li key={index}>{permission.name}</li>
                     ))}
                 </ol>
+            ) : (
+                <span>Нет разрешений</span>
             )}
         </BaseEntityItem>
     );

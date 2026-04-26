@@ -11,6 +11,7 @@ export type DialogPayloads = {
     profile: undefined;
     settings: undefined;
     entity: { entityId: Guid; type: EntityType };
+    'edit-role': {roleId: Guid} | undefined;
     'edit-complex': { complexId: Guid } | undefined;
     'edit-mast': { complex: ComplexWithCreatorSchema; mastId?: Guid };
     'edit-mast-config': { configId: Guid } | undefined;

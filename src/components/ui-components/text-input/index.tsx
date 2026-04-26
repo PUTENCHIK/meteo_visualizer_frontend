@@ -16,7 +16,7 @@ interface TextInputProps extends Omit<
 }
 
 export const TextInput = ({
-    value: controlledValue,
+    value,
     defaultValue,
     password = false,
     trim = true,
@@ -25,22 +25,16 @@ export const TextInput = ({
     className,
     ...rest
 }: TextInputProps) => {
-    const [localValue, setLocalValue] = useState(defaultValue ?? '');
     const [passwordVisible, setPasswordVisible] = useState(false);
 
-    const displayValue = controlledValue !== undefined ? controlledValue : localValue;
-
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        let newValue = event.target.value;
-        newValue = trim ? newValue.trim() : newValue;
-        if (controlledValue === undefined) {
-            setLocalValue(newValue);
-        }
+        const newValue = event.target.value;
         onChange?.(newValue);
     };
 
     const handleBlur = (event: React.FocusEvent<HTMLInputElement>) => {
-        onChange?.(trim ? displayValue.trim() : displayValue);
+        const v = event.target.value;
+        onChange?.(trim ? v.trim() : v);
         onBlur?.(event);
     };
 
@@ -56,7 +50,7 @@ export const TextInput = ({
                 {...rest}
                 type={inputType}
                 className={clsx(s['text-input'], password && s['password'])}
-                value={displayValue}
+                value={value}
                 onChange={handleChange}
                 onBlur={handleBlur}
             />

@@ -67,7 +67,7 @@ export const ComplexItem = ({ data }: ComplexItemProps) => {
     };
 
     return (
-        <BaseEntityItem>
+        <BaseEntityItem isDeleted={isDeleted}>
             <ComponentRowBox
                 left={[<h2>{data.name}</h2>, <EntityLabel entity={data} field='id' />]}
                 right={[
@@ -129,7 +129,11 @@ export const ComplexItem = ({ data }: ComplexItemProps) => {
                 left={[
                     [
                         <span>Добавил:</span>,
-                        data.creator ? <EntityLabel entity={data.creator} /> : 'Система',
+                        data.creator ? (
+                            <EntityLabel entity={data.creator} type='user' linkable />
+                        ) : (
+                            'Система'
+                        ),
                     ],
                 ]}
                 right={[
@@ -152,7 +156,7 @@ export const ComplexItem = ({ data }: ComplexItemProps) => {
                                     iconSize={16}
                                     onClick={() => openDialog('edit-mast', { complex: data })}
                                 />
-                            </HasPermission>
+                            </HasPermission>,
                         ]}
                     />
                     {data.masts.length === 0 && <span>Нет мачт</span>}

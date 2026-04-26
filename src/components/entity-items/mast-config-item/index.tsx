@@ -51,7 +51,7 @@ export const MastConfigItem = ({ data }: MastConfigItemProps) => {
     };
 
     return (
-        <BaseEntityItem>
+        <BaseEntityItem isDeleted={isDeleted}>
             <ComponentRowBox
                 left={[<h2>{data.name}</h2>, <EntityLabel entity={data} field='id' />]}
                 right={[

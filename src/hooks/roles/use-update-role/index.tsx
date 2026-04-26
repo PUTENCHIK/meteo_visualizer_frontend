@@ -1,20 +1,20 @@
 import api from '@stores/auth-store/api';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import type { RoleSchema } from '@utils/schemas';
 import type { Guid } from 'typescript-guid';
+import type { RoleFormData } from '@forms/role-form/schema';
 
-export const useDeleteComplex = () => {
+export const useUpdateRole = () => {
     const queryClient = useQueryClient();
 
     return useMutation({
-        mutationFn: async ({ id, force }: { id: Guid; force: boolean }) => {
-            const response = await api.delete<void>(`/complexes/${id}`, {
-                params: { force },
-            });
+        mutationFn: async ({ id, data }: { id: Guid; data: RoleFormData }) => {
+            const response = await api.patch<RoleSchema>(`/roles/${id}`, data);
             return response.data;
         },
         onSuccess: (_, { id }) => {
-            queryClient.invalidateQueries({ queryKey: ['complexes'] });
-            queryClient.invalidateQueries({ queryKey: ['complex', id.toString()] });
+            queryClient.invalidateQueries({ queryKey: ['roles'] });
+            queryClient.invalidateQueries({ queryKey: ['role', id.toString()] });
             queryClient.invalidateQueries({ queryKey: ['users'] });
             queryClient.invalidateQueries({ queryKey: ['user'] });
         },

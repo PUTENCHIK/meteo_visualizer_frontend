@@ -2,4 +2,8 @@
 
 .entity-item {
     @include m.item-box;
+
+    &.deleted {
+        border-color: var(--danger-color);
+    }
 }

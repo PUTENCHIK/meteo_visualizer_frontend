@@ -15,8 +15,9 @@ interface MastYardItemProps {
 
 export const MastYardItem = ({ data, config }: MastYardItemProps) => {
     const { openDialog } = useDialogs();
-
     const deleteMutation = useDeleteMastYard();
+
+    const isDeleted = data.deleted_at !== null;
 
     const updateMastYard = () => {
         openDialog('edit-mast-yard', { config, mastYardId: data.id });
@@ -36,7 +37,7 @@ export const MastYardItem = ({ data, config }: MastYardItemProps) => {
     };
 
     return (
-        <BaseEntityItem>
+        <BaseEntityItem isDeleted={isDeleted}>
             <ComponentRowBox
                 left={[<span>Рея</span>, <EntityLabel entity={data} />]}
                 right={[

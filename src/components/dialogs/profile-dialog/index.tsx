@@ -55,18 +55,6 @@ export const ProfileDialog: React.FC<DialogProps<'profile'>> = () => {
                         ]}
                         size='tiny'
                     />
-                    <h3>Разрешения:</h3>
-                    {user.role.permissions.length > 0 ? (
-                        <ol>
-                            {
-                                user.role.permissions.map((p) => (
-                                    <li>{p.name}</li>
-                                ))
-                            }
-                        </ol>
-                    ): (
-                        <span>Разрешений нет</span>
-                    )}
                 </div>
             ) : (
                 <span>Профиль не загружен</span>

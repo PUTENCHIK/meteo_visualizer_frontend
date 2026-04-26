@@ -8,7 +8,6 @@ export interface PermissionSchema extends AuditableModelSchema {
 export interface RoleSchema extends AuditableModelSchema {
     name: string;
     parent_id: string | null;
-    permissions: PermissionSchema[];
 }
 
 export interface RoleWithParentSchema extends RoleSchema {

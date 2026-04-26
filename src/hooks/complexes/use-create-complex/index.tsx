@@ -13,6 +13,8 @@ export const useCreateComplex = () => {
         },
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['complexes'] });
+            queryClient.invalidateQueries({ queryKey: ['users'] });
+            queryClient.invalidateQueries({ queryKey: ['user'] });
         },
     });
 };

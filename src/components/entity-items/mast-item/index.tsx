@@ -16,8 +16,9 @@ interface MastItemProps {
 
 export const MastItem = ({ data, complex }: MastItemProps) => {
     const { openDialog } = useDialogs();
-
     const deleteMutation = useDeleteMast();
+
+    const isDeleted = data.deleted_at !== null;
 
     const updateMast = () => {
         openDialog('edit-mast', { complex: complex, mastId: data.id });
@@ -37,7 +38,7 @@ export const MastItem = ({ data, complex }: MastItemProps) => {
     };
 
     return (
-        <BaseEntityItem>
+        <BaseEntityItem isDeleted={isDeleted}>
             <ComponentRowBox
                 left={[<span>Мачта</span>, <EntityLabel entity={data} />]}
                 right={[
