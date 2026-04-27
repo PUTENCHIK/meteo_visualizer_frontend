@@ -32,4 +32,17 @@ export type SystemPermission =
     | 'mast_yard:update'
     | 'mast_yard:delete'
     | 'complex_favorite:create'
-    | 'complex_favorite:delete';
+    | 'complex_favorite:delete'
+    | 'measure:read'
+    | 'measure:create'
+    | 'measure:restore'
+    | 'measure:update'
+    | 'measure:delete'
+    | 'measure_color:read'
+    | 'measure_color:create'
+    | 'measure_color:update'
+    | 'measure_color:delete'
+    | 'measure_alias:read'
+    | 'measure_alias:create'
+    | 'measure_alias:update'
+    | 'measure_alias:delete';

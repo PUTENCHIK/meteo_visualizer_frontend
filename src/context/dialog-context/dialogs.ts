@@ -11,6 +11,9 @@ import { EditMastYardDialog } from '@dialogs/edit-mast-yard-dialog';
 import { EntityDialog } from '@dialogs/entity-dialog';
 import { EditRoleDialog } from '@dialogs/edit-role-dialog';
 import { EditUserDialog } from '@dialogs/edit-user-dialog';
+import { EditMeasureDialog } from '@dialogs/edit-measure-dialog';
+import { EditMeasureColorDialog } from '@dialogs/edit-measure-color-dialog';
+import { EditMeasureAliasDialog } from '@dialogs/edit-measure-alias-dialog';
 
 export interface DialogProps<K extends DialogId> {
     data: DialogPayloads[K];
@@ -26,6 +29,9 @@ export const dialogComponents: { [K in DialogId]: React.FC<any> } = {
     'edit-mast': EditMastDialog,
     'edit-mast-config': EditMastConfigDialog,
     'edit-mast-yard': EditMastYardDialog,
+    'edit-measure': EditMeasureDialog,
+    'edit-measure-color': EditMeasureColorDialog,
+    'edit-measure-alias': EditMeasureAliasDialog,
     'confirm-delete': ConfirmDeleteDialog,
     'confirm-restore': ConfirmRestoreDialog,
 };

@@ -13,6 +13,7 @@ import { ComponentRowBox } from '@components/component-row-box';
 import { EntityLabel } from '@components/entity-label';
 import { Select } from '@components/select';
 import { GeographicInput } from '@components/geographic-input';
+import { TextInput } from '@components/text-input';
 
 interface MastFormProps {
     complex: ComplexWithCreatorSchema;
@@ -38,6 +39,7 @@ export const MastForm = ({ complex, mast, mastConfigs }: MastFormProps) => {
         defaultValues: {
             complex_id: complex.id.toString(),
             config_id: mast?.config?.id.toString() ?? '-',
+            prefix: mast?.prefix ?? '',
             latitude: mast ? Number(mast.latitude) : 0,
             longitude: mast ? Number(mast.longitude) : 0,
             rotation: mast?.rotation ?? 0,
@@ -84,6 +86,15 @@ export const MastForm = ({ complex, mast, mastConfigs }: MastFormProps) => {
                                 ),
                             }}
                         />
+                    </InputLabel>
+                )}
+            />
+            <Controller
+                name='prefix'
+                control={control}
+                render={({ field }) => (
+                    <InputLabel label='Префикс' required error={errors.prefix?.message}>
+                        <TextInput {...field} placeholder='north' />
                     </InputLabel>
                 )}
             />

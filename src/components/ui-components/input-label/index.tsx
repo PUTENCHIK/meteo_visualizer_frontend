@@ -26,12 +26,12 @@ export const InputLabel = ({
         <Component className={clsx(s['label'], s[orientation])}>
             <div className={clsx(s['label-box'])}>
                 <span>{label}:</span>
-                {required && <span className={clsx(s['required-mark'])}>*</span>}
+                {required && orientation === 'vertical' && (
+                    <span className={clsx(s['required-mark'])}>*</span>
+                )}
             </div>
-            <div className={clsx(s['input-wrapper'])}>
-                {children}
-                {error && <span className={clsx(s['error'])}>{error}</span>}
-            </div>
+            <div className={clsx(s['input-wrapper'])}>{children}</div>
+            {error && <span className={clsx(s['error'])}>{error}</span>}
         </Component>
     );
 };

@@ -1,34 +1,34 @@
-import type { MastConfigSchema, MastYardSchema } from '@utils/schemas';
 import { ComponentRowBox } from '@components/component-row-box';
 import { EntityLabel } from '@components/entity-label';
 import { IconButton } from '@components/icon-button';
 import { TimestampLabel } from '@components/timestamp-label';
 import { useDialogs } from '@context/dialog-context';
-import { useDeleteMastYard } from '@hooks/mast-yards/use-delete-mast-yard';
 import { BaseEntityItem } from '@entity-items/base-entity-item';
+import { useDeleteMeasureColor } from '@hooks/measure-colors/use-delete-measure-color';
 import { HasPermission } from '@pages/has-permission';
+import type { MeasureColorSchema, MeasureWithDependentsSchema } from '@utils/schemas';
 
-interface MastYardItemProps {
-    data: MastYardSchema;
-    config: MastConfigSchema;
+interface MeasureColorItemProps {
+    data: MeasureColorSchema;
+    measure: MeasureWithDependentsSchema;
 }
 
-export const MastYardItem = ({ data, config }: MastYardItemProps) => {
+export const MeasureColorItem = ({ data, measure }: MeasureColorItemProps) => {
     const { openDialog } = useDialogs();
-    const deleteMutation = useDeleteMastYard();
+    const deleteMutation = useDeleteMeasureColor();
 
-    const updateMastYard = () => {
-        openDialog('edit-mast-yard', { config, mastYardId: data.id });
+    const updateMeasureColor = () => {
+        openDialog('edit-measure-color', { measure, colorId: data.id });
     };
 
-    const deleteMastYard = () => {
+    const deleteMeasureColor = () => {
         openDialog('confirm-delete', {
             mode: 'hard',
             onSubmit: async () => {
                 await deleteMutation.mutateAsync({ id: data.id });
             },
             extra: {
-                entityName: 'Рея мачты',
+                entityName: 'Цвет параметра',
                 entity: data,
             },
         });
@@ -37,30 +37,33 @@ export const MastYardItem = ({ data, config }: MastYardItemProps) => {
     return (
         <BaseEntityItem>
             <ComponentRowBox
-                left={[<span>Рея</span>, <EntityLabel entity={data} />]}
+                left={[<span>Цвет</span>, <EntityLabel entity={data} />]}
                 right={[
-                    <HasPermission permission='mast_yard:update'>
+                    <HasPermission permission='measure_color:create'>
                         <IconButton
                             iconName='pencil'
                             title='Редактировать'
                             iconSize={16}
-                            onClick={updateMastYard}
+                            onClick={updateMeasureColor}
                         />
                     </HasPermission>,
-                    <HasPermission permission='mast_yard:delete'>
+                    <HasPermission permission='measure_color:delete'>
                         <IconButton
                             iconName='bin'
                             title='Удалить'
                             iconSize={16}
-                            onClick={deleteMastYard}
+                            onClick={deleteMeasureColor}
                         />
                     </HasPermission>,
                 ]}
                 size='tiny'
             />
-            <span>Высота размещения: {data.height} м</span>
             <ComponentRowBox
-                left={[<span>Количество станций: {data.amount}</span>]}
+                left={[<span>Значение: </span>, <input type='color' value={data.value} readOnly />]}
+                size='tiny'
+            />
+            <ComponentRowBox
+                left={[<span>Процент: {data.percent * 100}%</span>]}
                 right={[
                     <TimestampLabel value={data.created_at} />,
                     <TimestampLabel value={data.updated_at} />,

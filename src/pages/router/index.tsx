@@ -8,6 +8,7 @@ import { ComplexesPage } from '@pages/complexes-page';
 import { MastConfigsPage } from '@pages/mast-configs-page';
 import { UsersPage } from '@pages/users-page';
 import { RolesPage } from '@pages/roles-page';
+import { MeasuresPage } from '@pages/measures-page';
 
 export const AppRouter = createBrowserRouter([
     {
@@ -45,6 +46,10 @@ export const AppRouter = createBrowserRouter([
                     {
                         path: 'mast-configs',
                         element: <MastConfigsPage />,
+                    },
+                    {
+                        path: 'measures',
+                        element: <MeasuresPage />,
                     },
                 ],
             },

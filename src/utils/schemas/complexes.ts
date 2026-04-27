@@ -15,6 +15,7 @@ export interface MastConfigSchema extends AuditableModelSchema {
 }
 
 export interface MastSchema extends AuditableModelSchema {
+    prefix: string;
     latitude: number;
     longitude: number;
     rotation: number;

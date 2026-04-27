@@ -1,34 +1,34 @@
-import type { MastConfigSchema, MastYardSchema } from '@utils/schemas';
 import { ComponentRowBox } from '@components/component-row-box';
 import { EntityLabel } from '@components/entity-label';
 import { IconButton } from '@components/icon-button';
 import { TimestampLabel } from '@components/timestamp-label';
 import { useDialogs } from '@context/dialog-context';
-import { useDeleteMastYard } from '@hooks/mast-yards/use-delete-mast-yard';
 import { BaseEntityItem } from '@entity-items/base-entity-item';
+import { useDeleteMeasureAlias } from '@hooks/measure-aliases/use-delete-measure-alias';
 import { HasPermission } from '@pages/has-permission';
+import type { MeasureAliasSchema, MeasureWithDependentsSchema } from '@utils/schemas';
 
-interface MastYardItemProps {
-    data: MastYardSchema;
-    config: MastConfigSchema;
+interface MeasureAliasItemProps {
+    data: MeasureAliasSchema;
+    measure: MeasureWithDependentsSchema;
 }
 
-export const MastYardItem = ({ data, config }: MastYardItemProps) => {
+export const MeasureAliasItem = ({ data, measure }: MeasureAliasItemProps) => {
     const { openDialog } = useDialogs();
-    const deleteMutation = useDeleteMastYard();
+    const deleteMutation = useDeleteMeasureAlias();
 
-    const updateMastYard = () => {
-        openDialog('edit-mast-yard', { config, mastYardId: data.id });
+    const updateMeasureAlias = () => {
+        openDialog('edit-measure-alias', { measure, aliasId: data.id });
     };
 
-    const deleteMastYard = () => {
+    const deleteMeasureAlias = () => {
         openDialog('confirm-delete', {
             mode: 'hard',
             onSubmit: async () => {
                 await deleteMutation.mutateAsync({ id: data.id });
             },
             extra: {
-                entityName: 'Рея мачты',
+                entityName: 'Псевдоним параметра',
                 entity: data,
             },
         });
@@ -37,30 +37,28 @@ export const MastYardItem = ({ data, config }: MastYardItemProps) => {
     return (
         <BaseEntityItem>
             <ComponentRowBox
-                left={[<span>Рея</span>, <EntityLabel entity={data} />]}
+                left={[<span>Псевдоним</span>, <EntityLabel entity={data} />]}
                 right={[
-                    <HasPermission permission='mast_yard:update'>
+                    <HasPermission permission='measure_alias:update'>
                         <IconButton
                             iconName='pencil'
                             title='Редактировать'
                             iconSize={16}
-                            onClick={updateMastYard}
+                            onClick={updateMeasureAlias}
                         />
                     </HasPermission>,
-                    <HasPermission permission='mast_yard:delete'>
+                    <HasPermission permission='measure_alias:delete'>
                         <IconButton
                             iconName='bin'
                             title='Удалить'
                             iconSize={16}
-                            onClick={deleteMastYard}
+                            onClick={deleteMeasureAlias}
                         />
                     </HasPermission>,
                 ]}
                 size='tiny'
             />
-            <span>Высота размещения: {data.height} м</span>
             <ComponentRowBox
-                left={[<span>Количество станций: {data.amount}</span>]}
                 right={[
                     <TimestampLabel value={data.created_at} />,
                     <TimestampLabel value={data.updated_at} />,

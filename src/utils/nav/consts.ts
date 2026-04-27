@@ -17,4 +17,8 @@ export const headerNavItems: HeaderNavItem[] = [
         path: '/mast-configs',
         title: 'Конфиги мачт',
     },
+    {
+        path: '/measures',
+        title: 'Параметры',
+    },
 ];
