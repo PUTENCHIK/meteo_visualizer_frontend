@@ -8,9 +8,7 @@ export const useRole = (roleId?: Guid) => {
         queryKey: ['role', roleId?.toString()],
         queryFn: async () => {
             if (!roleId) return undefined;
-            const response = await api.get<RoleWithPermissionsSchema>(
-                `/roles/${roleId}`,
-            );
+            const response = await api.get<RoleWithPermissionsSchema>(`/roles/${roleId}`);
             return response.data;
         },
         enabled: !!roleId,

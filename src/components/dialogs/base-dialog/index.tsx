@@ -14,10 +14,10 @@ interface BaseDialogProps {
 }
 
 export const BaseDialog = ({ dialogId, title, hardClose = false, children }: BaseDialogProps) => {
-    const { activeDialogs: activeDialog, closeDialog } = useDialogs();
+    const { activeDialogs, closeDialog, closeAllDialogs } = useDialogs();
     const dialogRef = useRef<HTMLDialogElement>(null);
 
-    const dialog = activeDialog.find((d) => d.id === dialogId);
+    const dialog = activeDialogs.find((d) => d.id === dialogId);
     const isOpen = !!dialog;
 
     useEffect(() => {
@@ -41,7 +41,7 @@ export const BaseDialog = ({ dialogId, title, hardClose = false, children }: Bas
 
     const handleCancel = (e: React.SyntheticEvent) => {
         e.preventDefault();
-        closeDialog();
+        closeAllDialogs();
     };
 
     return (

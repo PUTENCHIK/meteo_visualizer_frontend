@@ -6,23 +6,31 @@ import { Toggle } from '@components/toggle';
 import { useDialogs } from '@context/dialog-context';
 import { RoleItem } from '@entity-items/role-item';
 import { useRoles } from '@hooks/roles/use-roles';
+import { usePermission } from '@hooks/use-permission';
 import { HasPermission } from '@pages/has-permission';
 import { HolyGrailLayout } from '@pages/holy-grail-layout';
 import { useState } from 'react';
 
 export const RolesPage = () => {
+    const { hasPermission } = usePermission();
     const { openDialog } = useDialogs();
     const [includeDeleted, setIncludeDeleted] = useState(false);
-    const { data: roles, isLoading, isError } = useRoles(includeDeleted);
+    const {
+        data: roles,
+        isLoading,
+        isError,
+    } = useRoles(includeDeleted && hasPermission('role:restore'));
 
     return (
         <HolyGrailLayout>
             <ComponentRowBox
                 left={[<h1>Роли пользователей</h1>]}
                 right={[
-                    <InputLabel label='удалённые' orientation='horizontal'>
-                        <Toggle value={includeDeleted} onChange={setIncludeDeleted} />
-                    </InputLabel>,
+                    <HasPermission permission='role:restore'>
+                        <InputLabel label='удалённые' orientation='horizontal'>
+                            <Toggle value={includeDeleted} onChange={setIncludeDeleted} />
+                        </InputLabel>
+                    </HasPermission>,
                     <HasPermission permission='role:create'>
                         <Button
                             title='Добавить роль'

@@ -21,7 +21,7 @@ export const ComplexPage = () => {
     const navigate = useNavigate();
     const { openPanel } = usePanels();
     const { openDialog } = useDialogs();
-    const { disableConnection } = useSocket();
+    const { isConnected, disableConnection } = useSocket();
     const { complex, setComplex } = useComplexStore();
     const { id: complexId } = useParams<{ id: string }>();
 
@@ -73,7 +73,7 @@ export const ComplexPage = () => {
                             />,
                             <Button
                                 title={'Соединение'}
-                                type='tertiary'
+                                type={isConnected ? 'primary' : 'tertiary'}
                                 onClick={() => openPanel('websocketApi')}
                             />,
                             <Button

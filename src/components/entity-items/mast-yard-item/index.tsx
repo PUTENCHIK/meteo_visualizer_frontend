@@ -56,7 +56,7 @@ export const MastYardItem = ({ data, config }: MastYardItemProps) => {
                             iconSize={16}
                             onClick={deleteMastYard}
                         />
-                    </HasPermission>
+                    </HasPermission>,
                 ]}
                 size='tiny'
             />

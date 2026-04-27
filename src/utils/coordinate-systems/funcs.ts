@@ -19,7 +19,7 @@ export const numberToGeographic = (decimal: number): Vector3 => {
         seconds = 0;
         minutes += 1;
     }
-    
+
     if (minutes >= 60) {
         minutes = 0;
         degrees += 1;
@@ -33,16 +33,15 @@ export const geographicToPolar = (
     mastLon: number,
     complexLat: number,
 ): PolarPosition => {
-    const M_IN_LAT = 111133
+    const M_IN_LAT = 111133;
     const M_IN_LON = 111320 * Math.cos(degToRad(complexLat));
 
-    const dx = (mastLon) * M_IN_LON;
-    const dy = (mastLat) * M_IN_LAT;
+    const dx = mastLon * M_IN_LON;
+    const dy = mastLat * M_IN_LAT;
 
     const d = Math.sqrt(dx * dx + dy * dy);
     let a = radToDeg(Math.atan2(-dx, dy));
-    if (a < 0)
-        a += 360;
+    if (a < 0) a += 360;
 
     return new PolarPosition(d, a);
 };

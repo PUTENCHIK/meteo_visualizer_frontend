@@ -10,7 +10,7 @@ export const PanelsBox = () => {
                 const Component = panelComponents[panel.id] as React.FC<PanelProps<any>>;
                 if (!Component) return null;
 
-                return <Component key={panel.id} data={panel.data} />
+                return <Component key={panel.id} data={panel.data} />;
             })}
         </>
     );

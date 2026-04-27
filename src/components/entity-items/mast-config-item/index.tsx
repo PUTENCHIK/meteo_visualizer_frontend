@@ -71,7 +71,7 @@ export const MastConfigItem = ({ data }: MastConfigItemProps) => {
                                         title='Удалить'
                                         onClick={deleteMastConfig}
                                     />
-                                </HasPermission>
+                                </HasPermission>,
                             ]
                         ) : (
                             <HasPermission permission='mast_config:restore'>
@@ -107,7 +107,7 @@ export const MastConfigItem = ({ data }: MastConfigItemProps) => {
                                     iconSize={16}
                                     onClick={() => openDialog('edit-mast-yard', { config: data })}
                                 />
-                            </HasPermission>
+                            </HasPermission>,
                         ]}
                     />
                     {data.yards.length === 0 && <span>Нет рей</span>}

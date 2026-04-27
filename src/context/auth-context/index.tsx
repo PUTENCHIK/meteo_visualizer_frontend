@@ -16,7 +16,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
                 setAccessToken(response.data.access_token);
                 await fetchUser();
             } catch (e) {
-                showError({error: e as Error});
+                showError({ error: e as Error });
             } finally {
                 setIsChecking(false);
             }

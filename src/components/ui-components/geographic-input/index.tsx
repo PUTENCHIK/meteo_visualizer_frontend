@@ -44,7 +44,7 @@ export const GeographicInput = ({
 
     const handleSelectChange = (value: SignType) => {
         setSign(value);
-    }
+    };
 
     const handleVectorChange = (vector: Vector3) => {
         setVector(vector);

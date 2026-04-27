@@ -49,17 +49,13 @@ export const LineChart = ({ deviceName, measure }: LineChartProps) => {
         // const updateChart = () => {
         //     const chartInstance = chartRef.current?.getEchartsInstance();
         //     if (!chartInstance) return;
-
         //     const rawData = store.getChartData(deviceName, measure);
         //     const formattedData = rawData.map((d) => [d.timestamp, d.value]);
-
         //     chartInstance.setOption({
         //         series: [{ data: formattedData }],
         //     });
         // };
-
         // updateChart();
-
         // const unsubscribe = store.subscribe(updateChart);
         // return () => {
         //     unsubscribe();

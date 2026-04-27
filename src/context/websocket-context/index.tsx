@@ -72,27 +72,24 @@ export const WebSocketProvider = ({ children }: { children: ReactNode }) => {
 
     const reconnectRef = useRef<boolean>(false);
 
-    const getSocketUrl = useCallback(
-        async (): Promise<string> => {
-            if (!complex) return '';
+    const getSocketUrl = useCallback(async (): Promise<string> => {
+        if (!complex) return '';
 
-            if (reconnectRef.current) {
-                try {
-                    await api.get('/users/status');
-                    reconnectRef.current = false;
-                } catch (error) {
-                    await logout();
-                    showError({error: error as Error});
-                    window.location.href = '/auth';
-                    throw error;
-                }
+        if (reconnectRef.current) {
+            try {
+                await api.get('/users/status');
+                reconnectRef.current = false;
+            } catch (error) {
+                await logout();
+                showError({ error: error as Error });
+                window.location.href = '/auth';
+                throw error;
             }
+        }
 
-            const { accessToken } = useAuthStore.getState();
-            return `ws://localhost:5049/api/complexes/${complex.id}/ws?token=${accessToken}`;
-        },
-        [complex],
-    );
+        const { accessToken } = useAuthStore.getState();
+        return `ws://localhost:5049/api/complexes/${complex.id}/ws?token=${accessToken}`;
+    }, [complex, logout]);
 
     const socketUrl = useMemo(() => {
         if (!connectionEnabled || !complex) return null;
@@ -114,8 +111,6 @@ export const WebSocketProvider = ({ children }: { children: ReactNode }) => {
         },
         onClose: (event) => {
             if (event.code === 4001) {
-                console.log(4001);
-                
                 reconnectRef.current = true;
             }
         },
@@ -148,14 +143,7 @@ export const WebSocketProvider = ({ children }: { children: ReactNode }) => {
             disableConnection: () => setConnectionEnabled(false),
             messagesCount: messagesCount,
         }),
-        [
-            sendJsonMessage,
-            readyState,
-            connectionEnabled,
-            isConnecting,
-            isConnected,
-            messagesCount,
-        ],
+        [sendJsonMessage, readyState, connectionEnabled, isConnecting, isConnected, messagesCount],
     );
 
     return <SocketContext.Provider value={contextValue}>{children}</SocketContext.Provider>;

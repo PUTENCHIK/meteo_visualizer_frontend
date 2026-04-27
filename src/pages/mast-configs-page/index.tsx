@@ -9,20 +9,28 @@ import { useMastConfigs } from '@hooks/mast-configs/use-mast-configs';
 import { HolyGrailLayout } from '@pages/holy-grail-layout';
 import { useState } from 'react';
 import { HasPermission } from '@pages/has-permission';
+import { usePermission } from '@hooks/use-permission';
 
 export const MastConfigsPage = () => {
+    const { hasPermission } = usePermission();
     const { openDialog } = useDialogs();
     const [includeDeleted, setIncludeDeleted] = useState(false);
-    const { data: configs, isLoading, isError } = useMastConfigs(includeDeleted);
+    const {
+        data: configs,
+        isLoading,
+        isError,
+    } = useMastConfigs(includeDeleted && hasPermission('mast_config:restore'));
 
     return (
         <HolyGrailLayout>
             <ComponentRowBox
                 left={[<h1>Конфиги мачт</h1>]}
                 right={[
-                    <InputLabel label='удалённые' orientation='horizontal'>
-                        <Toggle value={includeDeleted} onChange={setIncludeDeleted} />
-                    </InputLabel>,
+                    <HasPermission permission='mast_config:restore'>
+                        <InputLabel label='удалённые' orientation='horizontal'>
+                            <Toggle value={includeDeleted} onChange={setIncludeDeleted} />
+                        </InputLabel>
+                    </HasPermission>,
                     <HasPermission permission='mast_config:create'>
                         <Button
                             title='Добавить конфиг'
@@ -30,7 +38,7 @@ export const MastConfigsPage = () => {
                             disabled={isLoading}
                             onClick={() => openDialog('edit-mast-config')}
                         />
-                    </HasPermission>
+                    </HasPermission>,
                 ]}
                 size='big'
             />

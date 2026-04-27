@@ -9,12 +9,7 @@ import { BasePanel } from '@panels/base-panel';
 import { useComplexStore } from '@stores/complex-store';
 
 export const WebsocketApiPanel: React.FC<PanelProps<'websocketApi'>> = () => {
-    const {
-        connectionEnabled,
-        isConnecting,
-        isConnected,
-        toggleConnection,
-    } = useSocket();
+    const { connectionEnabled, isConnecting, isConnected, toggleConnection } = useSocket();
     const { complex } = useComplexStore();
 
     const address = complex?.address;
@@ -22,29 +17,32 @@ export const WebsocketApiPanel: React.FC<PanelProps<'websocketApi'>> = () => {
     return (
         <BasePanel
             panelId='websocketApi'
-            title='Соединение с API комплекса' noContent={{
+            title='Соединение с API комплекса'
+            noContent={{
                 cond: () => !address,
-                label: (<span>Адрес не установлен, невозможно подключиться</span>)
+                label: <span>Адрес не установлен, невозможно подключиться</span>,
             }}>
-                {address && (
-                    <>
+            {address && (
+                <>
                     <ComponentRowBox
                         left={[
                             <InputLabel label='Подключение' orientation='horizontal'>
                                 <Toggle
                                     value={isConnected}
-                                    intermediate={isConnecting || (connectionEnabled && !isConnected)}
+                                    intermediate={
+                                        isConnecting || (connectionEnabled && !isConnected)
+                                    }
                                     onChange={toggleConnection}
                                 />
                             </InputLabel>,
-                            isConnecting && <Loader size={24} />
+                            isConnecting && <Loader size={24} />,
                         ]}
                     />
-                        <InputLabel label='Адрес TCP'>
-                            <TextInput value={address} readOnly />
-                        </InputLabel>
-                    </>
-                )}
+                    <InputLabel label='Адрес TCP'>
+                        <TextInput value={address} readOnly />
+                    </InputLabel>
+                </>
+            )}
         </BasePanel>
     );
 };

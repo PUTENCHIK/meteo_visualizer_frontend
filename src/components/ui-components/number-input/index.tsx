@@ -46,7 +46,7 @@ export const NumberInput = forwardRef<HTMLInputElement, NumberInputProps>(
         }, [value]);
 
         const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-            let v = event.target.value.replace(',', '.');
+            const v = event.target.value.replace(',', '.');
 
             let isPartial = v === '';
             if (min && Number(min) < 0) {
@@ -60,13 +60,13 @@ export const NumberInput = forwardRef<HTMLInputElement, NumberInputProps>(
             if (!isPartial && isNaN(Number(v))) return;
 
             if (maxLength) {
-                let ml = maxLength;
+                const ml = maxLength;
                 if (v.replace('-', '').replace('.', '').length > ml) return;
             }
 
             setInputValue(v);
 
-            let num = parseFloat(v);
+            const num = parseFloat(v);
             if (!isNaN(num)) {
                 onChange?.(num);
             }

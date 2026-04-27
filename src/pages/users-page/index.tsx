@@ -1,35 +1,42 @@
-import { ComponentRowBox } from "@components/component-row-box";
-import { InputLabel } from "@components/input-label";
-import { Loader } from "@components/loader";
-import { Toggle } from "@components/toggle";
-import { UserItem } from "@entity-items/user-item";
-import { useUsers } from "@hooks/users/use-users";
-import { HolyGrailLayout } from "@pages/holy-grail-layout"
-import { useState } from "react";
+import { ComponentRowBox } from '@components/component-row-box';
+import { InputLabel } from '@components/input-label';
+import { Loader } from '@components/loader';
+import { Toggle } from '@components/toggle';
+import { UserItem } from '@entity-items/user-item';
+import { usePermission } from '@hooks/use-permission';
+import { useUsers } from '@hooks/users/use-users';
+import { HasPermission } from '@pages/has-permission';
+import { HolyGrailLayout } from '@pages/holy-grail-layout';
+import { useState } from 'react';
 
 export const UsersPage = () => {
+    const { hasPermission } = usePermission();
     const [includeDeleted, setIncludeDeleted] = useState(false);
-    const {data: users, isLoading, isError} = useUsers(includeDeleted);
+    const {
+        data: users,
+        isLoading,
+        isError,
+    } = useUsers(includeDeleted && hasPermission('user:restore'));
 
     return (
         <HolyGrailLayout>
             <ComponentRowBox
                 left={[<h1>Пользователи</h1>]}
                 right={[
-                    <InputLabel label='удалённые' orientation='horizontal'>
-                        <Toggle value={includeDeleted} onChange={setIncludeDeleted} />
-                    </InputLabel>,
+                    <HasPermission permission='user:restore'>
+                        <InputLabel label='удалённые' orientation='horizontal'>
+                            <Toggle value={includeDeleted} onChange={setIncludeDeleted} />
+                        </InputLabel>
+                    </HasPermission>,
                 ]}
                 size='big'
             />
             {isLoading && <Loader />}
             {isError && <p>Не удалось загрузить пользователей</p>}
-            {users && (
+            {users && !isError && !isLoading && (
                 <>
                     {users.length > 0 ? (
-                        users.map((user, index) => (
-                            <UserItem key={index} data={user} />
-                        ))
+                        users.map((user, index) => <UserItem key={index} data={user} />)
                     ) : (
                         <p>Нет пользователей в базе</p>
                     )}
@@ -37,4 +44,4 @@ export const UsersPage = () => {
             )}
         </HolyGrailLayout>
     );
-}
+};

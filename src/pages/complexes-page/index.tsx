@@ -11,20 +11,28 @@ import { useComplexes } from '@hooks/complexes/use-complexes';
 import { HolyGrailLayout } from '@pages/holy-grail-layout';
 import { useState } from 'react';
 import { HasPermission } from '@pages/has-permission';
+import { usePermission } from '@hooks/use-permission';
 
 export const ComplexesPage = () => {
+    const { hasPermission } = usePermission();
     const { openDialog } = useDialogs();
     const [includeDeleted, setIncludeDeleted] = useState(false);
-    const { data: complexes, isLoading, isError } = useComplexes(includeDeleted);
+    const {
+        data: complexes,
+        isLoading,
+        isError,
+    } = useComplexes(includeDeleted && hasPermission('complex:restore'));
 
     return (
         <HolyGrailLayout>
             <ComponentRowBox
                 left={[<h1>Комплексы МАМКА</h1>]}
                 right={[
-                    <InputLabel label='удалённые' orientation='horizontal'>
-                        <Toggle value={includeDeleted} onChange={setIncludeDeleted} />
-                    </InputLabel>,
+                    <HasPermission permission='complex:restore'>
+                        <InputLabel label='удалённые' orientation='horizontal'>
+                            <Toggle value={includeDeleted} onChange={setIncludeDeleted} />
+                        </InputLabel>
+                    </HasPermission>,
                     <HasPermission permission='complex:create'>
                         <Button
                             title='Добавить комплекс'
@@ -32,7 +40,7 @@ export const ComplexesPage = () => {
                             disabled={isLoading}
                             onClick={() => openDialog('edit-complex')}
                         />
-                    </HasPermission>
+                    </HasPermission>,
                 ]}
                 size='big'
             />

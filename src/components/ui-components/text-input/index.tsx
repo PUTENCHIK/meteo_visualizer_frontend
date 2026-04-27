@@ -50,6 +50,7 @@ export const TextInput = ({
                 {...rest}
                 type={inputType}
                 className={clsx(s['text-input'], password && s['password'])}
+                defaultValue={defaultValue}
                 value={value}
                 onChange={handleChange}
                 onBlur={handleBlur}

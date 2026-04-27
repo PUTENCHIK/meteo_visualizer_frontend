@@ -15,15 +15,15 @@ interface MastModelProps {
 
 export const MastModel = ({ data }: MastModelProps) => {
     const { map: settings } = useSettings();
-    const {complex} = useComplexStore();
+    const { complex } = useComplexStore();
 
     const defaultMastHeight = 5;
 
-    if (!complex) return null;
-
     const position = useMemo(() => {
-        return geographicToPolar(data.latitude, data.longitude, complex.latitude)
+        return complex && geographicToPolar(data.latitude, data.longitude, complex.latitude);
     }, [data, complex]);
+
+    if (!complex || !position) return null;
 
     return (
         <MeshGroup
@@ -52,7 +52,7 @@ export const MastModel = ({ data }: MastModelProps) => {
                 position={new Vector3(0, (data.config?.height ?? defaultMastHeight) / 2, 0)}
                 color={settings.model.masts.mastsColor}
             />
-            
+
             {data.config && (
                 <>
                     {/* Реи с метеостанциями */}

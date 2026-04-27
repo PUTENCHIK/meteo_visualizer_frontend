@@ -8,9 +8,7 @@ export const useUser = (userId?: Guid) => {
         queryKey: ['user', userId?.toString()],
         queryFn: async () => {
             if (!userId) return undefined;
-            const response = await api.get<UserWithComplexesSchema>(
-                `/users/${userId}`,
-            );
+            const response = await api.get<UserWithComplexesSchema>(`/users/${userId}`);
             return response.data;
         },
         enabled: !!userId,

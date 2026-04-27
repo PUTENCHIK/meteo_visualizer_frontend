@@ -1,9 +1,9 @@
-import clsx from 'clsx';
-import s from './charts-panel.module.scss';
-import { LineChart } from '@components/line-chart';
+// import clsx from 'clsx';
+// import s from './charts-panel.module.scss';
+// import { LineChart } from '@components/line-chart';
 import { BasePanel } from '@panels/base-panel';
-import { InputLabel } from '@components/input-label';
-import { Select } from '@components/select';
+// import { InputLabel } from '@components/input-label';
+// import { Select } from '@components/select';
 import type { PanelProps } from '@context/panel-context/panels';
 
 export const ChartsPanel: React.FC<PanelProps<'charts'>> = () => {

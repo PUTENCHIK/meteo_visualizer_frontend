@@ -9,6 +9,7 @@ export type SystemPermission =
     | 'role_permission:delete'
     | 'permission:read'
     | 'user:update'
+    | 'user:update_self'
     | 'user:restore'
     | 'user:delete'
     | 'complex:read'

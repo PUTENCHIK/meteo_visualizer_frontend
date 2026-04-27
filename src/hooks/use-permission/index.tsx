@@ -19,15 +19,19 @@ export const usePermission = () => {
     );
 
     const hasAnyPermission = useCallback(
-        (requiredPermissions: SystemPermission[]): boolean => {
-            return requiredPermissions.some((perm) => permissions.has(perm));
+        (requiredPermissions: (SystemPermission | boolean)[]): boolean => {
+            return requiredPermissions.some((perm) =>
+                typeof perm === 'boolean' ? perm : permissions.has(perm),
+            );
         },
         [permissions],
     );
 
     const hasAllPermissions = useCallback(
-        (requiredPermissions: SystemPermission[]): boolean => {
-            return requiredPermissions.every((perm) => permissions.has(perm));
+        (requiredPermissions: (SystemPermission | boolean)[]): boolean => {
+            return requiredPermissions.every((perm) =>
+                typeof perm === 'boolean' ? perm : permissions.has(perm),
+            );
         },
         [permissions],
     );

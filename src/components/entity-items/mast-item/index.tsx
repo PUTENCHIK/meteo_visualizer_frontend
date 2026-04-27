@@ -69,9 +69,7 @@ export const MastItem = ({ data, complex }: MastItemProps) => {
                 size='tiny'
             />
             <ComponentRowBox
-                left={[
-                    <span>Расположение:</span>,
-                ]}
+                left={[<span>Расположение:</span>]}
                 right={[
                     <GeographicInput value={data.latitude} param='lat' readOnly />,
                     <GeographicInput value={data.longitude} param='lon' readOnly />,

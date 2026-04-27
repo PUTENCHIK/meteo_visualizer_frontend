@@ -49,9 +49,9 @@ export const WeatherStationModel = ({
     // }, [data, setStationPosition]);
 
     // const handleStationClick = (e: ThreeEvent<MouseEvent>) => {
-        // e.stopPropagation();
-        // if (!showInfo && data) focusStation(data.id);
-        // setShowInfo((prev) => !prev);
+    // e.stopPropagation();
+    // if (!showInfo && data) focusStation(data.id);
+    // setShowInfo((prev) => !prev);
     // };
 
     // if (!data || !devices) {

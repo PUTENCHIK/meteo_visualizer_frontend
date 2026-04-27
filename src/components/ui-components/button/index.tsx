@@ -23,7 +23,6 @@ export const Button = ({
     disabled = false,
     onClick,
 }: ButtonProps) => {
-
     if (href && !disabled) {
         return (
             <Link to={href} className={clsx(s['button'], s[type], 'link-reset')}>

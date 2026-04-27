@@ -5,8 +5,8 @@ import type { SystemPermission } from '@utils/http';
 interface HasPermissionProps {
     children: React.ReactNode;
     permission?: SystemPermission;
-    anyOf?: SystemPermission[];
-    allOf?: SystemPermission[];
+    anyOf?: (SystemPermission | boolean)[];
+    allOf?: (SystemPermission | boolean)[];
     fallback?: React.ReactNode;
 }
 

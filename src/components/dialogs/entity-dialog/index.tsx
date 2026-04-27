@@ -8,7 +8,7 @@ const entityTitles: Record<EntityType, string> = {
     'mast-config': 'Конфиг мачты',
     complex: 'Комплекс МАМКА',
     role: 'Роль пользователей',
-    user: 'Пользователь'
+    user: 'Пользователь',
 };
 
 export const EntityDialog: React.FC<DialogProps<'entity'>> = ({ data }) => {

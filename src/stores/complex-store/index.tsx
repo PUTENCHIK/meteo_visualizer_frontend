@@ -10,8 +10,8 @@ interface ComplexState {
 
 export const useComplexStore = create<ComplexState>((set) => ({
     complex: null,
-    setComplex: (complex) => 
+    setComplex: (complex) =>
         set({
-            complex: complex
-        })
+            complex: complex,
+        }),
 }));

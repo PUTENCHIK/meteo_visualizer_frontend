@@ -14,9 +14,7 @@ interface SharedInputProps {
 }
 
 interface VectorInputProps<T extends VectorInputType>
-    extends
-        Omit<ComponentPropsWithoutRef<'div'>, 'value' | 'onChange'>,
-        SharedInputProps {
+    extends Omit<ComponentPropsWithoutRef<'div'>, 'value' | 'onChange'>, SharedInputProps {
     value: T;
     axisLabels?: Partial<Record<VectorAxes<T>, string>>;
     postfixes?: Partial<Record<VectorAxes<T>, string>>;
