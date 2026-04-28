@@ -1,6 +1,13 @@
 @use '../../../styles/mixins.scss' as m;
 
 .label {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.content {
     display: flex;
     gap: 8px;
 
@@ -8,16 +15,26 @@
         flex-direction: row;
         flex-wrap: wrap;
         align-items: center;
-    }
 
+        &.reverse {
+            flex-direction: row-reverse;
+            justify-content: start;
+        }
+    }
+    
     &.vertical {
         flex-direction: column;
+
+        &.reverse {
+            flex-direction: column-reverse;
+        }
     }
 }
 
 .label-box {
     display: flex;
     justify-content: space-between;
+    gap: 8px;
 }
 
 span.required-mark {

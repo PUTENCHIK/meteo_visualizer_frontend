@@ -49,11 +49,11 @@ export const NumberInput = forwardRef<HTMLInputElement, NumberInputProps>(
             const v = event.target.value.replace(',', '.');
 
             let isPartial = v === '';
-            if (min && Number(min) < 0) {
+            if (!min || Number(min) < 0) {
                 isPartial ||= v === '-';
                 isPartial ||= v === '-0';
             }
-            if (decimal && decimal > 0) {
+            if (!decimal || decimal > 0) {
                 isPartial ||= v.endsWith('.');
             }
 

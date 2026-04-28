@@ -28,6 +28,7 @@ interface IconButtonProps {
     type?: IconButtonType;
     iconSize?: IconSize;
     iconColor?: string;
+    iconRotate?: number;
     className?: string;
     disabled?: boolean;
     onClick?: () => void;
@@ -39,6 +40,7 @@ export const IconButton = ({
     type = 'default',
     iconSize = 24,
     iconColor,
+    iconRotate = 0,
     className,
     disabled = false,
     onClick,
@@ -53,6 +55,7 @@ export const IconButton = ({
             <SvgIcon
                 iconName={iconName}
                 size={iconSize}
+                rotate={iconRotate}
                 disabled={disabled}
                 color={iconColor ?? typeToStyles[type].iconColor}
             />

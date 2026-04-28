@@ -18,6 +18,7 @@ export type IconName =
     | 'star-off'
     | 'plus'
     | 'restore'
-    | 'star-full';
+    | 'star-full'
+    | 'checron';
 
 export type IconSize = 48 | 36 | 28 | 24 | 20 | 16 | 12;

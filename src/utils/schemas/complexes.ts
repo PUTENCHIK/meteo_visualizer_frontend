@@ -30,6 +30,7 @@ export interface ComplexSchema extends AuditableModelSchema {
     longitude: number;
     address: string | null;
     is_secreted: boolean;
+    creator_id: Guid | null;
 }
 
 export interface ComplexWithCreatorSchema extends ComplexSchema {

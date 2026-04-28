@@ -90,8 +90,12 @@ export const MeasureItem = ({ data }: MeasureItemProps) => {
             <span>
                 Шкала: [{data.min}; {data.max}]
             </span>
+            <span>Обозначение единицы измерения: {data.units}</span>
             <ComponentRowBox
-                left={[<span>Обозначение единицы измерения: {data.units}</span>]}
+                left={[
+                    <span>Добавил:</span>,
+                    <EntityLabel entity={data.creator} type='user' linkable />,
+                ]}
                 right={[
                     <TimestampLabel value={data.created_at} />,
                     <TimestampLabel value={data.updated_at} />,

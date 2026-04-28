@@ -13,6 +13,8 @@ export const useDeleteUser = () => {
         onSuccess: (_, { id }) => {
             queryClient.invalidateQueries({ queryKey: ['users'] });
             queryClient.invalidateQueries({ queryKey: ['user', id.toString()] });
+            queryClient.invalidateQueries({ queryKey: ['complexes'] });
+            queryClient.invalidateQueries({ queryKey: ['measures'] });
         },
     });
 };

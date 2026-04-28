@@ -129,11 +129,7 @@ export const ComplexItem = ({ data }: ComplexItemProps) => {
                 left={[
                     [
                         <span>Добавил:</span>,
-                        data.creator ? (
-                            <EntityLabel entity={data.creator} type='user' linkable />
-                        ) : (
-                            'Система'
-                        ),
+                        <EntityLabel entity={data.creator} type='user' linkable />,
                     ],
                 ]}
                 right={[

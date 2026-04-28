@@ -81,7 +81,7 @@ export const MeasureForm = ({ measure }: MeasureFormProps) => {
                 name='max'
                 control={control}
                 render={({ field }) => (
-                    <InputLabel label='Максимум шкалы' required error={errors.min?.message}>
+                    <InputLabel label='Максимум шкалы' required error={errors.max?.message}>
                         <NumberInput {...field} placeholder='100' step={1} />
                     </InputLabel>
                 )}

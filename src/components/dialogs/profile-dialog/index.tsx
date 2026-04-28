@@ -13,7 +13,13 @@ export const ProfileDialog: React.FC<DialogProps<'profile'>> = () => {
         <BaseDialog dialogId='profile' title='Профиль'>
             {isLoading && <Loader />}
             {isError && <span>Не удалось загрузить данные пользователя</span>}
-            {data ? <UserItem data={data} profile /> : <span>На удивление, вас не существует</span>}
+            {!isLoading &&
+                !isError &&
+                (data ? (
+                    <UserItem data={data} profile />
+                ) : (
+                    <span>На удивление, вас не существует</span>
+                ))}
         </BaseDialog>
     );
 };
