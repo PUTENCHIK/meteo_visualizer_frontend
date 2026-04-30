@@ -22,7 +22,7 @@ export const ComplexPage = () => {
     const { openPanel } = usePanels();
     const { openDialog } = useDialogs();
     const { isConnected, disableConnection } = useSocket();
-    const { complex, setComplex } = useComplexStore();
+    const { complex, setComplex, reset } = useComplexStore();
     const { id: complexId } = useParams<{ id: string }>();
 
     const isIdValid = Guid.isGuid(complexId ?? '');
@@ -41,7 +41,7 @@ export const ComplexPage = () => {
         if (loadedComplex) {
             setComplex(loadedComplex);
         }
-        return () => setComplex(null);
+        return () => reset();
     }, [loadedComplex, setComplex]);
 
     const handleBackClick = () => {

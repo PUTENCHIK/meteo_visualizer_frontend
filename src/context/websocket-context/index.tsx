@@ -62,7 +62,7 @@ const SocketContext = createContext<SocketContextType | undefined>(undefined);
 
 export const WebSocketProvider = ({ children }: { children: ReactNode }) => {
     // const { addData } = useDevicesStore();
-    const { complex } = useComplexStore();
+    const { complex, measure } = useComplexStore();
     const { logout } = useAuthStore();
 
     const [connectionEnabled, setConnectionEnabled] = useState(false);
@@ -73,7 +73,7 @@ export const WebSocketProvider = ({ children }: { children: ReactNode }) => {
     const reconnectRef = useRef<boolean>(false);
 
     const getSocketUrl = useCallback(async (): Promise<string> => {
-        if (!complex) return '';
+        if (!complex || !measure) return '';
 
         if (reconnectRef.current) {
             try {
@@ -88,8 +88,8 @@ export const WebSocketProvider = ({ children }: { children: ReactNode }) => {
         }
 
         const { accessToken } = useAuthStore.getState();
-        return `ws://localhost:5049/api/complexes/${complex.id}/ws?token=${accessToken}`;
-    }, [complex, logout]);
+        return `ws://localhost:5049/api/complexes/${complex.id}/ws?token=${accessToken}&aliases=${measure.aliases.map(a => a.name).join(',')}`;;
+    }, [complex, measure, logout]);
 
     const socketUrl = useMemo(() => {
         if (!connectionEnabled || !complex) return null;
@@ -99,11 +99,13 @@ export const WebSocketProvider = ({ children }: { children: ReactNode }) => {
     const { sendJsonMessage, readyState } = useWebSocket<ServerMessage>(socketUrl, {
         onMessage: (event) => {
             try {
-                const message: ServerMessage = JSON.parse(event.data);
-                if (message.poll_result) {
-                    // addData(message.pollable_name, message.poll_result);
-                    console.log(message.pollable_name);
-                }
+                console.log(event.data);
+                
+                // const message: ServerMessage = JSON.parse(event.data);
+                // if (message.poll_result) {
+                //     // addData(message.pollable_name, message.poll_result);
+                //     console.log(message.pollable_name);
+                // }
                 messagesCountRef.current += 1;
             } catch (error) {
                 showError({ error: error as Error });

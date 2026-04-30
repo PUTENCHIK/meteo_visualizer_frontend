@@ -2,7 +2,7 @@ import api from '@stores/auth-store/api';
 import { useQuery } from '@tanstack/react-query';
 import type { MeasureWithDependentsSchema } from '@utils/schemas';
 
-export const useMeasures = (includeDeleted: boolean) => {
+export const useMeasures = (includeDeleted: boolean = false) => {
     return useQuery({
         queryKey: ['measures', includeDeleted],
         queryFn: async () => {

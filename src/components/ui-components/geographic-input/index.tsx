@@ -34,7 +34,7 @@ export const GeographicInput = ({
     const [vector, setVector] = useState<Vector3>(numberToGeographic(value));
 
     useEffect(() => {
-        setSign(value >= 0 ? '+' : '-');
+        setSign(value > 0 ? '+' : '-');
         setVector(numberToGeographic(value));
     }, [value]);
 

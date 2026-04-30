@@ -9,6 +9,7 @@ const entityTitles: Record<EntityType, string> = {
     complex: 'Комплекс МАМКА',
     role: 'Роль пользователей',
     user: 'Пользователь',
+    measure: 'Параметр',
 };
 
 export const EntityDialog: React.FC<DialogProps<'entity'>> = ({ data }) => {

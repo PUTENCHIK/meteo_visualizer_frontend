@@ -1,3 +1,5 @@
+import clsx from 'clsx';
+import s from './measure-item.module.scss';
 import { ComponentColumnsBox } from '@components/component-columns-box';
 import { ComponentRowBox } from '@components/component-row-box';
 import { EntityLabel } from '@components/entity-label';
@@ -103,6 +105,11 @@ export const MeasureItem = ({ data }: MeasureItemProps) => {
                 ]}
                 size='tiny'
             />
+            {(data.aliases.length < 1 || data.colors.length < 2) && (
+                <div className={clsx(s['warning'])}>
+                    Параметр нельзя будет использовать до добавления хотя бы 2 цветов и 1 псевдонима
+                </div>
+            )}
             {!isDeleted && (
                 <ComponentColumnsBox>
                     <>
