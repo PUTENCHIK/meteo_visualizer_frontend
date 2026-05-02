@@ -82,18 +82,6 @@ const rawSettings = {
     atmosphere: createSection('Настройки модели атмосферы', 'wind', {
         enable: createBoolean('Отображение', false),
         degreeOfInterpolation: createRange('Степень интерполяции', 3, 1, 4, 1),
-        tempScale: createChapter('Шкала значений температуры', {
-            min: createRange('Мин', 20, -30, 50, 1),
-            max: createRange('Макс', 35, -30, 50, 1),
-        }),
-        humidityScale: createChapter('Шкала значений влажности', {
-            min: createRange('Мин', 0, 0, 100, 5),
-            max: createRange('Макс', 100, 0, 100, 5),
-        }),
-        pressureScale: createChapter('Шкала значений давления', {
-            min: createRange('Мин', 700, 660, 840, 5),
-            max: createRange('Макс', 820, 660, 840, 5),
-        }),
         maxStations: createNumber(
             'Максимальное принимаемое шейдерами количество метеостанций',
             128,

@@ -15,7 +15,7 @@ export const ComplexPanel: React.FC<PanelProps<'complex'>> = () => {
                 cond: () => !complex,
                 label: <span>Комплекса нет в хранилище</span>,
             }}>
-            {complex && <ComplexItem data={complex} />}
+            {complex && <ComplexItem data={complex} focusable />}
         </BasePanel>
     );
 };

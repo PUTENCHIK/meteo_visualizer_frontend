@@ -16,7 +16,7 @@ import { ProviderComposer } from '@context/provider-composer';
 import { SceneProvider } from '@context/scene-context';
 import { BridgeProvider } from '@context/bridge-context';
 import { FiberProvider } from 'its-fine';
-// import { DevicesProvider } from '@context/devices-context';
+import { DevicesProvider } from '@context/devices-context';
 import { DialogProvider } from '@context/dialog-context';
 import { AuthProvider } from '@context/auth-context';
 import { QueryProvider } from '@context/query-context';
@@ -28,7 +28,7 @@ const providers = [
     AuthProvider,
     DialogProvider,
     PanelProvider,
-    // DevicesProvider,
+    DevicesProvider,
     WebSocketProvider,
     SceneProvider,
     BridgeProvider,

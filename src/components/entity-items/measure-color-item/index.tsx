@@ -1,3 +1,4 @@
+import { ColorDisplay } from '@components/color-display';
 import { ComponentRowBox } from '@components/component-row-box';
 import { EntityLabel } from '@components/entity-label';
 import { IconButton } from '@components/icon-button';
@@ -59,7 +60,7 @@ export const MeasureColorItem = ({ data, measure }: MeasureColorItemProps) => {
                 size='tiny'
             />
             <ComponentRowBox
-                left={[<span>Значение: </span>, <input type='color' value={data.value} readOnly />]}
+                left={[<span>Значение: </span>, <ColorDisplay color={data.value} size={24} />]}
                 size='tiny'
             />
             <ComponentRowBox

@@ -1,8 +1,8 @@
-// import { useDevicesStore } from '@context/devices-context';
 import { showError } from '@components/toast/funcs';
 import { useAuthStore } from '@stores/auth-store';
 import api from '@stores/auth-store/api';
 import { useComplexStore } from '@stores/complex-store';
+import type { MessagePayloadSchema } from '@utils/schemas/websocket';
 import {
     createContext,
     useCallback,
@@ -14,38 +14,7 @@ import {
     type ReactNode,
 } from 'react';
 import useWebSocket, { ReadyState } from 'react-use-websocket';
-
-type PollStatus = 'DONE' | 'ERROR' | 'DEACTIVATED' | 'CONNECTION_FAILURE';
-
-interface PayloadItem {
-    description: string;
-    name: string;
-    units: string;
-    value: number;
-}
-
-interface DebugInfo {
-    poll_start_time: number;
-    poll_end_time: number;
-}
-
-export interface PollResult {
-    timestamp: number;
-    payload: PayloadItem[];
-    status: PollStatus;
-    debug_info: DebugInfo;
-}
-
-interface ServerMessage {
-    pollable_name: string;
-    pipelines: string[];
-    poll_result: PollResult | null;
-}
-
-export interface SocketConfig {
-    host: string;
-    port: number;
-}
+import { devicesStore } from '@stores/devices-store';
 
 interface SocketContextType {
     sendMessage: (data: any) => void;
@@ -61,7 +30,6 @@ interface SocketContextType {
 const SocketContext = createContext<SocketContextType | undefined>(undefined);
 
 export const WebSocketProvider = ({ children }: { children: ReactNode }) => {
-    // const { addData } = useDevicesStore();
     const { complex, measure } = useComplexStore();
     const { logout } = useAuthStore();
 
@@ -88,7 +56,7 @@ export const WebSocketProvider = ({ children }: { children: ReactNode }) => {
         }
 
         const { accessToken } = useAuthStore.getState();
-        return `ws://localhost:5049/api/complexes/${complex.id}/ws?token=${accessToken}&aliases=${measure.aliases.map(a => a.name).join(',')}`;;
+        return `ws://localhost:5049/api/complexes/${complex.id}/ws?token=${accessToken}&measure_id=${measure.id}`;
     }, [complex, measure, logout]);
 
     const socketUrl = useMemo(() => {
@@ -96,16 +64,14 @@ export const WebSocketProvider = ({ children }: { children: ReactNode }) => {
         return getSocketUrl;
     }, [connectionEnabled, getSocketUrl, complex]);
 
-    const { sendJsonMessage, readyState } = useWebSocket<ServerMessage>(socketUrl, {
+    const { sendJsonMessage, readyState } = useWebSocket<MessagePayloadSchema>(socketUrl, {
+        onOpen: () => {
+            devicesStore.clear();
+        },
         onMessage: (event) => {
             try {
-                console.log(event.data);
-                
-                // const message: ServerMessage = JSON.parse(event.data);
-                // if (message.poll_result) {
-                //     // addData(message.pollable_name, message.poll_result);
-                //     console.log(message.pollable_name);
-                // }
+                const message: MessagePayloadSchema = JSON.parse(event.data);
+                devicesStore.addData(message);
                 messagesCountRef.current += 1;
             } catch (error) {
                 showError({ error: error as Error });

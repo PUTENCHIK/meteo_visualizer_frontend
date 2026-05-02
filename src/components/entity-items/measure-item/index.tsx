@@ -13,6 +13,7 @@ import { useDeleteMeasure } from '@hooks/measures/use-delete-measure';
 import { useRestoreMeasure } from '@hooks/measures/use-restore-measure';
 import { HasPermission } from '@pages/has-permission';
 import type { MeasureWithDependentsSchema } from '@utils/schemas';
+import { MAX_MEASURE_COLORS } from '@utils/common';
 
 interface MeasureItemProps {
     data: MeasureWithDependentsSchema;
@@ -22,6 +23,8 @@ export const MeasureItem = ({ data }: MeasureItemProps) => {
     const { openDialog } = useDialogs();
     const deleteMutation = useDeleteMeasure();
     const restoreMutation = useRestoreMeasure();
+
+    const isMaxColors = data.colors.length >= MAX_MEASURE_COLORS;
 
     const updateMeasure = () => {
         openDialog('edit-measure', { measureId: data.id });
@@ -119,9 +122,14 @@ export const MeasureItem = ({ data }: MeasureItemProps) => {
                                 <HasPermission permission='measure_color:create'>
                                     <IconButton
                                         iconName='plus'
-                                        title='Добавить цвет'
+                                        title={
+                                            isMaxColors
+                                                ? `Максимум ${MAX_MEASURE_COLORS} цветов`
+                                                : 'Добавить цвет'
+                                        }
                                         type='primary'
                                         iconSize={16}
+                                        disabled={isMaxColors}
                                         onClick={() =>
                                             openDialog('edit-measure-color', { measure: data })
                                         }

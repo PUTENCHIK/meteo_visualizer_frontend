@@ -1,12 +1,39 @@
-export const fragmentShader = `
+export const fragmentShader = (maxColors: number) => `
+    #define MAX_COLORS ${maxColors}
+
     varying float vValue;
+    uniform vec4 uColors[MAX_COLORS];
+    uniform int uColorCount;
     uniform float uMinVal;
     uniform float uMaxVal;
     uniform float uOpacity;
 
     void main() {
+        // нормализация значения
         float t = clamp((vValue - uMinVal) / (uMaxVal - uMinVal), 0.0, 1.0);
-        vec3 color = vec3(t, 0.0, 1.0 - t);
+        // значение цвета по умолчанию
+        vec3 color = uColors[0].xyz;
+
+        for (int i = 0; i < MAX_COLORS - 1; i++) {
+            // пропускаем цвета, которых нет
+            if (i >= uColorCount - 1) break;
+
+            vec4 start = uColors[i];
+            vec4 end = uColors[i+1];
+
+            // если цвет в промежутке двух цветов
+            if (t >= start.w && t <= end.w) {
+                float localT = (t - start.w) / (end.w - start.w);
+                color = mix(start.xyz, end.xyz, localT);
+                break;
+            }
+
+            // t больше цветов в промежутке
+            if (t > end.w) {
+                color = end.xyz;
+            }
+        }
+        // color = vec3(t, 0.0, 1.0 - t);
         gl_FragColor = vec4(color, uOpacity);
     }
 `;

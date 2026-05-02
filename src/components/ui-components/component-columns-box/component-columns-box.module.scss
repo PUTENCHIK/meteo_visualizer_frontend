@@ -1,8 +1,15 @@
 .component-columns-box {
     flex: 1;
     display: flex;
-    column-gap: 20px;
     align-items: start;
+
+    &.tiny {
+        column-gap: 8px;
+    }
+
+    &.normal {
+        column-gap: 20px;
+    }
 }
 
 .column-box {

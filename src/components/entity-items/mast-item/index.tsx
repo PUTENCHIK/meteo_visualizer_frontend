@@ -8,14 +8,17 @@ import { useDeleteMast } from '@hooks/masts/use-delete-mast';
 import { BaseEntityItem } from '@entity-items/base-entity-item';
 import { GeographicInput } from '@components/geographic-input';
 import { HasPermission } from '@pages/has-permission';
+import { useFocus } from '@hooks/use-focus';
 
 interface MastItemProps {
     data: MastSchema;
     complex: ComplexWithCreatorSchema;
+    focusable?: boolean;
 }
 
-export const MastItem = ({ data, complex }: MastItemProps) => {
+export const MastItem = ({ data, complex, focusable = false }: MastItemProps) => {
     const { openDialog } = useDialogs();
+    const { focusMast } = useFocus();
     const deleteMutation = useDeleteMast();
 
     const isDeleted = data.deleted_at !== null;
@@ -42,6 +45,14 @@ export const MastItem = ({ data, complex }: MastItemProps) => {
             <ComponentRowBox
                 left={[<span>Мачта</span>, <EntityLabel entity={data} />]}
                 right={[
+                    focusable && (
+                        <IconButton
+                            iconName='eye'
+                            title='Фокус'
+                            iconSize={16}
+                            onClick={() => focusMast(data.id)}
+                        />
+                    ),
                     <HasPermission permission='mast:update'>
                         <IconButton
                             iconName='pencil'

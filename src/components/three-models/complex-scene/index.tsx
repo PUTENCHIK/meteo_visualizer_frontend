@@ -6,12 +6,10 @@ import { TelescopeModel } from '@models_/telescope-model';
 import { MastModel } from '@models_/mast-model';
 import { Suspense, useEffect, useMemo, useState } from 'react';
 import { Loader } from '@components/loader';
-// import { AtmosphereModel } from '@models_/atmosphere-model';
 import { SceneReporter } from '@helpers/scene-reporter';
 import { degToRad } from 'three/src/math/MathUtils.js';
 import { useSettings } from '@context/use-settings';
-// import { Heatmap } from '@models_/heatmap';
-// import { Pillarmap } from '@models_/pillarmap';
+import { AtmosphereModel } from '@models_/atmosphere-model';
 import { SunModel } from '@models_/sun-model';
 import { useScene } from '@context/scene-context';
 import { geographicToPolar } from '@utils/coordinate-systems';
@@ -121,28 +119,11 @@ export const ComplexScene = () => {
                 )}
 
                 {complex && complex.masts.map((item) => <MastModel data={item} />)}
-                {/* {settings.atmosphere.enable && (
+                {settings.atmosphere.enable && (
                     <>
-                        {settings.atmosphere.model.value === 'particles' && (
-                            <AtmosphereModel
-                                basePlateSize={basePlateSize}
-                                height={settings.atmosphere.model.particles.height}
-                            />
-                        )}
-                        {settings.atmosphere.model.value === 'heatmap' && (
-                            <Heatmap
-                                basePlateSize={basePlateSize}
-                                height={settings.atmosphere.model.heatmap.height}
-                            />
-                        )}
-                        {settings.atmosphere.model.value === 'pillarmap' && (
-                            <Pillarmap
-                                basePlateSize={basePlateSize}
-                                height={settings.atmosphere.model.pillarmap.height}
-                            />
-                        )}
+                        <AtmosphereModel basePlateSize={basePlateSize} />
                     </>
-                )} */}
+                )}
             </Suspense>
 
             {settings.scene.grid.enable && <gridHelper args={[basePlateSize.x, basePlateSize.z]} />}

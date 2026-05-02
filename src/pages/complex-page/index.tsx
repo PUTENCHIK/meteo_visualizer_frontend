@@ -16,6 +16,7 @@ import { Guid } from 'typescript-guid';
 import { Loader } from '@components/loader';
 import { useComplexStore } from '@stores/complex-store';
 import { useSocket } from '@context/websocket-context';
+import { MeasureGradient } from '@components/measure-gradient';
 
 export const ComplexPage = () => {
     const navigate = useNavigate();
@@ -123,6 +124,7 @@ export const ComplexPage = () => {
 
                     <CompassModel />
                     <SceneStats />
+                    <MeasureGradient />
                 </>
             )}
         </>

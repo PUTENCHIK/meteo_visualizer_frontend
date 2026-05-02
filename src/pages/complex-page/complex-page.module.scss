@@ -2,8 +2,8 @@
     width: calc(100% - 2*var(--complex-page-padding));
 
     position: absolute;
-    top: 20px;
-    left: 20px;
+    top: var(--complex-page-padding);
+    left: var(--complex-page-padding);
     z-index: 5;
 }
 

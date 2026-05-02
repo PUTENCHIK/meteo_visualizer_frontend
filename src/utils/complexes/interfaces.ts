@@ -1,6 +1,5 @@
 // import type { PolarPositionDto } from '@utils/coordinate-systems';
 // import type { WeatherStationsNum, MastConfigName } from './types';
-// import type { Vector3 } from 'three';
 
 // export interface DeviceMeasurement {
 //     value: number;
@@ -10,11 +9,6 @@
 // export interface DeviceMeasure {
 //     units: string;
 //     measurements: DeviceMeasurement[];
-// }
-
-// export interface VisualizationData {
-//     position: Vector3;
-//     value: number;
 // }
 
 // export interface WeatherDeviceName {

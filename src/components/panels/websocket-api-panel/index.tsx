@@ -10,14 +10,29 @@ import { useSocket } from '@context/websocket-context';
 import { useMeasures } from '@hooks/measures/use-measures';
 import { BasePanel } from '@panels/base-panel';
 import { useComplexStore } from '@stores/complex-store';
+import { useCallback, useEffect, useMemo } from 'react';
 
 export const WebsocketApiPanel: React.FC<PanelProps<'websocketApi'>> = () => {
     const { connectionEnabled, isConnecting, isConnected, toggleConnection } = useSocket();
     const { complex, measure, setMeasure } = useComplexStore();
     const { data, isLoading, isError } = useMeasures();
 
-    const address = complex?.address;
-    const measures = data?.filter(m => m.colors.length >= 2 && m.aliases.length >= 1);
+    const address = useMemo(() => complex?.address, [complex]);
+    const measures = useMemo(
+        () => data?.filter((m) => m.colors.length >= 2 && m.aliases.length >= 1),
+        [data],
+    );
+
+    useEffect(() => {
+        setMeasure(measures?.find((m) => measure?.id === m.id) ?? null);
+    }, [measures]);
+
+    const handleMeasureChange = useCallback(
+        (value: string) => {
+            setMeasure(measures?.find((m) => m.id.toString() === value) ?? null);
+        },
+        [measures],
+    );
 
     return (
         <BasePanel
@@ -37,7 +52,7 @@ export const WebsocketApiPanel: React.FC<PanelProps<'websocketApi'>> = () => {
                                     intermediate={
                                         isConnecting || (connectionEnabled && !isConnected)
                                     }
-                                    disabled={isLoading || !measure}
+                                    disabled={isLoading || isError || !measure}
                                     onChange={toggleConnection}
                                 />
                             </InputLabel>,
@@ -59,7 +74,7 @@ export const WebsocketApiPanel: React.FC<PanelProps<'websocketApi'>> = () => {
                                 ],
                                 [
                                     <Select
-                                        value={measure?.id.toString() ?? ''}
+                                        value={measure?.id?.toString() ?? ''}
                                         options={['', ...measures.map((m) => m.id.toString())]}
                                         labels={{
                                             '': 'Выберите параметр',
@@ -67,12 +82,7 @@ export const WebsocketApiPanel: React.FC<PanelProps<'websocketApi'>> = () => {
                                                 measures.map((m) => [m.id.toString(), m.name]),
                                             ),
                                         }}
-                                        onChange={(value) =>
-                                            setMeasure(
-                                                measures.find((m) => m.id.toString() === value) ??
-                                                    null,
-                                            )
-                                        }
+                                        onChange={handleMeasureChange}
                                     />,
                                 ],
                             ]}

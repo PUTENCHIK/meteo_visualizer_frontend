@@ -17,9 +17,10 @@ import { HasPermission } from '@pages/has-permission';
 
 interface ComplexItemProps {
     data: ComplexWithFavoriteInfoSchema;
+    focusable?: boolean;
 }
 
-export const ComplexItem = ({ data }: ComplexItemProps) => {
+export const ComplexItem = ({ data, focusable = false }: ComplexItemProps) => {
     const { openDialog } = useDialogs();
     const { mutate: addToFavorite, isPending: favPending } = useAddComplexToFavorites();
     const { mutate: deleteFromFavorite, isPending: unfavPending } = useDeleteComplexFromFavorites();
@@ -158,7 +159,12 @@ export const ComplexItem = ({ data }: ComplexItemProps) => {
                     {data.masts.length === 0 && <span>Нет мачт</span>}
                     {data.masts &&
                         data.masts.map((mast, index) => (
-                            <MastItem key={index} data={mast} complex={data} />
+                            <MastItem
+                                key={index}
+                                data={mast}
+                                complex={data}
+                                focusable={focusable}
+                            />
                         ))}
                 </>
             )}
