@@ -32,11 +32,11 @@ export const AtmosphereModel = ({ basePlateSize }: AtmosphereModelProps) => {
 
     const { positions, count, opacity, instancedMeshPosition } = useMemo(() => {
         return strategy.getLayout({ basePlateSize, settings });
-    }, [strategy, basePlateSize, settings, ...strategy.getDeps(settings)]);
+    }, [strategy, basePlateSize, settings, strategy.getDeps(settings)]);
 
     const stationsData = useMemo(
-        () => new Array(MAX_STATIONS).fill(null).map(() => new Vector4(0, 0, 0, measure?.min ?? 0)),
-        [MAX_STATIONS, measure],
+        () => new Array(MAX_STATIONS).fill(null).map(() => new Vector4(0, 0, 0, 0)),
+        [MAX_STATIONS],
     );
 
     const colorsData = useMemo(() => {
@@ -85,7 +85,7 @@ export const AtmosphereModel = ({ basePlateSize }: AtmosphereModelProps) => {
         strategy,
         basePlateSize,
         settings,
-        ...strategy.getShaderDeps(settings),
+        strategy.getShaderDeps(settings),
     ]);
 
     const instanceMatrices = useMemo(() => {
@@ -118,7 +118,7 @@ export const AtmosphereModel = ({ basePlateSize }: AtmosphereModelProps) => {
             dataIndex++;
         }
         for (let i = dataIndex; i < MAX_STATIONS; i++) {
-            stationsData[i].set(0, 0, 0, measure?.min ?? 0);
+            stationsData[i].set(0, 0, 0, 0);
         }
 
         const uniforms = materialRef.current.uniforms as StrictUniforms;
@@ -139,7 +139,11 @@ export const AtmosphereModel = ({ basePlateSize }: AtmosphereModelProps) => {
         <instancedMesh args={[undefined, undefined, count]} position={instancedMeshPosition}>
             <instancedBufferAttribute attach='instanceMatrix' args={[instanceMatrices, 16]} />
             {strategy.renderGeometry({ basePlateSize, settings })}
-            <shaderMaterial ref={materialRef} args={[shader]} transparent />
+            <shaderMaterial
+                ref={materialRef}
+                args={[shader]}
+                transparent
+            />
         </instancedMesh>
     );
 };

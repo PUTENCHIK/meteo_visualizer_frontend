@@ -31,6 +31,10 @@ export class DevicesStore {
         return () => this._listeners.delete(callback);
     };
 
+    get data() {
+        return this._data;
+    }
+
     public clear() {
         this._data = {};
     }

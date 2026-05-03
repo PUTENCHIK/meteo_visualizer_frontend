@@ -71,7 +71,11 @@ export const vertexShader = (maxStations: number) => `
             weightSum += w;
         }
         
-        vValue = valueSum / weightSum;
+        if (weightSum > 0.0) {
+            vValue = valueSum / weightSum;
+        } else {
+            vValue = uMinVal;
+        }
         vec3 localPos = position;
 
         if (uScaling) {

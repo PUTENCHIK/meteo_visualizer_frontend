@@ -10,6 +10,7 @@ import { useSocket } from '@context/websocket-context';
 import { useMeasures } from '@hooks/measures/use-measures';
 import { BasePanel } from '@panels/base-panel';
 import { useComplexStore } from '@stores/complex-store';
+import { devicesStore } from '@stores/devices-store';
 import { useCallback, useEffect, useMemo } from 'react';
 
 export const WebsocketApiPanel: React.FC<PanelProps<'websocketApi'>> = () => {
@@ -29,6 +30,7 @@ export const WebsocketApiPanel: React.FC<PanelProps<'websocketApi'>> = () => {
 
     const handleMeasureChange = useCallback(
         (value: string) => {
+            devicesStore.clear();
             setMeasure(measures?.find((m) => m.id.toString() === value) ?? null);
         },
         [measures],

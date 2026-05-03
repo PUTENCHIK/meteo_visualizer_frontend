@@ -1,23 +1,23 @@
 // import { Guid } from 'typescript-guid';
 // import { useShallow } from 'zustand/shallow';
-// import { useSyncExternalStore, useMemo, useState, useEffect } from 'react';
-// import { useDevicesStore } from '@context/devices-context';
+import { useSyncExternalStore } from 'react';
+import { useDevicesStore } from '@context/devices-context';
 // import { useSettings } from '@context/use-settings';
 // import { useComplexStore } from '@stores/complex-store';
 // import type { WeatherDevice } from '@utils/complexes';
 
 // const EMPTY_DEVICES: WeatherDevice[] = [];
 
-// export const useDevicesData = () => {
-//     const store = useDevicesStore();
+export const useDevicesData = () => {
+    const store = useDevicesStore();
 
-//     const data = useSyncExternalStore(
-//         (callback) => store.subscribe(callback),
-//         () => store.data,
-//     );
+    const data = useSyncExternalStore(
+        (callback) => store.subscribe(callback),
+        () => store.data,
+    );
 
-//     return data;
-// };
+    return data;
+};
 
 // export const useDeviceData = (stationId?: Guid) => {
 //     const store = useDevicesStore();

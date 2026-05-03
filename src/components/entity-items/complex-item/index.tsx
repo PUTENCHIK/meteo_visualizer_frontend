@@ -161,7 +161,7 @@ export const ComplexItem = ({ data, focusable = false }: ComplexItemProps) => {
                         data.masts.map((mast, index) => (
                             <MastItem
                                 key={index}
-                                data={mast}
+                                mast={mast}
                                 complex={data}
                                 focusable={focusable}
                             />
