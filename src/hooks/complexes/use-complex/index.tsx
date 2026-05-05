@@ -5,7 +5,7 @@ import type { Guid } from 'typescript-guid';
 
 export const useComplex = (complexId?: Guid) => {
     return useQuery({
-        queryKey: ['complex', complexId],
+        queryKey: ['complex', complexId?.toString()],
         queryFn: async () => {
             if (!complexId) return undefined;
             const response = await api.get<ComplexWithFavoriteInfoSchema>(

@@ -2,26 +2,42 @@
 
 .label {
     display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.content {
+    display: flex;
     gap: 8px;
 
     &.horizontal {
         flex-direction: row;
         flex-wrap: wrap;
         align-items: center;
-    }
 
+        &.reverse {
+            flex-direction: row-reverse;
+            justify-content: start;
+        }
+    }
+    
     &.vertical {
         flex-direction: column;
+
+        &.reverse {
+            flex-direction: column-reverse;
+        }
     }
 }
 
 .label-box {
     display: flex;
     justify-content: space-between;
+    gap: 8px;
 }
 
 span.required-mark {
-    color: red;
+    color: var(--danger-color);
 }
 
 .input-wrapper {

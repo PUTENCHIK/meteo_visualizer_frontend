@@ -13,9 +13,12 @@ export const useUpdateMastYard = () => {
             return response.data;
         },
         onSuccess: (updatedYard) => {
+            queryClient.invalidateQueries({ queryKey: ['complex'] });
             queryClient.invalidateQueries({ queryKey: ['mast-configs'] });
-            queryClient.invalidateQueries({ queryKey: ['mast-config', updatedYard.config_id] });
-            queryClient.invalidateQueries({ queryKey: ['mast-yard', updatedYard.id] });
+            queryClient.invalidateQueries({
+                queryKey: ['mast-config', updatedYard.config_id.toString()],
+            });
+            queryClient.invalidateQueries({ queryKey: ['mast-yard', updatedYard.id.toString()] });
         },
     });
 };

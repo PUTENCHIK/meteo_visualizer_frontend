@@ -1,5 +1,8 @@
-import { useDevicesStore } from '@context/devices-context';
-import { storageManager } from '@managers/local-storage-manager';
+import { showError } from '@components/toast/funcs';
+import { useAuthStore } from '@stores/auth-store';
+import api from '@stores/auth-store/api';
+import { useComplexStore } from '@stores/complex-store';
+import type { MessagePayloadSchema } from '@utils/schemas/websocket';
 import {
     createContext,
     useCallback,
@@ -11,38 +14,7 @@ import {
     type ReactNode,
 } from 'react';
 import useWebSocket, { ReadyState } from 'react-use-websocket';
-
-type PollStatus = 'DONE' | 'ERROR' | 'DEACTIVATED' | 'CONNECTION_FAILURE';
-
-interface PayloadItem {
-    description: string;
-    name: string;
-    units: string;
-    value: number;
-}
-
-interface DebugInfo {
-    poll_start_time: number;
-    poll_end_time: number;
-}
-
-export interface PollResult {
-    timestamp: number;
-    payload: PayloadItem[];
-    status: PollStatus;
-    debug_info: DebugInfo;
-}
-
-interface ServerMessage {
-    pollable_name: string;
-    pipelines: string[];
-    poll_result: PollResult | null;
-}
-
-export interface SocketConfig {
-    host: string;
-    port: number;
-}
+import { devicesStore } from '@stores/devices-store';
 
 interface SocketContextType {
     sendMessage: (data: any) => void;
@@ -51,43 +23,63 @@ interface SocketContextType {
     isConnecting: boolean;
     isConnected: boolean;
     toggleConnection: () => void;
-    config: SocketConfig;
-    updateConfig: (host: string, port: number) => void;
-    socketUrl: string;
+    disableConnection: () => void;
     messagesCount: number;
 }
 
 const SocketContext = createContext<SocketContextType | undefined>(undefined);
 
 export const WebSocketProvider = ({ children }: { children: ReactNode }) => {
-    const { addData } = useDevicesStore();
+    const { complex, measure } = useComplexStore();
+    const { logout } = useAuthStore();
 
     const [connectionEnabled, setConnectionEnabled] = useState(false);
-    const [config, setConfig] = useState<SocketConfig>(storageManager.getItem('socketContext'));
 
     const messagesCountRef = useRef<number>(0);
     const [messagesCount, setMessagesCount] = useState<number>(0);
 
-    const getSocketUrl = useCallback(
-        () => `ws://${config.host}:${config.port}/ws`,
-        [config.host, config.port],
-    );
+    const reconnectRef = useRef<boolean>(false);
 
-    const socketUrl = useMemo(
-        () => (connectionEnabled ? getSocketUrl() : null),
-        [connectionEnabled, getSocketUrl],
-    );
+    const getSocketUrl = useCallback(async (): Promise<string> => {
+        if (!complex || !measure) return '';
 
-    const { sendJsonMessage, readyState } = useWebSocket<ServerMessage>(socketUrl, {
+        if (reconnectRef.current) {
+            try {
+                await api.get('/users/status');
+                reconnectRef.current = false;
+            } catch (error) {
+                await logout();
+                showError({ error: error as Error });
+                window.location.href = '/auth';
+                throw error;
+            }
+        }
+
+        const { accessToken } = useAuthStore.getState();
+        return `ws://localhost:5049/api/complexes/${complex.id}/ws?token=${accessToken}&measure_id=${measure.id}`;
+    }, [complex, measure, logout]);
+
+    const socketUrl = useMemo(() => {
+        if (!connectionEnabled || !complex) return null;
+        return getSocketUrl;
+    }, [connectionEnabled, getSocketUrl, complex]);
+
+    const { sendJsonMessage, readyState } = useWebSocket<MessagePayloadSchema>(socketUrl, {
+        onOpen: () => {
+            devicesStore.clearData();
+        },
         onMessage: (event) => {
             try {
-                const message: ServerMessage = JSON.parse(event.data);
-                if (message.poll_result) {
-                    addData(message.pollable_name, message.poll_result);
-                }
+                const message: MessagePayloadSchema = JSON.parse(event.data);
+                devicesStore.addData(message);
                 messagesCountRef.current += 1;
             } catch (error) {
-                console.error(`Parsing error: ${error}`);
+                showError({ error: error as Error });
+            }
+        },
+        onClose: (event) => {
+            if (event.code === 4001) {
+                reconnectRef.current = true;
             }
         },
         shouldReconnect: () => true,
@@ -108,12 +100,6 @@ export const WebSocketProvider = ({ children }: { children: ReactNode }) => {
     const isConnecting =
         connectionEnabled && !isConnected && readyState !== ReadyState.UNINSTANTIATED;
 
-    const updateConfig = (host: string, port: number) => {
-        const newConfig = { host, port };
-        setConfig(newConfig);
-        storageManager.setItem('socketContext', newConfig);
-    };
-
     const contextValue = useMemo(
         () => ({
             sendMessage: sendJsonMessage,
@@ -122,21 +108,10 @@ export const WebSocketProvider = ({ children }: { children: ReactNode }) => {
             isConnecting,
             isConnected,
             toggleConnection: () => setConnectionEnabled((prev) => !prev),
-            config,
-            updateConfig: updateConfig,
-            socketUrl: getSocketUrl(),
+            disableConnection: () => setConnectionEnabled(false),
             messagesCount: messagesCount,
         }),
-        [
-            sendJsonMessage,
-            readyState,
-            connectionEnabled,
-            isConnecting,
-            isConnected,
-            config,
-            getSocketUrl,
-            messagesCount,
-        ],
+        [sendJsonMessage, readyState, connectionEnabled, isConnecting, isConnected, messagesCount],
     );
 
     return <SocketContext.Provider value={contextValue}>{children}</SocketContext.Provider>;

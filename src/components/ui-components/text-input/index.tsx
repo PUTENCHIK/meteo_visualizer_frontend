@@ -1,53 +1,41 @@
 import clsx from 'clsx';
 import s from './text-input.module.scss';
-import { useState } from 'react';
+import { useState, type ComponentPropsWithoutRef } from 'react';
 import { IconButton } from '@components/icon-button';
 
-interface TextInputProps {
+interface TextInputProps extends Omit<
+    ComponentPropsWithoutRef<'input'>,
+    'value' | 'defaultValue' | 'onChange' | 'onBlur'
+> {
     value?: string;
     defaultValue?: string;
-    placeholder?: string;
-    maxLength?: number;
-    minLength?: number;
-    name?: string;
     password?: boolean;
     trim?: boolean;
-    autoComplete?: string;
-    disabled?: boolean;
     onChange?: (value: string) => void;
-    onBlur?: (value: string) => void;
+    onBlur?: (event: React.FocusEvent<HTMLInputElement>) => void;
 }
 
 export const TextInput = ({
-    value: controlledValue,
+    value,
     defaultValue,
-    placeholder,
-    maxLength,
-    minLength,
-    name,
     password = false,
     trim = true,
-    autoComplete,
-    disabled = false,
     onChange,
     onBlur,
+    className,
+    ...rest
 }: TextInputProps) => {
-    const [localValue, setLocalValue] = useState(defaultValue ?? '');
     const [passwordVisible, setPasswordVisible] = useState(false);
 
-    const displayValue = controlledValue !== undefined ? controlledValue : localValue;
-
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        let newValue = event.target.value;
-        newValue = trim ? newValue.trim() : newValue;
-        if (controlledValue === undefined) {
-            setLocalValue(newValue);
-        }
+        const newValue = event.target.value;
         onChange?.(newValue);
     };
 
-    const handleBlur = () => {
-        onBlur?.(trim ? displayValue.trim() : displayValue);
+    const handleBlur = (event: React.FocusEvent<HTMLInputElement>) => {
+        const v = event.target.value;
+        onChange?.(trim ? v.trim() : v);
+        onBlur?.(event);
     };
 
     const togglePasswordVisible = () => {
@@ -57,19 +45,15 @@ export const TextInput = ({
     const inputType = password ? (passwordVisible ? 'text' : 'password') : 'text';
 
     return (
-        <div className={clsx(s['input-container'])}>
+        <div className={clsx(s['input-container'], className)}>
             <input
+                {...rest}
                 type={inputType}
-                name={name}
-                autoComplete={autoComplete}
                 className={clsx(s['text-input'], password && s['password'])}
-                minLength={minLength}
-                maxLength={maxLength}
-                placeholder={placeholder}
-                value={displayValue}
+                defaultValue={defaultValue}
+                value={value}
                 onChange={handleChange}
                 onBlur={handleBlur}
-                disabled={disabled}
             />
             {password && (
                 <IconButton

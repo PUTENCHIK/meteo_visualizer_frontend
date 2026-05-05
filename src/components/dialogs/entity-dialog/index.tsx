@@ -7,6 +7,9 @@ import { Loader } from '@components/loader';
 const entityTitles: Record<EntityType, string> = {
     'mast-config': 'Конфиг мачты',
     complex: 'Комплекс МАМКА',
+    role: 'Роль пользователей',
+    user: 'Пользователь',
+    measure: 'Параметр',
 };
 
 export const EntityDialog: React.FC<DialogProps<'entity'>> = ({ data }) => {
@@ -20,11 +23,9 @@ export const EntityDialog: React.FC<DialogProps<'entity'>> = ({ data }) => {
         <BaseDialog dialogId='entity' title={entityTitles[type]}>
             {isLoading && <Loader />}
             {isError && <span>Ошибка при загрузке</span>}
-            {entity && !isError ? (
-                <Component data={entity} />
-            ) : (
-                <span>Не удалось загрузить сущность</span>
-            )}
+            {!isError &&
+                !isLoading &&
+                (entity ? <Component data={entity} /> : <span>Сущности нет</span>)}
         </BaseDialog>
     );
 };

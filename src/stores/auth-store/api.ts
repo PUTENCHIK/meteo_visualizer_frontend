@@ -1,6 +1,6 @@
 import axios, { AxiosError } from 'axios';
 import { useAuthStore } from '.';
-import type { ApiErrorResponse, ErrorCode } from '@utils/http';
+import type { ApiErrorResponse } from '@utils/http';
 import { showError } from '@components/toast/funcs';
 
 const api = axios.create({
@@ -42,10 +42,7 @@ api.interceptors.response.use(
                     return Promise.reject(refreshError);
                 }
             }
-            const isToastError = (['HTTP_ERROR', 'INTERNAL_ERROR'] as ErrorCode[]).includes(code);
-            if (isToastError) {
-                showError({ error: errorData, statusCode: error.response?.status });
-            }
+            showError({ error: errorData, statusCode: error.response?.status });
         }
 
         return Promise.reject(error);

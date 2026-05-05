@@ -5,6 +5,7 @@ import { type IconName, type IconSize, iconFiles, sizesToStrokes } from '@utils/
 interface SvgIconProps {
     iconName: IconName;
     size: IconSize;
+    rotate?: number;
     strokeWidth?: number;
     color?: string;
     primary?: boolean;
@@ -14,6 +15,7 @@ interface SvgIconProps {
 export const SvgIcon = ({
     iconName,
     size,
+    rotate = 0,
     strokeWidth,
     color,
     primary = false,
@@ -33,6 +35,9 @@ export const SvgIcon = ({
             height={size}
             strokeWidth={strokeWidth ?? sizesToStrokes[size]}
             color={color}
+            style={{
+                rotate: `${rotate}deg`,
+            }}
         />
     );
 };

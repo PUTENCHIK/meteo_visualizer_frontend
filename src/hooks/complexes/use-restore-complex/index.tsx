@@ -13,7 +13,9 @@ export const useRestoreComplex = () => {
         },
         onSuccess: (_, { id }) => {
             queryClient.invalidateQueries({ queryKey: ['complexes'] });
-            queryClient.invalidateQueries({ queryKey: ['complex', id] });
+            queryClient.invalidateQueries({ queryKey: ['complex', id.toString()] });
+            queryClient.invalidateQueries({ queryKey: ['users'] });
+            queryClient.invalidateQueries({ queryKey: ['user'] });
         },
     });
 };

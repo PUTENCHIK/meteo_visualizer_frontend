@@ -12,8 +12,11 @@ export const useCreateMastYard = () => {
             return response.data;
         },
         onSuccess: (createdYard) => {
+            queryClient.invalidateQueries({ queryKey: ['complex'] });
             queryClient.invalidateQueries({ queryKey: ['mast-configs'] });
-            queryClient.invalidateQueries({ queryKey: ['mast-config', createdYard.config_id] });
+            queryClient.invalidateQueries({
+                queryKey: ['mast-config', createdYard.config_id.toString()],
+            });
         },
     });
 };

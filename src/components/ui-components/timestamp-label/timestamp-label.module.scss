@@ -5,6 +5,7 @@
     font-family: monospace;
     cursor: default;
 
+    white-space: nowrap;
     background-color: color-mix(in srgb, var(--text-primary), transparent 90%);
     color: var(--text-primary);
 

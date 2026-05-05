@@ -11,7 +11,6 @@ import '@fontsource/roboto/700.css';
 import { Suspense } from 'react';
 import { Loader } from '@components/loader';
 import { WebSocketProvider } from '@context/websocket-context';
-import { ComplexDataProvider } from '@context/complex-data-context';
 import { PanelProvider } from '@context/panel-context';
 import { ProviderComposer } from '@context/provider-composer';
 import { SceneProvider } from '@context/scene-context';
@@ -29,7 +28,6 @@ const providers = [
     AuthProvider,
     DialogProvider,
     PanelProvider,
-    ComplexDataProvider,
     DevicesProvider,
     WebSocketProvider,
     SceneProvider,

@@ -8,8 +8,8 @@ import { TextInput } from '@components/text-input';
 import type { ComplexWithFavoriteInfoSchema } from '@utils/schemas';
 import { useDialogs } from '@context/dialog-context';
 import { useUpdateComplex } from '@hooks/complexes/use-update-complex';
-import { NumberInput } from '@components/number-input';
 import { useCreateComplex } from '@hooks/complexes/use-create-complex';
+import { GeographicInput } from '@components/geographic-input';
 
 interface ComplexFormProps {
     complex?: ComplexWithFavoriteInfoSchema;
@@ -74,8 +74,8 @@ export const ComplexForm = ({ complex }: ComplexFormProps) => {
                 name='latitude'
                 control={control}
                 render={({ field }) => (
-                    <InputLabel label='Широта' required error={errors.latitude?.message}>
-                        <NumberInput {...field} />
+                    <InputLabel label='Широта' required error={errors.latitude?.message} notLabel>
+                        <GeographicInput {...field} param='lat' />
                     </InputLabel>
                 )}
             />
@@ -83,8 +83,8 @@ export const ComplexForm = ({ complex }: ComplexFormProps) => {
                 name='longitude'
                 control={control}
                 render={({ field }) => (
-                    <InputLabel label='Долгота' required error={errors.longitude?.message}>
-                        <NumberInput {...field} />
+                    <InputLabel label='Долгота' required error={errors.longitude?.message} notLabel>
+                        <GeographicInput {...field} param='lon' />
                     </InputLabel>
                 )}
             />

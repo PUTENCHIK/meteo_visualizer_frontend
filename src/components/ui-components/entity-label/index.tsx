@@ -4,8 +4,13 @@ import { useAuthStore } from '@stores/auth-store';
 import type { AuditableModelSchema } from '@utils/schemas';
 import { useDialogs } from '@context/dialog-context';
 import type { EntityType } from '@dialogs/entity-dialog/queries';
+import type { Guid } from 'typescript-guid';
 
 type LabelSize = 'small' | 'big';
+
+interface WithId {
+    id: Guid;
+}
 
 interface WithName extends AuditableModelSchema {
     name: string;
@@ -14,7 +19,7 @@ interface WithLogin extends AuditableModelSchema {
     login: string;
 }
 
-type DisplayableEntity = AuditableModelSchema | WithName | WithLogin;
+type DisplayableEntity = AuditableModelSchema | WithId | WithName | WithLogin;
 
 interface EntityLabelProps<T extends DisplayableEntity> {
     entity: T | null;

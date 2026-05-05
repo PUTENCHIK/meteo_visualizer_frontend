@@ -13,7 +13,7 @@ export const useDeleteMast = () => {
         onSuccess: (_, { id }) => {
             queryClient.invalidateQueries({ queryKey: ['complexes'] });
             queryClient.invalidateQueries({ queryKey: ['complex'] });
-            queryClient.invalidateQueries({ queryKey: ['mast', id] });
+            queryClient.invalidateQueries({ queryKey: ['mast', id.toString()] });
         },
     });
 };

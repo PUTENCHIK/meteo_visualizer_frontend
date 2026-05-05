@@ -1,64 +1,105 @@
-import { Button } from '@components/button';
+import { ComponentRowBox } from '@components/component-row-box';
+import { EntityLabel } from '@components/entity-label';
 import { InputLabel } from '@components/input-label';
-import { NumberInput } from '@components/number-input';
+import { Loader } from '@components/loader';
+import { Select } from '@components/select';
 import { TextInput } from '@components/text-input';
 import { Toggle } from '@components/toggle';
+import type { PanelProps } from '@context/panel-context/panels';
 import { useSocket } from '@context/websocket-context';
+import { useMeasures } from '@hooks/measures/use-measures';
 import { BasePanel } from '@panels/base-panel';
-import { useState } from 'react';
+import { useComplexStore } from '@stores/complex-store';
+import { devicesStore } from '@stores/devices-store';
+import { useCallback, useEffect, useMemo } from 'react';
 
-export const WebsocketApiPanel = () => {
-    const {
-        connectionEnabled,
-        isConnecting,
-        isConnected,
-        toggleConnection,
-        config,
-        updateConfig,
-        socketUrl,
-    } = useSocket();
+export const WebsocketApiPanel: React.FC<PanelProps<'websocketApi'>> = () => {
+    const { connectionEnabled, isConnecting, isConnected, toggleConnection } = useSocket();
+    const { complex, measure, setMeasure } = useComplexStore();
+    const { data, isLoading, isError } = useMeasures();
 
-    const [host, setHost] = useState(config.host);
-    const [port, setPort] = useState(config.port);
+    const address = useMemo(() => complex?.address, [complex]);
+    const measures = useMemo(
+        () => data?.filter((m) => m.colors.length >= 2 && m.aliases.length >= 1),
+        [data],
+    );
 
-    const handleReset = () => {
-        setHost(config.host);
-        setPort(config.port);
-    };
+    useEffect(() => {
+        if (measures) {
+            setMeasure(measures.find((m) => measure?.id === m.id) ?? null);
+        }
+    }, [measure?.id, measures, setMeasure]);
 
-    const handleSave = () => {
-        updateConfig(host, port);
-    };
+    const handleMeasureChange = useCallback(
+        (value: string) => {
+            const m = measures?.find((m) => m.id.toString() === value) ?? null;
+            if (m && m.id !== measure?.id) {
+                devicesStore.clearData();
+            }
+            setMeasure(m);
+        },
+        [measure?.id, measures, setMeasure],
+    );
 
     return (
         <BasePanel
             panelId='websocketApi'
-            title='Конфиг вебсокета'
-            buttons={[
-                <Button title='Сбросить' onClick={handleReset} />,
-                <Button title='Сохранить' type='primary' onClick={handleSave} />,
-            ]}>
-            <InputLabel label='Подключение' orientation='horizontal'>
-                <Toggle
-                    value={isConnected}
-                    intermediate={isConnecting || (connectionEnabled && !isConnected)}
-                    onChange={toggleConnection}
-                />
-            </InputLabel>
-            <span>Адрес: {socketUrl}</span>
-            <InputLabel label='Хост'>
-                <TextInput key={host} defaultValue={host} placeholder={host} onBlur={setHost} />
-            </InputLabel>
-            <InputLabel label='Порт'>
-                <NumberInput
-                    key={port}
-                    defaultValue={port}
-                    placeholder={port.toString()}
-                    min={1}
-                    maxLength={5}
-                    onChange={(v?: number) => setPort(v ?? 0)}
-                />
-            </InputLabel>
+            title='Соединение с API комплекса'
+            noContent={{
+                cond: () => !address,
+                label: <span>Адрес комплекса не установлен, невозможно подключиться</span>,
+            }}>
+            {address && (
+                <>
+                    <ComponentRowBox
+                        left={[
+                            <InputLabel label='Подключение' orientation='horizontal'>
+                                <Toggle
+                                    value={isConnected}
+                                    intermediate={
+                                        isConnecting || (connectionEnabled && !isConnected)
+                                    }
+                                    disabled={isLoading || isError || !measure}
+                                    onChange={toggleConnection}
+                                />
+                            </InputLabel>,
+                            isConnecting && <Loader size={24} />,
+                        ]}
+                    />
+                    <InputLabel label='Адрес TCP'>
+                        <TextInput value={address} readOnly />
+                    </InputLabel>
+
+                    {isLoading && <Loader />}
+                    {isError && <span>Не удалось загрузить параметры</span>}
+                    {!isLoading &&
+                        !isError &&
+                        (measures ? (
+                            <ComponentRowBox
+                                left={[
+                                    [
+                                        <span>Параметр:</span>,
+                                        <EntityLabel entity={measure} type='measure' linkable />,
+                                    ],
+                                    [
+                                        <Select
+                                            value={measure?.id?.toString() ?? ''}
+                                            options={{
+                                                '': 'Выберите параметр',
+                                                ...Object.fromEntries(
+                                                    measures.map((m) => [m.id.toString(), m.name]),
+                                                ),
+                                            }}
+                                            onChange={handleMeasureChange}
+                                        />,
+                                    ],
+                                ]}
+                            />
+                        ) : (
+                            <span>Нет ни одного параметра в приложении</span>
+                        ))}
+                </>
+            )}
         </BasePanel>
     );
 };

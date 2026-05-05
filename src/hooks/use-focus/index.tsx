@@ -1,6 +1,7 @@
 import { useScene } from '@context/scene-context';
 import { useSettings } from '@context/use-settings';
 import { useComplexStore } from '@stores/complex-store';
+import type { MastSchema } from '@utils/schemas';
 import { Box3, PerspectiveCamera, Sphere, Vector3 } from 'three';
 import { degToRad } from 'three/src/math/MathUtils.js';
 import type { Guid } from 'typescript-guid';
@@ -45,27 +46,28 @@ export const useFocus = () => {
         }
     };
 
+    const getMast = (mastId: Guid): MastSchema | undefined => {
+        const complex = useComplexStore.getState().complex;
+        return complex?.masts.find((m) => m.id.toString() === mastId.toString());
+    };
+
     const focusMast = (mastId: Guid) => {
-        const mast = useComplexStore.getState().getMast(mastId);
+        const mast = getMast(mastId);
         if (mast) {
-            focusObject(mastId, new Vector3(0, mast.height / 2, 0), mast.rotation);
+            const height = mast.config?.height;
+            focusObject(mastId, new Vector3(0, (height ?? 0) / 2, 0), mast.rotation);
         } else {
             console.error(`Mast #${mastId} is undefined`);
         }
     };
 
-    const focusStation = (stationId: Guid) => {
-        const station = useComplexStore.getState().getStation(stationId);
-        if (!station) {
-            console.error(`Station #${stationId} is undefined`);
-            return;
+    const focusStation = (stationId: Guid, mastId: Guid) => {
+        const mast = getMast(mastId);
+        if (mast) {
+            focusObject(stationId, new Vector3(), mast.rotation);
+        } else {
+            console.error(`Mast #${mastId} is undefined`);
         }
-        const mast = useComplexStore.getState().getMast(station.mastId);
-        if (!mast) {
-            console.error(`Mast #${station.mastId} is undefined`);
-            return;
-        }
-        focusObject(stationId, new Vector3(), mast.rotation);
     };
 
     return { focusMast, focusStation, focusObject };

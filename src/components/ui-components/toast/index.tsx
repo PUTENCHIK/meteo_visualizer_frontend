@@ -10,7 +10,7 @@ export interface ToastMessagePayload {
 }
 
 export interface ToastErrorPayload {
-    error: ApiErrorResponse;
+    error: Error | ApiErrorResponse;
     statusCode?: number;
 }
 
@@ -47,7 +47,11 @@ export const Toast = ({ closeToast, data: { type, payload } }: ToastContentProps
             {type === 'message' && <span>{payload.text}</span>}
             {type === 'error' && (
                 <>
-                    <span>{payload.error.detail.message}</span>
+                    {'detail' in payload.error ? (
+                        <span>{payload.error.detail.message}</span>
+                    ) : (
+                        <span>{payload.error.message}</span>
+                    )}
                 </>
             )}
         </div>

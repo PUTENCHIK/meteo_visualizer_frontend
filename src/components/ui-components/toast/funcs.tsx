@@ -15,7 +15,6 @@ const showNotification = (toastProps: ToastProps) => {
         className: clsx(s['toast-wrapper']),
         hideProgressBar: true,
         position: 'bottom-right',
-        autoClose: 5000,
     });
 };
 

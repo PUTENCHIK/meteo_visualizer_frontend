@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { Loader } from '@components/loader';
 import { useAuthStore } from '@stores/auth-store';
 import api from '@stores/auth-store/api';
+import { showError } from '@components/toast/funcs';
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     const [isChecking, setIsChecking] = useState(true);
@@ -15,7 +16,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
                 setAccessToken(response.data.access_token);
                 await fetchUser();
             } catch (e) {
-                console.log(`Сессия не найдена или истекла: ${e}`);
+                showError({ error: e as Error });
             } finally {
                 setIsChecking(false);
             }

@@ -1,14 +1,15 @@
 import clsx from 'clsx';
 import s from './select.module.scss';
+import type { ComponentPropsWithoutRef } from 'react';
 
 type SelectType = number | string;
 
-interface SelectProps<T extends SelectType> {
+interface SelectProps<T extends SelectType> extends Omit<
+    ComponentPropsWithoutRef<'select'>,
+    'value' | 'onChange'
+> {
     value?: T;
-    options: readonly T[];
-    labels?: Partial<Record<T, string>>;
-    name?: string;
-    disabled?: boolean;
+    options: Record<T, string>;
     onChange?: (value: T) => void;
     onBlur?: () => void;
 }
@@ -16,11 +17,10 @@ interface SelectProps<T extends SelectType> {
 export const Select = <T extends SelectType>({
     value,
     options,
-    labels,
-    name,
-    disabled,
     onChange,
     onBlur,
+    className,
+    ...rest
 }: SelectProps<T>) => {
     const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
         onChange?.(event.target.value as T);
@@ -28,17 +28,14 @@ export const Select = <T extends SelectType>({
 
     return (
         <select
-            className={clsx(s['select'])}
-            name={name}
+            {...rest}
+            className={clsx(s['select'], className)}
             value={value}
-            disabled={disabled}
             onChange={handleChange}
             onBlur={onBlur}>
-            {options.map((item, index) => {
-                const label = labels?.[item] ?? item;
-
+            {(Object.entries(options) as [T, string][]).map(([value, label], index) => {
                 return (
-                    <option key={`${index}-${item}`} value={item}>
+                    <option key={`${index}-${value}`} value={value}>
                         {label}
                     </option>
                 );

@@ -3,11 +3,11 @@ import { MeshGroup } from '@models_/mesh-group';
 import { Vector3 } from 'three';
 import { BoxMesh } from '@models_/box-mesh';
 import { useSettings } from '@context/use-settings';
-import type { Yard } from '@utils/complexes';
 import type { Guid } from 'typescript-guid';
+import type { MastYardSchema } from '@utils/schemas';
 
 interface YardModelProps {
-    data: Yard;
+    data: MastYardSchema;
     mastId: Guid;
 }
 

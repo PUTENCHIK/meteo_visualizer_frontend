@@ -10,12 +10,14 @@ interface ComponentRowBoxProps {
     left?: GroupType;
     right?: GroupType;
     size?: SizeType;
+    wrap?: boolean;
 }
 
 export const ComponentRowBox = ({
     left = [],
     right = [],
     size = 'small',
+    wrap = true,
 }: ComponentRowBoxProps) => {
     const renderItems = (items: GroupType) => {
         return items.map((item, index) => (
@@ -35,7 +37,7 @@ export const ComponentRowBox = ({
 
     return (
         <div className={clsx(s['component-row-box'])}>
-            <div className={clsx(s['group'], s['wrap'], s[size])}>{renderItems(left)}</div>
+            <div className={clsx(s['group'], wrap && s['wrap'], s[size])}>{renderItems(left)}</div>
             <div className={clsx(s['group'], s[size])}>{renderItems(right)}</div>
         </div>
     );

@@ -12,6 +12,8 @@ import { useUpdateMast } from '@hooks/masts/use-update-mast';
 import { ComponentRowBox } from '@components/component-row-box';
 import { EntityLabel } from '@components/entity-label';
 import { Select } from '@components/select';
+import { GeographicInput } from '@components/geographic-input';
+import { TextInput } from '@components/text-input';
 
 interface MastFormProps {
     complex: ComplexWithCreatorSchema;
@@ -37,6 +39,7 @@ export const MastForm = ({ complex, mast, mastConfigs }: MastFormProps) => {
         defaultValues: {
             complex_id: complex.id.toString(),
             config_id: mast?.config?.id.toString() ?? '-',
+            prefix: mast?.prefix ?? '',
             latitude: mast ? Number(mast.latitude) : 0,
             longitude: mast ? Number(mast.longitude) : 0,
             rotation: mast?.rotation ?? 0,
@@ -75,8 +78,7 @@ export const MastForm = ({ complex, mast, mastConfigs }: MastFormProps) => {
                     <InputLabel label='Конфиг' required error={errors.config_id?.message}>
                         <Select
                             {...field}
-                            options={['-', ...mastConfigs.map((c) => c.id.toString())]}
-                            labels={{
+                            options={{
                                 '-': 'Выберите конфиг',
                                 ...Object.fromEntries(
                                     mastConfigs.map((c) => [c.id.toString(), c.name]),
@@ -87,11 +89,20 @@ export const MastForm = ({ complex, mast, mastConfigs }: MastFormProps) => {
                 )}
             />
             <Controller
+                name='prefix'
+                control={control}
+                render={({ field }) => (
+                    <InputLabel label='Префикс' required error={errors.prefix?.message}>
+                        <TextInput {...field} placeholder='north' />
+                    </InputLabel>
+                )}
+            />
+            <Controller
                 name='latitude'
                 control={control}
                 render={({ field }) => (
-                    <InputLabel label='Широта' required error={errors.latitude?.message}>
-                        <NumberInput {...field} />
+                    <InputLabel label='Широта' required error={errors.latitude?.message} notLabel>
+                        <GeographicInput {...field} param='lat' />
                     </InputLabel>
                 )}
             />
@@ -99,8 +110,8 @@ export const MastForm = ({ complex, mast, mastConfigs }: MastFormProps) => {
                 name='longitude'
                 control={control}
                 render={({ field }) => (
-                    <InputLabel label='Долгота' required error={errors.longitude?.message}>
-                        <NumberInput {...field} />
+                    <InputLabel label='Долгота' required error={errors.longitude?.message} notLabel>
+                        <GeographicInput {...field} param='lon' />
                     </InputLabel>
                 )}
             />

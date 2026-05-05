@@ -12,12 +12,15 @@ import { SecretedLabel } from '@components/secreted-label';
 import { useAddComplexToFavorites } from '@hooks/complexes/use-add-complex-to-favorites';
 import { useDeleteComplexFromFavorites } from '@hooks/complexes/use-delete-complex-from-favorites';
 import { BaseEntityItem } from '@entity-items/base-entity-item';
+import { GeographicInput } from '@components/geographic-input';
+import { HasPermission } from '@pages/has-permission';
 
 interface ComplexItemProps {
     data: ComplexWithFavoriteInfoSchema;
+    focusable?: boolean;
 }
 
-export const ComplexItem = ({ data }: ComplexItemProps) => {
+export const ComplexItem = ({ data, focusable = false }: ComplexItemProps) => {
     const { openDialog } = useDialogs();
     const { mutate: addToFavorite, isPending: favPending } = useAddComplexToFavorites();
     const { mutate: deleteFromFavorite, isPending: unfavPending } = useDeleteComplexFromFavorites();
@@ -65,7 +68,7 @@ export const ComplexItem = ({ data }: ComplexItemProps) => {
     };
 
     return (
-        <BaseEntityItem>
+        <BaseEntityItem isDeleted={isDeleted}>
             <ComponentRowBox
                 left={[<h2>{data.name}</h2>, <EntityLabel entity={data} field='id' />]}
                 right={[
@@ -75,44 +78,59 @@ export const ComplexItem = ({ data }: ComplexItemProps) => {
                     ],
                     [
                         !isDeleted ? (
-                            <>
-                                <IconButton
-                                    iconName={isFavorite ? 'star-full' : 'star'}
-                                    title={isFavorite ? 'Не отслеживать' : 'Отслеживать'}
-                                    iconColor={isFavorite ? 'yellow' : undefined}
-                                    disabled={favPending || unfavPending}
-                                    onClick={handleFavoriteClick}
-                                />
-                                <IconButton
-                                    iconName='pencil'
-                                    title='Редактировать'
-                                    onClick={updateComplex}
-                                />
-                                <IconButton
-                                    iconName='bin'
-                                    title='Удалить'
-                                    onClick={deleteComplex}
-                                />
-                            </>
+                            [
+                                <HasPermission
+                                    allOf={['complex_favorite:create', 'complex_favorite:delete']}>
+                                    <IconButton
+                                        iconName={isFavorite ? 'star-full' : 'star'}
+                                        title={isFavorite ? 'Не отслеживать' : 'Отслеживать'}
+                                        iconColor={isFavorite ? 'yellow' : undefined}
+                                        disabled={favPending || unfavPending}
+                                        onClick={handleFavoriteClick}
+                                    />
+                                </HasPermission>,
+                                <HasPermission permission='complex:update'>
+                                    <IconButton
+                                        iconName='pencil'
+                                        title='Редактировать'
+                                        onClick={updateComplex}
+                                    />
+                                </HasPermission>,
+                                <HasPermission permission='complex:delete'>
+                                    <IconButton
+                                        iconName='bin'
+                                        title='Удалить'
+                                        onClick={deleteComplex}
+                                    />
+                                </HasPermission>,
+                            ]
                         ) : (
-                            <IconButton
-                                iconName='restore'
-                                title='Восстановить'
-                                onClick={restoreComplex}
-                            />
+                            <HasPermission permission='complex:restore'>
+                                <IconButton
+                                    iconName='restore'
+                                    title='Восстановить'
+                                    onClick={restoreComplex}
+                                />
+                            </HasPermission>
                         ),
                     ],
                 ]}
             />
             <span>Адрес TCP: {data.address ?? '-'}</span>
-            <span>
-                Расположение: {data.latitude} {data.longitude}
-            </span>
+            <ComponentRowBox
+                left={[<span>Расположение:</span>]}
+                right={[
+                    <GeographicInput value={data.latitude} param='lat' readOnly />,
+                    <GeographicInput value={data.longitude} param='lon' readOnly />,
+                ]}
+                size='tiny'
+                wrap={false}
+            />
             <ComponentRowBox
                 left={[
                     [
                         <span>Добавил:</span>,
-                        data.creator ? <EntityLabel entity={data.creator} /> : 'Система',
+                        <EntityLabel entity={data.creator} type='user' linkable />,
                     ],
                 ]}
                 right={[
@@ -127,19 +145,26 @@ export const ComplexItem = ({ data }: ComplexItemProps) => {
                     <ComponentRowBox
                         left={[<h3>Мачты</h3>]}
                         right={[
-                            <IconButton
-                                iconName='plus'
-                                title='Добавить мачту'
-                                type='primary'
-                                iconSize={16}
-                                onClick={() => openDialog('edit-mast', { complex: data })}
-                            />,
+                            <HasPermission permission='mast:create'>
+                                <IconButton
+                                    iconName='plus'
+                                    title='Добавить мачту'
+                                    type='primary'
+                                    iconSize={16}
+                                    onClick={() => openDialog('edit-mast', { complex: data })}
+                                />
+                            </HasPermission>,
                         ]}
                     />
                     {data.masts.length === 0 && <span>Нет мачт</span>}
                     {data.masts &&
                         data.masts.map((mast, index) => (
-                            <MastItem key={index} data={mast} complex={data} />
+                            <MastItem
+                                key={index}
+                                mast={mast}
+                                complex={data}
+                                focusable={focusable}
+                            />
                         ))}
                 </>
             )}

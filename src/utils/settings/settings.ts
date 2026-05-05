@@ -48,6 +48,7 @@ const rawSettings = {
             enable: createBoolean('Отображение', true),
             height: createRange('Высота', 5, 1, 30, 1),
             padding: createRange('Отступ от мачт', 100, 20, 200, 1),
+            square: createBoolean('Всегда квадрат', false),
             color: createColor('Цвет', 'rgba(116, 116, 116, 1)'),
         }),
         telescope: createChapter('КСТ-3', {
@@ -69,6 +70,7 @@ const rawSettings = {
         }),
         weatherStation: createChapter('Метеостанции', {
             radius: createRange('Радиус', 0.35, 0.2, 0.5, 0.05),
+            occludeInfoBox: createBoolean('Скрытие инф. окна', false),
             color: createColor('Цвет', 'rgba(87, 104, 201, 1)'),
         }),
         sun: createChapter('Солнце', {
@@ -81,18 +83,6 @@ const rawSettings = {
     atmosphere: createSection('Настройки модели атмосферы', 'wind', {
         enable: createBoolean('Отображение', false),
         degreeOfInterpolation: createRange('Степень интерполяции', 3, 1, 4, 1),
-        tempScale: createChapter('Шкала значений температуры', {
-            min: createRange('Мин', 20, -30, 50, 1),
-            max: createRange('Макс', 35, -30, 50, 1),
-        }),
-        humidityScale: createChapter('Шкала значений влажности', {
-            min: createRange('Мин', 0, 0, 100, 5),
-            max: createRange('Макс', 100, 0, 100, 5),
-        }),
-        pressureScale: createChapter('Шкала значений давления', {
-            min: createRange('Мин', 700, 660, 840, 5),
-            max: createRange('Макс', 820, 660, 840, 5),
-        }),
         maxStations: createNumber(
             'Максимальное принимаемое шейдерами количество метеостанций',
             128,

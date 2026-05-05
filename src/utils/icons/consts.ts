@@ -18,6 +18,7 @@ import starOff from '@assets/star-off.svg?react';
 import plus from '@assets/plus.svg?react';
 import restore from '@assets/restore.svg?react';
 import starFull from '@assets/star-full.svg?react';
+import checron from '@assets/checron.svg?react';
 import type { IconName, IconSize } from './types';
 
 export const iconFiles: Record<IconName, React.ComponentType<React.SVGProps<SVGSVGElement>>> = {
@@ -41,6 +42,7 @@ export const iconFiles: Record<IconName, React.ComponentType<React.SVGProps<SVGS
     plus: plus,
     restore: restore,
     'star-full': starFull,
+    checron: checron,
 };
 
 export const sizesToStrokes: Record<IconSize, number> = {

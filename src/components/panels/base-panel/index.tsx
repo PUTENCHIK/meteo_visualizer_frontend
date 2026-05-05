@@ -14,7 +14,7 @@ interface WindowSizeLimits {
 
 interface NoContent {
     cond: () => boolean;
-    label: string;
+    label: React.ReactNode;
 }
 
 interface BasePanelProps {
@@ -37,22 +37,20 @@ export const BasePanel = ({
     children,
 }: BasePanelProps) => {
     const { map: settings } = useSettings();
-    const { activePanels, closePanel, focusPanel } = usePanels();
+    const { panelsOrder, closePanel, focusPanel } = usePanels();
 
-    const isOpen = activePanels.includes(panelId);
+    const index = panelsOrder.findIndex((p) => p === panelId);
 
     const handleCloseClick = () => {
         closePanel(panelId);
     };
 
-    if (!isOpen) return null;
-
     return (
         <Rnd
             className={clsx(s['panel-window'])}
             default={{
-                x: 100 + 20 * activePanels.indexOf(panelId),
-                y: 100 + 20 * activePanels.indexOf(panelId),
+                x: 100 + 20 * index,
+                y: 100 + 20 * index,
                 width: 'auto',
                 height: 'auto',
             }}
@@ -81,7 +79,7 @@ export const BasePanel = ({
             cancel='.close-button'
             onMouseDown={() => focusPanel(panelId)}
             style={{
-                zIndex: 10 + activePanels.indexOf(panelId),
+                zIndex: 10 + index,
                 maxHeight: `${heightLimits?.max ?? settings.ui.windows.maxHeight}px`,
             }}>
             <div className={clsx(s['window-content'])}>
@@ -104,7 +102,7 @@ export const BasePanel = ({
                     <div className={clsx(s['children-wrapper'])}>
                         {React.Children.count(children) === 0 || noContent?.cond() ? (
                             <div className={clsx(s['no-content-box'])}>
-                                <span>{noContent?.label ?? 'Нет контента'}</span>
+                                {noContent?.label ?? 'Нет контента'}
                             </div>
                         ) : (
                             children

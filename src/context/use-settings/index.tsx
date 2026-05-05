@@ -4,6 +4,8 @@ import type { appSettings, SettingsMap } from '@utils/settings';
 
 type AppSettingsType = typeof appSettings;
 
+export type SettingsMapType = SettingsMap<AppSettingsType>;
+
 export const useSettings = () => {
     useSyncExternalStore(
         (callback) => settingsManager.subscribe(callback),
@@ -12,6 +14,6 @@ export const useSettings = () => {
 
     return {
         raw: settingsManager.getRawSettings() as AppSettingsType,
-        map: settingsManager.settings as SettingsMap<AppSettingsType>,
+        map: settingsManager.settings as SettingsMapType,
     };
 };

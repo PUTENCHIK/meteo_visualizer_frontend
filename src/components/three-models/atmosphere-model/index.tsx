@@ -1,109 +1,110 @@
 import { useSettings } from '@context/use-settings';
 import { useMemo, useRef } from 'react';
-import { Object3D, ShaderMaterial, Vector3, Vector4 } from 'three';
+import { Vector3, Object3D, ShaderMaterial, Vector4 } from 'three';
 import { vertexShader, fragmentShader } from '@utils/shaders';
 import { useFpsFrame } from '@hooks/use-fps-frame';
-import { useMeasureScale } from '@stores/devices-store';
-import { useDevicesStore } from '@context/devices-context';
+import { useComplexStore } from '@stores/complex-store';
+import { devicesStore } from '@stores/devices-store';
+import { MAX_MEASURE_COLORS, parseColor } from '@utils/common';
+import type { ShaderData, StrictUniforms } from './shaders';
+import { layoutStrategies } from './strategies';
 
 export type AtmosphereParticleForm = 'sphere' | 'cube';
 
+export type AtmosphereModelType = 'particles' | 'heatmap' | 'pillarmap';
+
 interface AtmosphereModelProps {
     basePlateSize: Vector3;
-    height: number;
 }
 
-export const AtmosphereModel = ({ basePlateSize, height }: AtmosphereModelProps) => {
+export const AtmosphereModel = ({ basePlateSize }: AtmosphereModelProps) => {
     const { map: settings } = useSettings();
-    const store = useDevicesStore();
+    const { measure } = useComplexStore();
 
     const materialRef = useRef<ShaderMaterial>(null);
 
     const MAX_STATIONS = settings.atmosphere.maxStations;
+    const MAX_COLORS = MAX_MEASURE_COLORS;
     const degree = settings.atmosphere.degreeOfInterpolation;
-    const scale = useMeasureScale();
+    const atmosphereType = settings.atmosphere.model.value as AtmosphereModelType;
 
-    const particleSize = settings.atmosphere.model.particles.size;
-    const particleSegments = settings.atmosphere.model.particles.segments;
-    const particleFrequency = settings.atmosphere.model.particles.frequency;
-    const particleForm = settings.atmosphere.model.particles.form;
-    const particleOpacity = settings.atmosphere.model.particles.opacity;
+    const strategy = layoutStrategies[atmosphereType];
 
-    const shader = useMemo(
-        () => ({
-            uniforms: {
-                uStations: { value: [new Vector4(0, 0, 0, 0)] },
-                uStationCount: { value: 0 },
-                uDegree: { value: degree },
-                uMinVal: { value: scale.min },
-                uMaxVal: { value: scale.max },
-                uOpacity: { value: 1.0 },
-                uScaling: { value: false },
-                uScalingHeight: { value: 1.0 },
-            },
-            vertexShader: vertexShader(MAX_STATIONS),
-            fragmentShader: fragmentShader,
-        }),
-        [MAX_STATIONS, degree, scale],
+    const { positions, count, opacity, instancedMeshPosition } = useMemo(() => {
+        return strategy.getLayout({ basePlateSize, settings });
+    }, [strategy, basePlateSize, settings, strategy.getDeps(settings)]);
+
+    const stationsData = useMemo(
+        () => new Array(MAX_STATIONS).fill(null).map(() => new Vector4(0, 0, 0, 0)),
+        [MAX_STATIONS],
     );
 
-    const { particlePositions, particleCount } = useMemo(() => {
-        const minParticles = 2;
+    const colorsData = useMemo(() => {
+        const colors = [...(measure?.colors ?? [])].sort((a, b) => a.percent - b.percent);
+        const data = new Array(MAX_COLORS).fill(null).map(() => new Vector4(0.5, 0.5, 0.5, 1));
 
-        const list: Vector3[] = [];
-        const count = new Vector3(
-            (basePlateSize.x / particleSize) * particleFrequency,
-            (height / particleSize) * particleFrequency,
-            (basePlateSize.z / particleSize) * particleFrequency,
-        );
-        count.x = Math.max(Math.floor(count.x), minParticles);
-        count.y = Math.max(Math.floor(count.y), minParticles);
-        count.z = Math.max(Math.floor(count.z), minParticles);
-
-        const delta = new Vector3(
-            (basePlateSize.x - count.x * particleSize) / (count.x - 1),
-            (height - count.y * particleSize) / (count.y - 1),
-            (basePlateSize.z - count.z * particleSize) / (count.z - 1),
-        );
-        for (let x = 0; x < count.x; x += 1) {
-            for (let y = 0; y < count.y; y += 1) {
-                for (let z = 0; z < count.z; z += 1) {
-                    list.push(
-                        new Vector3(
-                            -basePlateSize.x / 2 + x * (delta.x + particleSize) + particleSize / 2,
-                            y * (delta.y + particleSize) + particleSize / 2,
-                            -basePlateSize.z / 2 + z * (delta.z + particleSize) + particleSize / 2,
-                        ),
-                    );
-                }
+        for (let i = 0; i < colors.length; i++) {
+            if (i < MAX_COLORS) {
+                const c = colors[i];
+                const color = parseColor(c.value, true);
+                data[i].set(color.r, color.g, color.b, c.percent);
             }
         }
 
-        return { particlePositions: list, particleCount: list.length };
-    }, [basePlateSize, height, particleSize, particleFrequency]);
+        return data;
+    }, [MAX_COLORS, measure]);
+
+    const shader: ShaderData = useMemo(() => {
+        const customUniforms = strategy.getExtraUniforms({ basePlateSize, settings });
+        const commonUniforms = {
+            uStations: { value: stationsData },
+            uStationCount: { value: 0 },
+            uColors: { value: colorsData },
+            uColorCount: { value: 0 },
+            uDegree: { value: 1 },
+            uMinVal: { value: 0 },
+            uMaxVal: { value: 1 },
+            uOpacity: { value: 1 },
+            uScaling: { value: false },
+            uScalingHeight: { value: 1.0 },
+        };
+
+        return {
+            uniforms: {
+                ...commonUniforms,
+                ...customUniforms,
+            },
+            vertexShader: vertexShader(MAX_STATIONS),
+            fragmentShader: fragmentShader(MAX_COLORS),
+        };
+    }, [
+        MAX_STATIONS,
+        MAX_COLORS,
+        stationsData,
+        colorsData,
+        strategy,
+        basePlateSize,
+        settings,
+        strategy.getShaderDeps(settings),
+    ]);
 
     const instanceMatrices = useMemo(() => {
-        if (particleCount === 0) return new Float32Array(0);
+        if (count === 0) return new Float32Array(0);
 
-        const array = new Float32Array(particleCount * 16);
+        const array = new Float32Array(count * 16);
         const obj = new Object3D();
-        particlePositions.forEach((pos, i) => {
+        positions.forEach((pos, i) => {
             obj.position.copy(pos);
             obj.updateMatrix();
             obj.matrix.toArray(array, i * 16);
         });
         return array;
-    }, [particlePositions, particleCount]);
-
-    const stationsData = useMemo(
-        () => new Array(MAX_STATIONS).fill(null).map(() => new Vector4()),
-        [MAX_STATIONS],
-    );
+    }, [positions, count]);
 
     useFpsFrame(() => {
         if (!materialRef.current) return;
 
-        const filteredDevices = store.getAtmosphereData();
+        const filteredDevices = devicesStore.getAtmosphereData();
 
         let dataIndex = 0;
         for (const deviceId in filteredDevices) {
@@ -120,25 +121,24 @@ export const AtmosphereModel = ({ basePlateSize, height }: AtmosphereModelProps)
             stationsData[i].set(0, 0, 0, 0);
         }
 
-        const uniforms = materialRef.current.uniforms;
+        const uniforms = materialRef.current.uniforms as StrictUniforms;
 
         uniforms.uStations.value = stationsData;
         uniforms.uStationCount.value = Math.min(dataIndex, MAX_STATIONS);
+        uniforms.uColors.value = colorsData;
+        uniforms.uColorCount.value = Math.min(colorsData.length, MAX_COLORS);
         uniforms.uDegree.value = degree;
-        uniforms.uOpacity.value = particleOpacity;
-        uniforms.uMinVal.value = scale.min;
-        uniforms.uMaxVal.value = scale.max;
+        uniforms.uOpacity.value = opacity;
+        uniforms.uMinVal.value = measure?.min ?? 0;
+        uniforms.uMaxVal.value = measure?.max ?? 1;
     }, settings.atmosphere.fps);
 
+    if (count == 0) return null;
+
     return (
-        <instancedMesh args={[undefined, undefined, particleCount]}>
+        <instancedMesh args={[undefined, undefined, count]} position={instancedMeshPosition}>
             <instancedBufferAttribute attach='instanceMatrix' args={[instanceMatrices, 16]} />
-            {particleForm === 'cube' && (
-                <boxGeometry args={[particleSize, particleSize, particleSize]} />
-            )}
-            {particleForm === 'sphere' && (
-                <sphereGeometry args={[particleSize / 2, particleSegments, particleSegments]} />
-            )}
+            {strategy.renderGeometry({ basePlateSize, settings })}
             <shaderMaterial ref={materialRef} args={[shader]} transparent />
         </instancedMesh>
     );

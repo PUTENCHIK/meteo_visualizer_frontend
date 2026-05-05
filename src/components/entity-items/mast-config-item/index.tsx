@@ -8,6 +8,7 @@ import { IconButton } from '@components/icon-button';
 import { TimestampLabel } from '@components/timestamp-label';
 import { MastYardItem } from '@entity-items/mast-yard-item';
 import { BaseEntityItem } from '@entity-items/base-entity-item';
+import { HasPermission } from '@pages/has-permission';
 
 interface MastConfigItemProps {
     data: MastConfigSchema;
@@ -50,30 +51,36 @@ export const MastConfigItem = ({ data }: MastConfigItemProps) => {
     };
 
     return (
-        <BaseEntityItem>
+        <BaseEntityItem isDeleted={isDeleted}>
             <ComponentRowBox
                 left={[<h2>{data.name}</h2>, <EntityLabel entity={data} field='id' />]}
                 right={[
                     [
                         !isDeleted ? (
-                            <>
-                                <IconButton
-                                    iconName='pencil'
-                                    title='Редактировать'
-                                    onClick={updateMastConfig}
-                                />
-                                <IconButton
-                                    iconName='bin'
-                                    title='Удалить'
-                                    onClick={deleteMastConfig}
-                                />
-                            </>
+                            [
+                                <HasPermission permission='mast_config:update'>
+                                    <IconButton
+                                        iconName='pencil'
+                                        title='Редактировать'
+                                        onClick={updateMastConfig}
+                                    />
+                                </HasPermission>,
+                                <HasPermission permission='mast_config:delete'>
+                                    <IconButton
+                                        iconName='bin'
+                                        title='Удалить'
+                                        onClick={deleteMastConfig}
+                                    />
+                                </HasPermission>,
+                            ]
                         ) : (
-                            <IconButton
-                                iconName='restore'
-                                title='Восстановить'
-                                onClick={restoreMastConfig}
-                            />
+                            <HasPermission permission='mast_config:restore'>
+                                <IconButton
+                                    iconName='restore'
+                                    title='Восстановить'
+                                    onClick={restoreMastConfig}
+                                />
+                            </HasPermission>
                         ),
                     ],
                 ]}
@@ -92,13 +99,15 @@ export const MastConfigItem = ({ data }: MastConfigItemProps) => {
                     <ComponentRowBox
                         left={[<h3>Реи</h3>]}
                         right={[
-                            <IconButton
-                                iconName='plus'
-                                title='Добавить рею'
-                                type='primary'
-                                iconSize={16}
-                                onClick={() => openDialog('edit-mast-yard', { config: data })}
-                            />,
+                            <HasPermission permission='mast_yard:create'>
+                                <IconButton
+                                    iconName='plus'
+                                    title='Добавить рею'
+                                    type='primary'
+                                    iconSize={16}
+                                    onClick={() => openDialog('edit-mast-yard', { config: data })}
+                                />
+                            </HasPermission>,
                         ]}
                     />
                     {data.yards.length === 0 && <span>Нет рей</span>}
