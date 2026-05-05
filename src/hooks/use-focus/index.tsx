@@ -48,7 +48,7 @@ export const useFocus = () => {
 
     const getMast = (mastId: Guid): MastSchema | undefined => {
         const complex = useComplexStore.getState().complex;
-        return complex?.masts.find((m) => m.id === mastId);
+        return complex?.masts.find((m) => m.id.toString() === mastId.toString());
     };
 
     const focusMast = (mastId: Guid) => {

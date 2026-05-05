@@ -1,5 +1,5 @@
 import throttle from 'lodash.throttle';
-import type { ComplexData, VisualizationData, WeatherStationsPos } from './types';
+import type { ComplexData, Measurement, VisualizationData, WeatherStationsPos } from './types';
 import type { MessagePayloadSchema } from '@utils/schemas/websocket';
 import { joinWithSeparator } from '@utils/common';
 import { Guid } from 'typescript-guid';
@@ -35,13 +35,18 @@ export class DevicesStore {
         return this._data;
     }
 
-    public clear() {
+    public clearData() {
         this._data = {};
+    }
+
+    public clearStore() {
+        this.clearData();
+        this._stationPositions = {};
     }
 
     public addData = (message: MessagePayloadSchema) => {
         const prefix = message.device_name.mast;
-        const yard = message.device_name.yard;
+        const yardNum = message.device_name.yard;
         const num = message.device_name.num;
         const device = joinWithSeparator([message.device_name.name, message.device_name.postfix]);
 
@@ -50,23 +55,23 @@ export class DevicesStore {
         const mast = masts.find((m) => m.prefix.toLowerCase() === prefix.toLowerCase());
         if (!mast) return;
         const mastId = mast.id.toString();
-        const yardHeight = mast.config?.yards.find((_, i) => i + 1 === yard)?.height;
-        if (!yardHeight) return;
+        const yard = mast.config?.yards.find((_, i) => i + 1 === yardNum);
+        if (!yard) return;
+        if (num > yard.amount) return;
 
         if (!(mastId in this._data)) {
             this._data[mastId] = {};
         }
-        if (!(yard in this._data[mastId])) {
-            this._data[mastId][yard] = {};
-        }
-        if (!(num in this._data[mastId][yard])) {
-            const stationId = DevicesStore.getStationId(mastId, yardHeight, num);
-            this._data[mastId][yard][num] = {
+        const stationId = DevicesStore.getStationId(mastId, yard.height, num);
+        if (!(stationId.toString() in this._data[mastId])) {
+            this._data[mastId][stationId.toString()] = {
                 id: stationId,
+                height: yard.height,
+                num: num,
                 devices: {},
             };
         }
-        const station = this._data[mastId][yard][num];
+        const station = this._data[mastId][stationId.toString()];
         if (!(device in station.devices)) {
             station.devices[device] = {
                 data: [],
@@ -78,7 +83,7 @@ export class DevicesStore {
             station.devices[device].data = [
                 ...measurements,
                 {
-                    value: item.value - 20 + Math.random() * 40,
+                    value: item.value, // - 20 + Math.random() * 40,
                     timestamp: message.timestamp,
                 },
             ];
@@ -105,20 +110,18 @@ export class DevicesStore {
         const result: Record<string, VisualizationData> = {};
 
         for (const mastId in this._data) {
-            for (const yard in this._data[mastId]) {
-                for (const stationNum in this._data[mastId][yard]) {
-                    const stationData = this._data[mastId][yard][stationNum];
-                    const pos = this._stationPositions[stationData.id.toString()];
-                    if (!pos) continue;
-                    for (const deviceName in stationData.devices) {
-                        const device = stationData.devices[deviceName];
-                        const lastMeasurement = device.data.at(-1);
-                        if (lastMeasurement) {
-                            result[`${stationData.id}-${deviceName}`] = {
-                                value: lastMeasurement.value,
-                                position: pos,
-                            };
-                        }
+            for (const stationId in this._data[mastId]) {
+                const stationData = this._data[mastId][stationId];
+                const pos = this._stationPositions[stationId];
+                if (!pos) continue;
+                for (const deviceName in stationData.devices) {
+                    const device = stationData.devices[deviceName];
+                    const lastMeasurement = device.data.at(-1);
+                    if (lastMeasurement) {
+                        result[`${stationId}-${deviceName}`] = {
+                            value: lastMeasurement.value,
+                            position: pos,
+                        };
                     }
                 }
             }
@@ -127,23 +130,12 @@ export class DevicesStore {
         return result;
     }
 
-    // public getChartData(deviceName: string, measure: string) {
-    //     for (const stationId in this._data) {
-    //         const devices = this._data[stationId];
-    //         for (const device of devices) {
-    //             if (device.fullName === deviceName) {
-    //                 for (const measureName in device.data) {
-    //                     if (measureName === measure) {
-    //                         const measure = device.data[measureName];
-    //                         return measure.measurements;
-    //                     }
-    //                 }
-    //                 return [];
-    //             }
-    //         }
-    //     }
-    //     return [];
-    // }
+    public getChartData(mastId: Guid, stationId: Guid, deviceId: string): Measurement[] {
+        return (
+            this._data[mastId.toString()]?.[stationId.toString()]?.devices[deviceId.toString()]
+                ?.data ?? []
+        );
+    }
 }
 
 export const devicesStore = new DevicesStore();

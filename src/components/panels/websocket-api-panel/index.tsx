@@ -25,15 +25,20 @@ export const WebsocketApiPanel: React.FC<PanelProps<'websocketApi'>> = () => {
     );
 
     useEffect(() => {
-        setMeasure(measures?.find((m) => measure?.id === m.id) ?? null);
-    }, [measures]);
+        if (measures) {
+            setMeasure(measures.find((m) => measure?.id === m.id) ?? null);
+        }
+    }, [measure?.id, measures, setMeasure]);
 
     const handleMeasureChange = useCallback(
         (value: string) => {
-            devicesStore.clear();
-            setMeasure(measures?.find((m) => m.id.toString() === value) ?? null);
+            const m = measures?.find((m) => m.id.toString() === value) ?? null;
+            if (m && m.id !== measure?.id) {
+                devicesStore.clearData();
+            }
+            setMeasure(m);
         },
-        [measures],
+        [measure?.id, measures, setMeasure],
     );
 
     return (
@@ -67,31 +72,32 @@ export const WebsocketApiPanel: React.FC<PanelProps<'websocketApi'>> = () => {
 
                     {isLoading && <Loader />}
                     {isError && <span>Не удалось загрузить параметры</span>}
-                    {!isLoading && !isError && measures ? (
-                        <ComponentRowBox
-                            left={[
-                                [
-                                    <span>Параметр:</span>,
-                                    <EntityLabel entity={measure} type='measure' linkable />,
-                                ],
-                                [
-                                    <Select
-                                        value={measure?.id?.toString() ?? ''}
-                                        options={['', ...measures.map((m) => m.id.toString())]}
-                                        labels={{
-                                            '': 'Выберите параметр',
-                                            ...Object.fromEntries(
-                                                measures.map((m) => [m.id.toString(), m.name]),
-                                            ),
-                                        }}
-                                        onChange={handleMeasureChange}
-                                    />,
-                                ],
-                            ]}
-                        />
-                    ) : (
-                        <span>Нет ни одного параметра в приложении</span>
-                    )}
+                    {!isLoading &&
+                        !isError &&
+                        (measures ? (
+                            <ComponentRowBox
+                                left={[
+                                    [
+                                        <span>Параметр:</span>,
+                                        <EntityLabel entity={measure} type='measure' linkable />,
+                                    ],
+                                    [
+                                        <Select
+                                            value={measure?.id?.toString() ?? ''}
+                                            options={{
+                                                '': 'Выберите параметр',
+                                                ...Object.fromEntries(
+                                                    measures.map((m) => [m.id.toString(), m.name]),
+                                                ),
+                                            }}
+                                            onChange={handleMeasureChange}
+                                        />,
+                                    ],
+                                ]}
+                            />
+                        ) : (
+                            <span>Нет ни одного параметра в приложении</span>
+                        ))}
                 </>
             )}
         </BasePanel>

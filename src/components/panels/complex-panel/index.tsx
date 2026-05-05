@@ -4,7 +4,7 @@ import { ComplexItem } from '@entity-items/complex-item';
 import { MastItem } from '@entity-items/mast-item';
 import { BasePanel } from '@panels/base-panel';
 import { useComplexStore } from '@stores/complex-store';
-import { useDevicesData } from '@stores/devices-store';
+import { useComplexData } from '@stores/devices-store';
 import type { MastSchema } from '@utils/schemas';
 import { useMemo, useState } from 'react';
 
@@ -15,7 +15,7 @@ export const ComplexPanel: React.FC<PanelProps<'complex'>> = () => {
     };
     const [currentTab, setCurrentTab] = useState<keyof typeof tabs>('complex');
     const { complex } = useComplexStore();
-    const data = useDevicesData();
+    const data = useComplexData();
 
     const masts: Record<string, MastSchema> = useMemo(
         () => Object.fromEntries(complex?.masts.map((mast) => [mast.id.toString(), mast]) ?? []),
@@ -37,25 +37,26 @@ export const ComplexPanel: React.FC<PanelProps<'complex'>> = () => {
             {complex && (
                 <>
                     {currentTab === 'complex' && <ComplexItem data={complex} focusable />}
-                    {currentTab === 'devices' && devicesData.length > 0 ? (
-                        devicesData.map(([mastId, mastData], index) => {
-                            const mast = masts[mastId];
+                    {currentTab === 'devices' &&
+                        (devicesData.length > 0 ? (
+                            devicesData.map(([mastId, mastData], index) => {
+                                const mast = masts[mastId];
 
-                            return (
-                                mast && (
-                                    <MastItem
-                                        key={index}
-                                        mast={mast}
-                                        complex={complex}
-                                        data={mastData}
-                                        focusable
-                                    />
-                                )
-                            );
-                        })
-                    ) : (
-                        <span>Измерений датчиков нет</span>
-                    )}
+                                return (
+                                    mast && (
+                                        <MastItem
+                                            key={index}
+                                            mast={mast}
+                                            complex={complex}
+                                            data={mastData}
+                                            focusable
+                                        />
+                                    )
+                                );
+                            })
+                        ) : (
+                            <span>Измерений датчиков нет</span>
+                        ))}
                 </>
             )}
         </BasePanel>

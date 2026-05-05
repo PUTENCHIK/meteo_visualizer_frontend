@@ -78,8 +78,7 @@ export const MastForm = ({ complex, mast, mastConfigs }: MastFormProps) => {
                     <InputLabel label='Конфиг' required error={errors.config_id?.message}>
                         <Select
                             {...field}
-                            options={['-', ...mastConfigs.map((c) => c.id.toString())]}
-                            labels={{
+                            options={{
                                 '-': 'Выберите конфиг',
                                 ...Object.fromEntries(
                                     mastConfigs.map((c) => [c.id.toString(), c.name]),

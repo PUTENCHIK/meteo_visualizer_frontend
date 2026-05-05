@@ -16,10 +16,6 @@
 
     border-radius: var(--box-padding);
     border: 1px solid var(--outline-color);
-
-    &:hover {
-        background-color: color-mix(in srgb, var(--menu-background-color), transparent 50%);
-    }
 }
 
 @mixin no-autofill {

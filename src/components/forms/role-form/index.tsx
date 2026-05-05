@@ -74,8 +74,7 @@ export const RoleForm = ({ role, parentRoles }: RoleFormProps) => {
                     <InputLabel label='Родительская роль' error={errors.parent_id?.message}>
                         <Select
                             {...field}
-                            options={['', ...parentRoles.map((r) => r.id.toString())]}
-                            labels={{
+                            options={{
                                 '': 'Нет родителя',
                                 ...Object.fromEntries(
                                     parentRoles.map((r) => [r.id.toString(), r.name]),

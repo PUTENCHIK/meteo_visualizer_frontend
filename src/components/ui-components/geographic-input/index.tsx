@@ -53,7 +53,11 @@ export const GeographicInput = ({
     return (
         <div className={clsx(s['geographic-input-wrapper'])}>
             {!readOnly ? (
-                <Select value={sign} options={['-', '+']} onChange={handleSelectChange} />
+                <Select
+                    value={sign}
+                    options={{ '-': '-', '+': '+' }}
+                    onChange={handleSelectChange}
+                />
             ) : (
                 <span className={clsx(s['sign'])}>{sign}</span>
             )}

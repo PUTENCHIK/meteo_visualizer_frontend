@@ -111,17 +111,20 @@ export const MastItem = ({ mast, complex, data, focusable = false }: MastItemPro
                                 title={showData ? 'Свернуть' : 'Развернуть'}
                                 iconRotate={showData ? -90 : 90}
                                 iconSize={16}
-                                onClick={() => setShowData(prev => !prev)}
+                                onClick={() => setShowData((prev) => !prev)}
                             />,
                         ]}
                     />
-                    {showData && (
-                        Object.values(data).map((yard) => (
-                            Object.values(yard).map((station, index) => (
-                                <WeatherStationItem key={index} data={station} mastId={mast.id} />
-                            ))
-                        ))
-                    )}
+                    {showData &&
+                        Object.values(data).map((station, index) => (
+                            <WeatherStationItem
+                                key={index}
+                                mastId={mast.id}
+                                yardHeight={station.height}
+                                num={station.num}
+                                devices={station.devices}
+                            />
+                        ))}
                 </>
             )}
         </BaseEntityItem>

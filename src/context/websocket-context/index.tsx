@@ -66,7 +66,7 @@ export const WebSocketProvider = ({ children }: { children: ReactNode }) => {
 
     const { sendJsonMessage, readyState } = useWebSocket<MessagePayloadSchema>(socketUrl, {
         onOpen: () => {
-            devicesStore.clear();
+            devicesStore.clearData();
         },
         onMessage: (event) => {
             try {

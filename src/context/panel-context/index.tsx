@@ -44,14 +44,6 @@ export const PanelProvider = ({ children }: { children: React.ReactNode }) => {
     }, []);
 
     const focusPanel = useCallback((id: PanelId) => {
-        // setActivePanels((prev) => {
-        //     const panel = prev.find((p) => p.id === id);
-        //     if (panel && prev.indexOf(panel) < prev.length - 1) {
-        //         return [...prev.filter((p) => p.id !== id), { id: panel.id, data: panel.data }];
-        //     } else {
-        //         return prev;
-        //     }
-        // });
         setPanelsOrder((prev) => [...prev.filter((p) => p !== id), id]);
     }, []);
 

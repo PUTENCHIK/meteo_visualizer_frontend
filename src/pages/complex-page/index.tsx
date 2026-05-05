@@ -17,6 +17,7 @@ import { Loader } from '@components/loader';
 import { useComplexStore } from '@stores/complex-store';
 import { useSocket } from '@context/websocket-context';
 import { MeasureGradient } from '@components/measure-gradient';
+import { devicesStore } from '@stores/devices-store';
 
 export const ComplexPage = () => {
     const navigate = useNavigate();
@@ -42,7 +43,10 @@ export const ComplexPage = () => {
         if (loadedComplex) {
             setComplex(loadedComplex);
         }
-        return () => reset();
+        return () => {
+            reset();
+            devicesStore.clearStore();
+        };
     }, [loadedComplex, setComplex]);
 
     const handleBackClick = () => {

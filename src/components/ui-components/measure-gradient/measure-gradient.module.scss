@@ -35,6 +35,8 @@
 
     position: absolute;
     bottom: calc(100% + 8px);
+
     font-size: 0.75rem;
     transform: translateX(-50%);
+    background-color: var(--background-color);
 }

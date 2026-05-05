@@ -5,10 +5,13 @@
     align-items: center;
 }
 
-span.loader {
+.loader-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
 
-    width: 72px;
-    height: 72px;
+span.loader {
     border-radius: 50%;
     position: relative;
     animation: rotate 1s linear infinite;

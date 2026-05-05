@@ -9,8 +9,7 @@ interface SelectProps<T extends SelectType> extends Omit<
     'value' | 'onChange'
 > {
     value?: T;
-    options: readonly T[];
-    labels?: Partial<Record<T, string>>;
+    options: Record<T, string>;
     onChange?: (value: T) => void;
     onBlur?: () => void;
 }
@@ -18,7 +17,6 @@ interface SelectProps<T extends SelectType> extends Omit<
 export const Select = <T extends SelectType>({
     value,
     options,
-    labels,
     onChange,
     onBlur,
     className,
@@ -35,11 +33,9 @@ export const Select = <T extends SelectType>({
             value={value}
             onChange={handleChange}
             onBlur={onBlur}>
-            {options.map((item, index) => {
-                const label = labels?.[item] ?? item;
-
+            {(Object.entries(options) as [T, string][]).map(([value, label], index) => {
                 return (
-                    <option key={`${index}-${item}`} value={item}>
+                    <option key={`${index}-${value}`} value={value}>
                         {label}
                     </option>
                 );

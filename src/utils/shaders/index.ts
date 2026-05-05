@@ -33,7 +33,6 @@ export const fragmentShader = (maxColors: number) => `
                 color = end.xyz;
             }
         }
-        // color = vec3(t, 0.0, 1.0 - t);
         gl_FragColor = vec4(color, uOpacity);
     }
 `;

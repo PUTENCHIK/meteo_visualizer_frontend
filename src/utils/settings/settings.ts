@@ -70,6 +70,7 @@ const rawSettings = {
         }),
         weatherStation: createChapter('Метеостанции', {
             radius: createRange('Радиус', 0.35, 0.2, 0.5, 0.05),
+            occludeInfoBox: createBoolean('Скрытие инф. окна', false),
             color: createColor('Цвет', 'rgba(87, 104, 201, 1)'),
         }),
         sun: createChapter('Солнце', {

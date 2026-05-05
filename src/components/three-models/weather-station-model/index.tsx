@@ -1,19 +1,18 @@
-// import clsx from 'clsx';
-// import s from './weather-station-model.module.scss';
 import { useSettings } from '@context/use-settings';
 import { SphereMesh } from '@models_/sphere-mesh';
-// import { Html } from '@react-three/drei';
+import { Html } from '@react-three/drei';
 import { Mesh, Vector3 } from 'three';
-// import { GuidLabel } from '@components/guid-label';
-// import { IconButton } from '@components/icon-button';
-// import { useBridge } from '@context/bridge-context';
 import { useFocus } from '@hooks/use-focus';
 import type { Guid } from 'typescript-guid';
-// import { useComplexStore } from '@stores/complex-store';
-// import { useDeviceData } from '@stores/devices-store';
-import { useEffect, useRef } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import type { ThreeEvent } from '@react-three/fiber';
-import { devicesStore, DevicesStore } from '@stores/devices-store';
+import { devicesStore, DevicesStore, useStationData } from '@stores/devices-store';
+import { useBridge } from '@context/bridge-context';
+import { WeatherStationItem } from '@entity-items/weather-station-item';
+import { useComplexStore } from '@stores/complex-store';
+import { getColorAtPercent } from '@utils/common';
+
+type DocumentCursor = 'default' | 'pointer';
 
 interface WeatherStationModelProps {
     position: Vector3;
@@ -30,14 +29,30 @@ export const WeatherStationModel = ({
 }: WeatherStationModelProps) => {
     const { map: settings } = useSettings();
     const { focusStation } = useFocus();
-    // const { Bridge } = useBridge();
+    const { Bridge } = useBridge();
+    const { measure } = useComplexStore();
 
     const meshRef = useRef<Mesh>(null);
-    // const [showInfo, setShowInfo] = useState(false);
+    const [showInfo, setShowInfo] = useState(false);
+    const [documentCursor, setDocumentCursor] = useState<DocumentCursor>('default');
 
-    const id = DevicesStore.getStationId(mastId, yardHeight, num);
-    // const data = useStation(mastId, yardHeight, num);
-    // const devices = useDeviceData(data?.id);
+    const id = useMemo(
+        () => DevicesStore.getStationId(mastId, yardHeight, num),
+        [mastId, yardHeight, num],
+    );
+    const stationData = useStationData(mastId, id);
+
+    const getColor = () => {
+        if (!measure || !stationData) return settings.model.weatherStation.color;
+        const colors = measure.colors;
+        const values = Object.values(stationData.devices)
+            .map((device) => device.data.at(-1)?.value)
+            .filter((v) => v !== undefined);
+        const average = values.reduce((sum, value) => sum + value, 0) / values.length;
+        const value = (average - measure.min) / (measure.max - measure.min);
+
+        return getColorAtPercent(colors, value);
+    };
 
     useEffect(() => {
         if (meshRef.current) {
@@ -46,88 +61,46 @@ export const WeatherStationModel = ({
 
             devicesStore.setStationPosition(mastId, yardHeight, num, worldPosition);
         }
-    }, [position]);
+    }, [mastId, yardHeight, num, position]);
+
+    useEffect(() => {
+        document.body.style.cursor = documentCursor;
+    }, [documentCursor]);
 
     const handleStationClick = (e: ThreeEvent<MouseEvent>) => {
         e.stopPropagation();
-        focusStation(id, mastId);
-        // setShowInfo((prev) => !prev);
+        if (!showInfo) focusStation(id, mastId);
+        setShowInfo((prev) => !prev);
     };
-
-    // if (!data || !devices) {
-    //     console.error(`Impossible to get weather station: ${mastId}, ${yardHeight}, ${num}`);
-    //     return null;
-    // }
 
     return (
         <>
-            {/* {showInfo && (
+            {showInfo && (
                 <Html
                     distanceFactor={14}
-                    position={[position.x + 2.2 * (num === 1 ? -1 : 1), position.y, position.z]}
+                    position={[position.x + (num === 1 ? -1 : 1) * 3, position.y, position.z]}
                     center
-                    occlude
+                    occlude={settings.model.weatherStation.occludeInfoBox}
+                    style={{}}
                     zIndexRange={[0, 10]}>
                     <Bridge>
-                        <div className={clsx(s['info-box'])}>
-                            {data && (
-                                <>
-                                    <div className={clsx(s['header'])}>
-                                        <div className={clsx(s['item'])}>
-                                            Станция
-                                            <GuidLabel value={data.id} objct='station' />
-                                        </div>
-                                        <IconButton
-                                            iconName='cross'
-                                            title='Закрыть'
-                                            iconSize={16}
-                                            onClick={() => setShowInfo(false)}
-                                        />
-                                    </div>
-                                    <div className={clsx(s['item'])}>
-                                        Мачта
-                                        <GuidLabel value={mastId} objct='mast' />
-                                    </div>
-                                    {devices.length > 0 && (
-                                        <>
-                                            <span>Датчики:</span>
-                                            <ol>
-                                                {devices.map((device, index) => (
-                                                    <>
-                                                        <li key={index}>{device.name}</li>
-                                                        <ul>
-                                                            {Object.entries(device.data).map(
-                                                                ([name, measure], mIndex) => (
-                                                                    <li key={mIndex}>
-                                                                        {name}:{' '}
-                                                                        {measure.measurements
-                                                                            .at(-1)
-                                                                            ?.value.toFixed(2)}
-                                                                        {measure.units}
-                                                                    </li>
-                                                                ),
-                                                            )}
-                                                        </ul>
-                                                    </>
-                                                ))}
-                                            </ol>
-                                        </>
-                                    )}
-                                </>
-                            )}
-                            {!data && <span>Не удалось определить станцию</span>}
-                        </div>
+                        <WeatherStationItem
+                            mastId={mastId}
+                            yardHeight={yardHeight}
+                            num={num}
+                            devices={stationData?.devices}
+                        />
                     </Bridge>
                 </Html>
-            )} */}
+            )}
             <SphereMesh
                 name={id.toString()}
                 radius={settings.model.weatherStation.radius}
                 position={position}
-                color={settings.model.weatherStation.color}
+                color={getColor()}
                 onClick={handleStationClick}
-                onPointerOver={() => (document.body.style.cursor = 'pointer')}
-                onPointerOut={() => (document.body.style.cursor = 'auto')}
+                onPointerOver={() => setDocumentCursor('pointer')}
+                onPointerOut={() => setDocumentCursor('default')}
                 ref={meshRef}
             />
         </>

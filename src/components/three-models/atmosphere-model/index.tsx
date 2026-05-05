@@ -139,11 +139,7 @@ export const AtmosphereModel = ({ basePlateSize }: AtmosphereModelProps) => {
         <instancedMesh args={[undefined, undefined, count]} position={instancedMeshPosition}>
             <instancedBufferAttribute attach='instanceMatrix' args={[instanceMatrices, 16]} />
             {strategy.renderGeometry({ basePlateSize, settings })}
-            <shaderMaterial
-                ref={materialRef}
-                args={[shader]}
-                transparent
-            />
+            <shaderMaterial ref={materialRef} args={[shader]} transparent />
         </instancedMesh>
     );
 };

@@ -1,19 +1,28 @@
 import { useEffect, useRef, useMemo } from 'react';
 import ReactECharts from 'echarts-for-react';
+import type { MeasureWithDependentsSchema } from '@utils/schemas';
+import { devicesStore } from '@stores/devices-store';
+import type { Guid } from 'typescript-guid';
 
 interface LineChartProps {
-    deviceName: string;
-    measure: string;
+    measure: MeasureWithDependentsSchema;
+    mastId: Guid;
+    stationId: Guid;
+    deviceId: string;
 }
 
-export const LineChart = ({ deviceName, measure }: LineChartProps) => {
+export const LineChart = ({ measure, mastId, stationId, deviceId }: LineChartProps) => {
     const chartRef = useRef<ReactECharts>(null);
 
     const options = useMemo(
         () => ({
             animation: false,
-            grid: { top: 10, right: 10, bottom: 40, left: 50 },
-            tooltip: { trigger: 'axis', animation: false },
+            grid: { top: 10, right: 10, bottom: 10, left: 10 },
+            tooltip: {
+                trigger: 'axis',
+                animation: false,
+                valueFormatter: (value: number) => `${value.toFixed(2)} ${measure.units}`,
+            },
             xAxis: {
                 type: 'time',
                 splitLine: { show: false },
@@ -25,19 +34,24 @@ export const LineChart = ({ deviceName, measure }: LineChartProps) => {
                             second: '2-digit',
                         }).format(value),
                 },
+                hideOverlap: true,
             },
             yAxis: {
                 type: 'value',
-                scale: true,
+                min: measure.min,
+                max: measure.max,
+                scale: false,
+                axisLabel: {
+                    formatter: (value: number) => `${value}${measure.units}`,
+                },
                 splitLine: { lineStyle: { type: 'dashed' } },
             },
             series: [
                 {
-                    name: measure,
                     type: 'line',
                     showSymbol: false,
                     data: [],
-                    lineStyle: { color: '#8884d8', width: 2 },
+                    lineStyle: { color: '#8884d8', width: 1 },
                     sampling: 'lttb',
                 },
             ],
@@ -46,21 +60,21 @@ export const LineChart = ({ deviceName, measure }: LineChartProps) => {
     );
 
     useEffect(() => {
-        // const updateChart = () => {
-        //     const chartInstance = chartRef.current?.getEchartsInstance();
-        //     if (!chartInstance) return;
-        //     const rawData = store.getChartData(deviceName, measure);
-        //     const formattedData = rawData.map((d) => [d.timestamp, d.value]);
-        //     chartInstance.setOption({
-        //         series: [{ data: formattedData }],
-        //     });
-        // };
-        // updateChart();
-        // const unsubscribe = store.subscribe(updateChart);
-        // return () => {
-        //     unsubscribe();
-        // };
-    }, [deviceName, measure]);
+        const updateChart = () => {
+            const chartInstance = chartRef.current?.getEchartsInstance();
+            if (!chartInstance) return;
+            const rawData = devicesStore.getChartData(mastId, stationId, deviceId);
+            const formattedData = rawData.map((d) => [d.timestamp, d.value]);
+            chartInstance.setOption({
+                series: [{ data: formattedData }],
+            });
+        };
+        updateChart();
+        const unsubscribe = devicesStore.subscribe(updateChart);
+        return () => {
+            unsubscribe();
+        };
+    }, [mastId, stationId, deviceId]);
 
     return (
         <div style={{ width: '100%', height: 500 }}>

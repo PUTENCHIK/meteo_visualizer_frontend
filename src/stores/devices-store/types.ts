@@ -22,11 +22,11 @@ export interface WeatherDeviceData {
 
 export interface WeatherStationData {
     id: Guid;
+    height: number;
+    num: number;
     devices: Record<string, WeatherDeviceData>;
 }
 
-export type YardData = Record<number, WeatherStationData>;
-
-export type MastData = Record<number, YardData>;
+export type MastData = Record<string, WeatherStationData>;
 
 export type ComplexData = Record<string, MastData>;

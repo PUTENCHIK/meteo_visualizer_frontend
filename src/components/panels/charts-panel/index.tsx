@@ -1,99 +1,84 @@
-// import clsx from 'clsx';
-// import s from './charts-panel.module.scss';
-// import { LineChart } from '@components/line-chart';
+import { LineChart } from '@components/line-chart';
 import { BasePanel } from '@panels/base-panel';
-// import { InputLabel } from '@components/input-label';
-// import { Select } from '@components/select';
 import type { PanelProps } from '@context/panel-context/panels';
+import { useComplexStore } from '@stores/complex-store';
+import { useComplexData } from '@stores/devices-store';
+import { ChartsFiltersForm } from '@forms/charts-filters-form';
+import { ComponentRowBox } from '@components/component-row-box';
+import { EntityLabel } from '@components/entity-label';
+import { useCallback, useMemo, useState } from 'react';
+import type { ChartsFiltersFormData } from '@forms/charts-filters-form/schema';
+import { Guid } from 'typescript-guid';
+import { IconButton } from '@components/icon-button';
+import { useFocus } from '@hooks/use-focus';
 
 export const ChartsPanel: React.FC<PanelProps<'charts'>> = () => {
-    // const masts = useComplexStore((state) => state.masts);
-    // const [currentMast, setCurrentMast] = useState<string>('');
+    const { complex, measure } = useComplexStore();
+    const { focusStation } = useFocus();
+    const data = useComplexData();
+    const [filters, setFilters] = useState<ChartsFiltersFormData>();
 
-    // const devices = useDevicesOfMast(currentMast);
+    const { mastId, stationId, deviceId } = useMemo(() => {
+        const mastId =
+            filters && Guid.isGuid(filters.mastId) ? Guid.parse(filters.mastId) : undefined;
+        const stationId =
+            filters && Guid.isGuid(filters.stationId) ? Guid.parse(filters.stationId) : undefined;
+        return { mastId, stationId, deviceId: filters?.deviceId ?? '' };
+    }, [filters]);
 
-    // const [currentDevice, setCurrentDevice] = useState<string>('');
-    // const [currentMeasure, setCurrentMeasure] = useState<string>('');
-
-    // const deviceData = useMemo(() => {
-    //     return devices.find((d) => d.fullName === currentDevice)?.data;
-    // }, [devices, currentDevice]);
-
-    // const handleMastChange = (value: string) => {
-    //     setCurrentMast(value);
-    //     setCurrentDevice('');
-    //     setCurrentMeasure('');
-    // };
-
-    // const handleDeviceChange = (value: string) => {
-    //     setCurrentDevice(value);
-    //     setCurrentMeasure('');
-    // };
-
-    // const handleMeasureChange = (value: string) => {
-    //     setCurrentMeasure(value);
-    // };
+    const handleFocusClick = useCallback(() => {
+        if (stationId && mastId) {
+            focusStation(stationId, mastId);
+        }
+    }, [stationId, mastId]);
 
     return (
         <BasePanel
             panelId='charts'
             title='График'
             widthLimits={{ min: 400, max: null }}
-            heightLimits={{ min: 400 }}>
-            {/* {masts.length ? (
+            heightLimits={{ min: 400 }}
+            noContent={{
+                cond: () => !complex || !measure,
+                label: 'Не установлен комплекс или параметр',
+            }}>
+            {complex && measure && (
                 <>
-                    <div className={clsx(s['filters-box'])}>
-                        <InputLabel label='Мачта'>
-                            <Select
-                                options={['', ...masts.map((mast) => mast.id.toString())]}
-                                labels={{
-                                    '': '-',
-                                    ...masts.reduce(
-                                        (acc, mast) => {
-                                            acc[mast.id.toString()] = [
-                                                mast.prefix,
-                                                mast.description && `(${mast.description})`,
-                                            ].join(' ');
-                                            return acc;
-                                        },
-                                        {} as Record<string, string>,
-                                    ),
-                                }}
-                                onChange={handleMastChange}
-                            />
-                        </InputLabel>
-                        <InputLabel label='Датчик'>
-                            <Select
-                                options={
-                                    currentMast
-                                        ? ['', ...devices.map((device) => device.fullName)]
-                                        : ['Выберите мачту']
-                                }
-                                labels={{ '': '-' }}
-                                onChange={handleDeviceChange}
-                            />
-                        </InputLabel>
-                        <InputLabel label='Параметр'>
-                            <Select
-                                options={
-                                    deviceData && currentMast && currentDevice
-                                        ? ['', ...Object.keys(deviceData).map((measure) => measure)]
-                                        : ['Выберите датчик']
-                                }
-                                labels={{ '': '-' }}
-                                onChange={handleMeasureChange}
-                            />
-                        </InputLabel>
-                    </div>
-                    {currentMast && currentDevice && currentMeasure ? (
-                        <LineChart deviceName={currentDevice} measure={currentMeasure} />
-                    ) : (
-                        <span>Установите фильтры</span>
+                    <ComponentRowBox
+                        left={[
+                            <span>Параметр:</span>,
+                            <EntityLabel entity={measure} type='measure' linkable />,
+                        ]}
+                        size='tiny'
+                    />
+                    {stationId && (
+                        <ComponentRowBox
+                            left={[
+                                <span>Метеостанция:</span>,
+                                <EntityLabel entity={{ id: stationId }} />,
+                            ]}
+                            right={[
+                                <IconButton
+                                    iconName='eye'
+                                    title='Фокус'
+                                    iconSize={16}
+                                    onClick={handleFocusClick}
+                                />,
+                            ]}
+                            size='tiny'
+                        />
+                    )}
+                    <ChartsFiltersForm data={data} complex={complex} onFiltersChange={setFilters} />
+                    {mastId && stationId && deviceId && (
+                        <LineChart
+                            measure={measure}
+                            mastId={mastId}
+                            stationId={stationId}
+                            deviceId={deviceId}
+                        />
                     )}
                 </>
-            ) : (
-                <span>Добавьте первую мачту</span>
-            )} */}
+            )}
         </BasePanel>
     );
 };

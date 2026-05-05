@@ -8,8 +8,16 @@ form.base-form {
 
 .inputs-box {
     display: flex;
-    flex-direction: column;
     gap: 16px;
+    
+    &.vertical {
+        flex-direction: column;
+    }
+
+    &.horizontal {
+        flex-direction: row;
+        flex-wrap: wrap;
+    }
 }
 
 .error-block {
