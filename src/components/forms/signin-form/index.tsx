@@ -13,7 +13,7 @@ export const SigninForm = () => {
     const navigate = useNavigate();
     const location = useLocation();
     const from = location.state?.from?.pathname || '/';
-    const signin = useAuthStore((state) => state.signin);
+    const { signin } = useAuthStore();
 
     const [counter, setCounter] = useState(0);
 

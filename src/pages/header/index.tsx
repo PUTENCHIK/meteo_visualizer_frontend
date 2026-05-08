@@ -38,7 +38,7 @@ export const Header = () => {
                         ]}
                         right={[
                             [
-                                <span>v0.3.0</span>,
+                                <span>v0.4.0</span>,
                                 <IconButton
                                     iconName='user'
                                     title='Профиль'

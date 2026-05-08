@@ -19,6 +19,7 @@ const typeToStyles: Record<IconButtonType, IconButtonStyle> = {
     },
     primary: {
         className: 'primary',
+        iconColor: 'white',
     },
 };
 

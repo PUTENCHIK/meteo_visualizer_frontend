@@ -1,8 +1,6 @@
 import type { ComplexWithFavoriteInfoSchema, MeasureWithDependentsSchema } from '@utils/schemas';
 import { create } from 'zustand';
 
-export * from './hooks';
-
 interface ComplexState {
     complex: ComplexWithFavoriteInfoSchema | null;
     setComplex: (complex: ComplexWithFavoriteInfoSchema | null) => void;

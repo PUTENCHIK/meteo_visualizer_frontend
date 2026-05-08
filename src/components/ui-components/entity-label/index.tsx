@@ -11,15 +11,17 @@ type LabelSize = 'small' | 'big';
 interface WithId {
     id: Guid;
 }
-
 interface WithName extends AuditableModelSchema {
     name: string;
 }
 interface WithLogin extends AuditableModelSchema {
     login: string;
 }
+interface WithPrefix extends AuditableModelSchema {
+    prefix: string;
+}
 
-type DisplayableEntity = AuditableModelSchema | WithId | WithName | WithLogin;
+type DisplayableEntity = AuditableModelSchema | WithId | WithName | WithLogin | WithPrefix;
 
 interface EntityLabelProps<T extends DisplayableEntity> {
     entity: T | null;
@@ -36,7 +38,7 @@ export const EntityLabel = <T extends DisplayableEntity>({
     type,
     linkable = false,
 }: EntityLabelProps<T>) => {
-    const user = useAuthStore((state) => state.user);
+    const { user } = useAuthStore();
     const { openDialog } = useDialogs();
     const entityId = entity ? entity.id.toString().slice(0, 8) : 'N/A';
     const color = entity ? entity.id.toString().slice(-6) : '808080';
@@ -54,6 +56,7 @@ export const EntityLabel = <T extends DisplayableEntity>({
         }
         if ('name' in entity) return entity.name;
         else if ('login' in entity) return entity.login;
+        else if ('prefix' in entity) return entity.prefix;
         else return entityId;
     };
 

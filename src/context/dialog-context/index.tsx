@@ -40,7 +40,7 @@ export const DialogProvider = ({ children }: { children: React.ReactNode }) => {
     return (
         <DialogContext.Provider
             value={{
-                activeDialogs: activeDialogs,
+                activeDialogs,
                 openDialog,
                 closeDialog,
                 closeAllDialogs,

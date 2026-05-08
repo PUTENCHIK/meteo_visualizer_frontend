@@ -5,8 +5,8 @@ import { useScene } from '@context/scene-context';
 export const SceneReporter = () => {
     const { sceneRef, cameraRef, updateFps } = useScene();
 
-    const camera = useThree((state) => state.camera);
-    const scene = useThree((state) => state.scene);
+    const { camera } = useThree();
+    const { scene } = useThree();
 
     useEffect(() => {
         if (scene) sceneRef.current = scene;

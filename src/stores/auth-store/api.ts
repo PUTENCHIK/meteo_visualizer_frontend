@@ -4,7 +4,7 @@ import type { ApiErrorResponse } from '@utils/http';
 import { showError } from '@components/toast/funcs';
 
 const api = axios.create({
-    baseURL: 'http://localhost:5049/api',
+    baseURL: `${import.meta.env.VITE_API_URL}/api`,
     withCredentials: true,
 });
 

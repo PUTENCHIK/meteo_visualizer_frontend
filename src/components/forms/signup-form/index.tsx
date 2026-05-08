@@ -11,7 +11,7 @@ import { useState } from 'react';
 
 export const SignupForm = () => {
     const navigate = useNavigate();
-    const signup = useAuthStore((state) => state.signup);
+    const { signup } = useAuthStore();
 
     const [counter, setCounter] = useState(0);
 

@@ -84,7 +84,6 @@ export const MastItem = ({ mast, complex, data, focusable = false }: MastItemPro
                 ]}
                 size='tiny'
             />
-            <span>Префикс мачты: {mast.prefix}</span>
             <ComponentRowBox
                 left={[<span>Расположение:</span>]}
                 right={[
