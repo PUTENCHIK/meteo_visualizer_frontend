@@ -1,0 +1,12 @@
+services:
+  frontend:
+    build: .
+    env_file:
+      - .env.docker
+    ports:
+      - "${VITE_APP_PORT}:${VITE_APP_PORT}"
+    volumes:
+      - .:/frontend
+      - /frontend/node_modules
+    stdin_open: true
+    tty: true
