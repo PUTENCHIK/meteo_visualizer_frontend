@@ -41,7 +41,7 @@ export const EntityLabel = <T extends DisplayableEntity>({
     const { user } = useAuthStore();
     const { openDialog } = useDialogs();
     const entityId = entity ? entity.id.toString().slice(0, 8) : 'N/A';
-    const color = entity ? entity.id.toString().slice(-6) : '808080';
+    const color = entity ? entity.id.toString().slice(0, 6) : '808080';
 
     const getLabel = (): string => {
         if (!entity) {
