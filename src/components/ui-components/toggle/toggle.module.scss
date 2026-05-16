@@ -1,20 +1,21 @@
 :root {
-    --width: 45px;
-    --height: 20px;
-    --padding: 2px;
+    --toggle-height: round(nearest, 1.25rem, 2px);
+    --toggle-padding: max(round(nearest, 0.125rem, 2px), 2px);
+    --toggle-width: calc(var(--toggle-height) * 2.2);
 }
 
 .toggle {
-    width: var(--width);
-    height: var(--height);
-    padding: var(--padding);
+    width: var(--toggle-width);
+    height: var(--toggle-height);
+    padding: var(--toggle-padding);
     box-sizing: border-box;
     
     display: flex;
+    align-items: center;
     justify-content: start;
 
     background-color: #a3a3a3;
-    border-radius: var(--width);
+    border-radius: var(--toggle-width);
     border: 0;
     outline: 0;
     cursor: pointer;
@@ -48,7 +49,7 @@
 }
 
 .ball {
-    height: 100%;
+    height: calc(var(--toggle-height) - (var(--toggle-padding) * 2));
     aspect-ratio: 1 / 1;
 
     display: block;

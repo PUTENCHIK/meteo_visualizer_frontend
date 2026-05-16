@@ -14,6 +14,7 @@ import { useDeleteComplexFromFavorites } from '@hooks/complexes/use-delete-compl
 import { BaseEntityItem } from '@entity-items/base-entity-item';
 import { GeographicInput } from '@components/geographic-input';
 import { HasPermission } from '@pages/has-permission';
+import { useMemo } from 'react';
 
 interface ComplexItemProps {
     data: ComplexWithFavoriteInfoSchema;
@@ -29,6 +30,11 @@ export const ComplexItem = ({ data, focusable = false }: ComplexItemProps) => {
 
     const isFavorite = data.is_favorite;
     const isDeleted = data.deleted_at !== null;
+
+    const favoriteColor = useMemo(() => {
+        const rootStyles = getComputedStyle(document.documentElement);
+        return rootStyles.getPropertyValue('--favorite-color').trim();
+    }, []);
 
     const handleFavoriteClick = () => {
         if (isFavorite) {
@@ -84,7 +90,7 @@ export const ComplexItem = ({ data, focusable = false }: ComplexItemProps) => {
                                     <IconButton
                                         iconName={isFavorite ? 'star-full' : 'star'}
                                         title={isFavorite ? 'Не отслеживать' : 'Отслеживать'}
-                                        iconColor={isFavorite ? 'yellow' : undefined}
+                                        iconColor={isFavorite ? favoriteColor : undefined}
                                         disabled={favPending || unfavPending}
                                         onClick={handleFavoriteClick}
                                     />

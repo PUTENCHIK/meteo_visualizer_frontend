@@ -56,7 +56,7 @@ export const WebSocketProvider = ({ children }: { children: ReactNode }) => {
         }
 
         const { accessToken } = useAuthStore.getState();
-        return `ws://localhost:5049/api/complexes/${complex.id}/ws?token=${accessToken}&measure_id=${measure.id}`;
+        return `ws://${import.meta.env.VITE_API_HOST}:${import.meta.env.VITE_API_PORT}/api/complexes/${complex.id}/ws?token=${accessToken}&measure_id=${measure.id}`;
     }, [complex, measure, logout]);
 
     const socketUrl = useMemo(() => {

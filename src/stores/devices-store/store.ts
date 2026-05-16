@@ -80,10 +80,25 @@ export class DevicesStore {
 
         const measurements = station.devices[device].data;
         for (const item of message.items) {
+            let delta = 0;
+            switch (prefix.toLowerCase()) {
+                case "west":
+                    delta = -10;
+                    break;
+                case "north":
+                    delta = -15;
+                    break;
+                case "east":
+                    delta = 5;
+                    break;
+                case "south":
+                    delta = 10;
+                    break;
+            }
             station.devices[device].data = [
                 ...measurements,
                 {
-                    value: item.value, // - 20 + Math.random() * 40,
+                    value: item.value + delta * Math.random(),
                     timestamp: message.timestamp,
                 },
             ];

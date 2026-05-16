@@ -40,6 +40,7 @@ export const MeasuresPage = () => {
                         />
                     </HasPermission>,
                 ]}
+                size='big'
             />
 
             {isLoading && <Loader />}

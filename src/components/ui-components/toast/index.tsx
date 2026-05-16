@@ -39,6 +39,7 @@ export const Toast = ({ closeToast, data: { type, payload } }: ToastContentProps
                         iconName='cross'
                         title='Закрыть'
                         iconSize={16}
+                        iconColor='white'
                         onClick={() => closeToast()}
                     />,
                 ]}

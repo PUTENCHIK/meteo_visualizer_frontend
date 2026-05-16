@@ -3,7 +3,7 @@ import { useAuthStore } from '@stores/auth-store';
 import type { DialogProps } from '@context/dialog-context/dialogs';
 import { UserItem } from '@entity-items/user-item';
 import { useUser } from '@hooks/users/use-user';
-import { Loader } from '@react-three/drei';
+import { Loader } from '@components/loader';
 
 export const ProfileDialog: React.FC<DialogProps<'profile'>> = () => {
     const { user } = useAuthStore();

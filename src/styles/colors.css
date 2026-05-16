@@ -1,14 +1,16 @@
 :root {
-    --main-color: #e95420;
+    --main-color: #fc4d0e;
     --text-primary: #121212;
-    --danger-color: red;
-    --access-color: #00c400;
-    --warning-color: #ff7b00;
-    --background-color: white;
-    --disabled-color: gray;
+    --danger-color: #ff0000;
+    --access-color: #00af00;
+    --warning-color: #ff7300;
+    --favorite-color: #ecde15;
+
+    --background-color: #ffffff;
+    --disabled-color: #808080;
     --menu-background-color: #f0f0f0;
     --menu-background-color-hover: #e0e0e0;
-    --header-background-color: #e6e6e6;
+    --header-background-color: #f0f0f0;
     --icon-default-color: var(--text-primary);
     --input-background: #e0e0e0;
     --outline-color: #00000080;
@@ -18,11 +20,18 @@
     --tab-background-current-color: #f4f4f4;
     --compass-background-color: #b3b3b394;
     --compass-text-color: var(--text-primary);
-    --backdrop-color: #000000a8;
+    --backdrop-color: #000000c2;
+    --scrollbar-color: #808080;
+    --scrollbar-color-hover: #6b6b6b;
 }
 
 [data-theme='dark'] {
-    --text-primary: white;
+    --main-color: #e95420;
+    --access-color: #00c400;
+    --warning-color: #ff7b00;
+    --favorite-color: #ffff00;
+
+    --text-primary: #ffffff;
     --background-color: #272727;
     --menu-background-color: #1d1d1d;
     --menu-background-color-hover: #131313;
@@ -34,4 +43,5 @@
     --tab-background-current-color: #181818;
     --compass-background-color: #39393994;
     --compass-text-color: var(--text-primary);
+    --backdrop-color: #000000a8;
 }

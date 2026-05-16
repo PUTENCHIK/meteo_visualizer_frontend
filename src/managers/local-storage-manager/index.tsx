@@ -1,8 +1,14 @@
-import type { Theme } from '@context/theme-context';
+import {
+    DEFAULT_FONT_SIZE,
+    DEFAULT_THEME,
+    type FontSize,
+    type Theme,
+} from '@context/theme-context';
 import type { AppSettings } from '@utils/settings';
 
 interface AppData {
     theme: Theme;
+    fonsSize: FontSize;
     settings: AppSettings;
 }
 
@@ -26,8 +32,9 @@ class LocalStorageManager {
 
     public getDefault(): AppData {
         return {
-            theme: 'dark',
+            theme: DEFAULT_THEME,
             settings: {},
+            fonsSize: DEFAULT_FONT_SIZE,
         };
     }
 

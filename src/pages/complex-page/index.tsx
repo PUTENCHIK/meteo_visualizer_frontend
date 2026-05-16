@@ -36,17 +36,17 @@ export const ComplexPage = () => {
     const { data: loadedComplex, isLoading, isError } = useComplex(parsedId);
 
     useEffect(() => {
-        return () => disableConnection();
+        return () => {
+            disableConnection();
+            reset();
+            devicesStore.clearStore();
+        };
     }, []);
 
     useEffect(() => {
         if (loadedComplex) {
             setComplex(loadedComplex);
         }
-        return () => {
-            reset();
-            devicesStore.clearStore();
-        };
     }, [loadedComplex, setComplex]);
 
     const handleBackClick = () => {

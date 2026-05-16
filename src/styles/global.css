@@ -49,3 +49,25 @@ a.link-reset {
 span.no-wrap {
     white-space: nowrap;
 }
+
+::-webkit-scrollbar {
+    width: var(--scrollbar-width);
+    height: var(--scrollbar-width);
+    background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: var(--scrollbar-color);
+    border-radius: 10px;
+    border: 2px solid transparent;
+    background-clip: content-box;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background-color: var(--scrollbar-color-hover);
+}
+
+* {
+    scrollbar-width: thin;
+    scrollbar-color: var(--scrollbar-color) transparent;
+}

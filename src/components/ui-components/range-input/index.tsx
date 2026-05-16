@@ -20,7 +20,6 @@ export const RangeInput = ({
     onChange,
 }: RangeInputProps) => {
     const [value, setValue] = useState(startValue);
-    const [showTooltip, setShowTooltip] = useState(false);
     const [thumbOffset, setThumbOffset] = useState(300);
 
     useEffect(() => {
@@ -33,20 +32,8 @@ export const RangeInput = ({
         if (onChange) onChange(v, false);
     };
 
-    const handleMouseDown = () => {
-        setShowTooltip(true);
-    };
-
-    const handleMouseUp = () => {
-        setShowTooltip(false);
-        if (onChange) onChange(value);
-    };
-
     return (
-        <div
-            className={clsx(s['range-input-wrapper'])}
-            onMouseEnter={() => setShowTooltip(true)}
-            onMouseLeave={() => setShowTooltip(false)}>
+        <div className={clsx(s['range-input-wrapper'])}>
             <span className={clsx(s['limit'])}>{min}</span>
             <div className={clsx(s['input-wrapper'])}>
                 <input
@@ -58,18 +45,14 @@ export const RangeInput = ({
                     step={step}
                     disabled={disabled}
                     onChange={handleChange}
-                    onMouseDown={handleMouseDown}
-                    onMouseUp={handleMouseUp}
                 />
-                {showTooltip && (
-                    <span
-                        className={clsx(s['tooltip'], disabled && s['disabled'])}
-                        style={{
-                            left: `${thumbOffset}%`,
-                        }}>
-                        {value}
-                    </span>
-                )}
+                <span
+                    className={clsx(s['tooltip'], disabled && s['disabled'])}
+                    style={{
+                        left: `${thumbOffset}%`,
+                    }}>
+                    {value}
+                </span>
             </div>
             <span className={clsx(s['limit'])}>{max}</span>
         </div>

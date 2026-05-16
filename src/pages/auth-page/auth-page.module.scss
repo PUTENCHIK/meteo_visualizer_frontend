@@ -1,5 +1,9 @@
+:root {
+    --auth-page-logo-size: 4rem;
+}
+
 .main {
-    min-height: 600px;
+    min-height: 37.5rem;
     flex: 1;
     display: flex;
     gap: 80px;
@@ -7,11 +11,14 @@
 }
 
 .container {
-    width: 400px;
+    width: 25rem;
     display: flex;
     flex-direction: column;
     align-items: center;
 
+    &.app-description {
+        row-gap: 1rem;
+    }
     &.forms {
         row-gap: 32px;
     }
@@ -20,8 +27,13 @@
     }
 }
 
+img.logo {
+    width: var(--auth-page-logo-size);
+    height: var(--auth-page-logo-size);
+}
 
 .title,
 .description {
     text-align: center;
+    margin: 0;
 }

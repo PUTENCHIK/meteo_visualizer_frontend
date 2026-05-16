@@ -1,27 +1,28 @@
 @mixin window {
     border-radius: var(--window-padding);
     background-color: var(--menu-background-color);
-    box-shadow: 4px 4px 6px 0 color-mix(in srgb, var(--menu-background-color), transparent 60%);
-    outline: 1px solid var(--outline-window-color);
+    box-shadow: 0.25rem 0.25rem 0.375rem 0 color-mix(in srgb, var(--menu-background-color), transparent 60%);
+    outline: 0.0625rem solid var(--outline-window-color);
     overflow: hidden;
 }
 
 @mixin item-box {
     box-sizing: border-box;
     padding: var(--box-padding);
-    
+
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 0.5rem;
 
     border-radius: var(--box-padding);
-    border: 1px solid var(--outline-color);
+    border: 0.0625rem solid var(--outline-color);
 }
 
 @mixin no-autofill {
+
     :-webkit-autofill,
     :-webkit-autofill:hover,
-    :-webkit-autofill:focus { 
+    :-webkit-autofill:focus {
         -webkit-box-shadow: 0 0 0 1000px inherit inset;
         -webkit-text-fill-color: var(--text-primary);
         caret-color: var(--text-primary);
@@ -31,23 +32,24 @@
 
 @mixin input {
     @include no-autofill();
-    
+
     padding: 0.375rem 0.75rem;
     box-sizing: border-box;
-    
+
     border: 0;
     outline: 0;
-    border-radius: 12px;
+    border-radius: 0.75rem;
     background-color: var(--input-background);
     color: var(--text-primary);
-    
+
     &:focus-visible {
-        outline: 1px solid var(--outline-color);
+        outline: 0.0625rem solid var(--outline-color);
     }
-    
+
     &:hover {
         background-color: color-mix(in srgb, var(--input-background), transparent 30%);
     }
+
     @include disableable();
 }
 
@@ -64,17 +66,17 @@
     width: fit-content;
 
     box-sizing: border-box;
-    padding: 2px 4px;
+    padding: 0.125rem 0.25rem;
 
-    border-radius: 6px;
+    border-radius: 0.375rem;
     font-size: 0.75rem;
     color: white;
     cursor: pointer;
 
     &.big {
         font-size: 1rem;
-        padding: 3px 6px;
-        border-radius: 6px;
+        padding: 0.1875rem 0.375rem;
+        border-radius: 0.375rem;
     }
 }
 
@@ -102,6 +104,7 @@
 }
 
 @mixin disableable {
+
     &:disabled,
     &:disabled:hover {
         background-color: color-mix(in srgb, var(--disabled-color), transparent 50%);
