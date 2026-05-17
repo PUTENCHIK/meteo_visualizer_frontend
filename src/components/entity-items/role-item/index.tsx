@@ -51,7 +51,7 @@ export const RoleItem = ({ data }: RoleItemProps) => {
     };
 
     return (
-        <BaseEntityItem isDeleted={isDeleted}>
+        <BaseEntityItem deleted={isDeleted}>
             <ComponentRowBox
                 left={[<EntityLabel entity={data} size='big' />]}
                 right={[
@@ -103,7 +103,7 @@ export const RoleItem = ({ data }: RoleItemProps) => {
                     <IconButton
                         iconName='checron'
                         title={showPermissions ? 'Свернуть' : 'Развернуть'}
-                        iconSize={16}
+                        iconSize={'small'}
                         iconRotate={showPermissions ? -90 : 90}
                         onClick={() => setShowPermissions((prev) => !prev)}
                     />,

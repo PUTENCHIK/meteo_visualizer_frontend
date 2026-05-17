@@ -1,4 +1,4 @@
-import { useSettings } from '@context/use-settings';
+import { useSceneSettings } from '@hooks/use-scene-settings';
 import { BoxMesh } from '@models_/box-mesh';
 import { Vector3 } from 'three';
 
@@ -7,7 +7,7 @@ interface BasePlateModelProps {
 }
 
 export const BasePlateModel = ({ size }: BasePlateModelProps) => {
-    const { map: settings } = useSettings();
+    const { map: settings } = useSceneSettings();
 
     return (
         <BoxMesh

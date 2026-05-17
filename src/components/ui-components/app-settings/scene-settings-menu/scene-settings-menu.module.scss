@@ -1,4 +1,4 @@
-@use '../../../styles/mixins.scss' as m;
+@use '../../../../styles/mixins.scss' as m;
 
 .menu-wrapper {
     display: flex;
@@ -88,6 +88,7 @@ button.section {
 
 .menu-content {
     min-width: 100%;
+    padding: 0.0625rem;
 
     display: inline-flex;
     flex-direction: column;

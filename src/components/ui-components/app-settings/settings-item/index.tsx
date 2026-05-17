@@ -1,25 +1,26 @@
 import clsx from 'clsx';
 import s from './settings-item.module.scss';
-import { settingsManager } from '@managers/settings-manager';
-import { type SettingsItem as SettingsItemType } from '@utils/settings';
+import { type SettingsItem as SettingsItemType, type SettingsType } from '@utils/settings';
 import { RangeInput } from '@components/range-input';
 import { Toggle } from '@components/toggle';
 import { TabsMenu } from '@components/tabs-menu';
 import { TextInput } from '@components/text-input';
 import { NumberInput } from '@components/number-input';
 import { Select } from '@components/select';
+import { SettingsManager } from '@managers/settings-manager';
 
 interface SettingsItemProps {
     item: SettingsItemType;
     path: string;
+    manager: SettingsManager<SettingsType>;
     parentDisabled?: boolean;
 }
 
-export const SettingsItem = ({ item, path, parentDisabled = false }: SettingsItemProps) => {
+export const SettingsItem = ({ item, path, manager, parentDisabled = false }: SettingsItemProps) => {
     let component;
 
     const handleChange = (value: any, finalValue?: boolean) => {
-        settingsManager.set(path, value, finalValue);
+        manager.set(path, value, finalValue);
     };
 
     let disabled = item.disabled || parentDisabled;
@@ -27,8 +28,8 @@ export const SettingsItem = ({ item, path, parentDisabled = false }: SettingsIte
 
     const pathEnable = path.split('.').slice(0, -1).join('.') + '.enable';
 
-    if (visible && settingsManager.get(pathEnable) !== undefined && path !== pathEnable) {
-        disabled = disabled || !settingsManager.get(pathEnable);
+    if (visible && manager.get(pathEnable) !== undefined && path !== pathEnable) {
+        disabled = disabled || !manager.get(pathEnable);
     }
     const tabs: Record<string, string> = {};
 
@@ -120,6 +121,7 @@ export const SettingsItem = ({ item, path, parentDisabled = false }: SettingsIte
                             key={key}
                             item={tabItem}
                             path={`${path}.${item.value}.${key}`}
+                            manager={manager}
                             parentDisabled={disabled}
                         />
                     ))}
@@ -141,6 +143,7 @@ export const SettingsItem = ({ item, path, parentDisabled = false }: SettingsIte
                                 key={key}
                                 item={item}
                                 path={`${path}.${key}`}
+                                manager={manager}
                                 parentDisabled={disabled}
                             />
                         ))}

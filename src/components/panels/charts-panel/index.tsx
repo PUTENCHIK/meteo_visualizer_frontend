@@ -61,7 +61,7 @@ export const ChartsPanel: React.FC<PanelProps<'charts'>> = () => {
                                 <IconButton
                                     iconName='eye'
                                     title='Фокус'
-                                    iconSize={16}
+                                    iconSize={'small'}
                                     onClick={handleFocusClick}
                                 />,
                             ]}

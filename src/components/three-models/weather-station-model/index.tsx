@@ -1,4 +1,4 @@
-import { useSettings } from '@context/use-settings';
+import { useSceneSettings } from '@hooks/use-scene-settings';
 import { SphereMesh } from '@models_/sphere-mesh';
 import { Html } from '@react-three/drei';
 import { Mesh, Vector3 } from 'three';
@@ -27,7 +27,7 @@ export const WeatherStationModel = ({
     yardHeight,
     num,
 }: WeatherStationModelProps) => {
-    const { map: settings } = useSettings();
+    const { map: settings } = useSceneSettings();
     const { focusStation } = useFocus();
     const { Bridge } = useBridge();
     const { measure } = useComplexStore();

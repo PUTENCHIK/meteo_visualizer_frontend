@@ -91,8 +91,8 @@ export type SettingsItem =
 // Глобальная секция настроек, отображаемая в худе
 export interface SettingsSection extends Base {
     title: string;
-    iconName: IconName;
+    iconName: IconName | null;
     items: Record<string, SettingsItem>;
 }
 
-export type AppSettings = Record<string, SettingsSection>;
+export type SettingsType = Record<string, SettingsSection>;

@@ -51,7 +51,7 @@ export const MastConfigItem = ({ data }: MastConfigItemProps) => {
     };
 
     return (
-        <BaseEntityItem isDeleted={isDeleted}>
+        <BaseEntityItem deleted={isDeleted}>
             <ComponentRowBox
                 left={[<h2>{data.name}</h2>, <EntityLabel entity={data} field='id' />]}
                 right={[
@@ -104,7 +104,7 @@ export const MastConfigItem = ({ data }: MastConfigItemProps) => {
                                     iconName='plus'
                                     title='Добавить рею'
                                     type='primary'
-                                    iconSize={16}
+                                    iconSize={'small'}
                                     onClick={() => openDialog('edit-mast-yard', { config: data })}
                                 />
                             </HasPermission>,

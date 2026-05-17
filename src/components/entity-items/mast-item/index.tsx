@@ -46,7 +46,7 @@ export const MastItem = ({ mast, complex, data, focusable = false }: MastItemPro
     };
 
     return (
-        <BaseEntityItem isDeleted={isDeleted}>
+        <BaseEntityItem deleted={isDeleted}>
             <ComponentRowBox
                 left={[<span>Мачта</span>, <EntityLabel entity={mast} />]}
                 right={[
@@ -54,7 +54,7 @@ export const MastItem = ({ mast, complex, data, focusable = false }: MastItemPro
                         <IconButton
                             iconName='eye'
                             title='Фокус'
-                            iconSize={16}
+                            iconSize={'small'}
                             onClick={() => focusMast(mast.id)}
                         />
                     ),
@@ -62,7 +62,7 @@ export const MastItem = ({ mast, complex, data, focusable = false }: MastItemPro
                         <IconButton
                             iconName='pencil'
                             title='Редактировать'
-                            iconSize={16}
+                            iconSize={'small'}
                             onClick={updateMast}
                         />
                     </HasPermission>,
@@ -70,7 +70,7 @@ export const MastItem = ({ mast, complex, data, focusable = false }: MastItemPro
                         <IconButton
                             iconName='bin'
                             title='Удалить'
-                            iconSize={16}
+                            iconSize={'small'}
                             onClick={deleteMast}
                         />
                     </HasPermission>,
@@ -93,7 +93,7 @@ export const MastItem = ({ mast, complex, data, focusable = false }: MastItemPro
                 size='tiny'
             />
             <ComponentRowBox
-                left={[<span>Угол поворота: {mast.rotation}</span>]}
+                left={[<span>Угол поворота: {mast.rotation}°</span>]}
                 right={[
                     <TimestampLabel value={mast.created_at} />,
                     <TimestampLabel value={mast.updated_at} />,
@@ -109,7 +109,7 @@ export const MastItem = ({ mast, complex, data, focusable = false }: MastItemPro
                                 iconName='checron'
                                 title={showData ? 'Свернуть' : 'Развернуть'}
                                 iconRotate={showData ? -90 : 90}
-                                iconSize={16}
+                                iconSize={'small'}
                                 onClick={() => setShowData((prev) => !prev)}
                             />,
                         ]}

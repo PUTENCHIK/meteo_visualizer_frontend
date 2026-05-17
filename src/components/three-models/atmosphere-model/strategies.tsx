@@ -1,4 +1,4 @@
-import type { SettingsMapType } from '@context/use-settings';
+import type { SceneSettingsMapType } from '@hooks/use-scene-settings';
 import { Vector2, Vector3 } from 'three';
 import type { AtmosphereModelType } from '.';
 import type { CustomUniforms } from './shaders';
@@ -12,15 +12,15 @@ export interface LayoutResult {
 
 interface LayoutParams {
     basePlateSize: Vector3;
-    settings: SettingsMapType;
+    settings: SceneSettingsMapType;
 }
 
 interface LayoutStrategy {
     getLayout: (params: LayoutParams) => LayoutResult;
     renderGeometry: (params: LayoutParams) => React.ReactNode;
     getExtraUniforms: (params: LayoutParams) => Partial<CustomUniforms>;
-    getDeps: (settings: SettingsMapType) => any[];
-    getShaderDeps: (settings: SettingsMapType) => any[];
+    getDeps: (settings: SceneSettingsMapType) => any[];
+    getShaderDeps: (settings: SceneSettingsMapType) => any[];
 }
 
 const getPixelSize = (basePlateSize: Vector3, pixelAmount: number): Vector2 => {

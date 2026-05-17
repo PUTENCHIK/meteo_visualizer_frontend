@@ -1,14 +1,15 @@
 import clsx from 'clsx';
-import s from './settings-menu.module.scss';
+import s from './scene-settings-menu.module.scss';
 import { SvgIcon } from '@components/svg-icon';
 import { useState } from 'react';
-import { SettingsItem } from '@components/settings-item';
-import { useSettings } from '@context/use-settings';
+import { SettingsItem } from '@components/app-settings/settings-item';
+import { useSceneSettings } from '@hooks/use-scene-settings';
 import { IconButton } from '@components/icon-button';
 import { ComponentRowBox } from '@components/component-row-box';
+import { sceneSettingsManager } from '@managers/settings-manager';
 
-export const SettingsMenu = () => {
-    const { raw: settings } = useSettings();
+export const SceneSettingsMenu = () => {
+    const { raw: settings } = useSceneSettings();
     const [currentSection, setCurrentSection] = useState<string>();
 
     const handleSectionClick = (key: string) => {
@@ -34,15 +35,15 @@ export const SettingsMenu = () => {
                                     key === currentSection && s['current'],
                                 )}
                                 title={section.title}
-                                disabled={section.disabled}
                                 onClick={
-                                    !section.disabled ? () => handleSectionClick(key) : undefined
+                                    () => handleSectionClick(key)
                                 }>
-                                <SvgIcon
-                                    iconName={section.iconName}
-                                    size={24}
-                                    disabled={section.disabled}
-                                />
+                                {section.iconName && (
+                                    <SvgIcon
+                                        iconName={section.iconName}
+                                        size={'medium'}
+                                    />
+                                )}
                             </button>
                         ),
                 )}
@@ -61,7 +62,13 @@ export const SettingsMenu = () => {
                     />
                     <div className={clsx(s['menu-content'])}>
                         {Object.entries(section.items).map(([key, item]) => (
-                            <SettingsItem key={key} path={`${currentSection}.${key}`} item={item} />
+                            <SettingsItem
+                                key={key}
+                                item={item}
+                                path={`${currentSection}.${key}`}
+                                manager={sceneSettingsManager}
+                                parentDisabled={section.disabled}
+                            />
                         ))}
                     </div>
                 </div>

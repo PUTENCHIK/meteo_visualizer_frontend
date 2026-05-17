@@ -44,7 +44,7 @@ export const MeasureColorItem = ({ data, measure }: MeasureColorItemProps) => {
                         <IconButton
                             iconName='pencil'
                             title='Редактировать'
-                            iconSize={16}
+                            iconSize={'small'}
                             onClick={updateMeasureColor}
                         />
                     </HasPermission>,
@@ -52,7 +52,7 @@ export const MeasureColorItem = ({ data, measure }: MeasureColorItemProps) => {
                         <IconButton
                             iconName='bin'
                             title='Удалить'
-                            iconSize={16}
+                            iconSize={'small'}
                             onClick={deleteMeasureColor}
                         />
                     </HasPermission>,

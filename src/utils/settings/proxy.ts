@@ -1,4 +1,4 @@
-import type { AppSettings } from './structure';
+import type { SettingsWithIconType } from './structure';
 
 export type SettingsMap<T> = {
     // SettingsTab
@@ -19,7 +19,7 @@ export type SettingsMap<T> = {
               : T[key];
 };
 
-export const createSettingsProxy = <T extends AppSettings>(target: T): SettingsMap<T> => {
+export const createSettingsProxy = <T extends SettingsWithIconType>(target: T): SettingsMap<T> => {
     return new Proxy(target, {
         get(obj: any, prop: string) {
             // SettingsSection и SettingsChapter

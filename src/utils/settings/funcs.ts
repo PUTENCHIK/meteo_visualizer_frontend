@@ -165,7 +165,7 @@ export const createTab = <K extends Record<string, SettingsTabItem>, T extends K
 
 export const createSection = <T extends Record<string, SettingsItem>>(
     title: string,
-    iconName: IconName,
+    iconName: IconName | null,
     items: T,
     others?: Partial<Omit<SettingsSection, 'title' | 'iconName' | 'items'>>,
 ) => {

@@ -1,4 +1,4 @@
-import { useSettings } from '@context/use-settings';
+import { useSceneSettings } from '@hooks/use-scene-settings';
 import { useMemo, useRef } from 'react';
 import { Vector3, Object3D, ShaderMaterial, Vector4 } from 'three';
 import { vertexShader, fragmentShader } from '@utils/shaders';
@@ -18,7 +18,7 @@ interface AtmosphereModelProps {
 }
 
 export const AtmosphereModel = ({ basePlateSize }: AtmosphereModelProps) => {
-    const { map: settings } = useSettings();
+    const { map: settings } = useSceneSettings();
     const { measure } = useComplexStore();
 
     const materialRef = useRef<ShaderMaterial>(null);

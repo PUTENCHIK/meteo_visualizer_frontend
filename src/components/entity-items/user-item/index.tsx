@@ -59,7 +59,7 @@ export const UserItem = ({ data, profile = false }: UserItemProps) => {
     };
 
     return (
-        <BaseEntityItem isDeleted={isDeleted}>
+        <BaseEntityItem deleted={isDeleted}>
             <ComponentRowBox
                 left={[<EntityLabel entity={data} size='big' field='login' />]}
                 right={[

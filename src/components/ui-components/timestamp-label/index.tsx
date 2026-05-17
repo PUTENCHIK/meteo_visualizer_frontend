@@ -9,7 +9,7 @@ interface TimestampLabelProps {
 
 export const TimestampLabel = ({ value, deleted = false }: TimestampLabelProps) => {
     return (
-        <div className={clsx(s['timestamp-label'], deleted && s['deleted'])}>
+        <div className={clsx(s['timestamp-label'], deleted && s['deleted'])} title={value}>
             {formatTimespamp(value)}
         </div>
     );

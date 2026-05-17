@@ -1,5 +1,4 @@
 import type { AtmosphereParticleForm } from '@models_/atmosphere-model';
-import type { CompassType } from '@models_/compass-model';
 import {
     createBoolean,
     createChapter,
@@ -11,9 +10,9 @@ import {
     createTab,
     createTabItem,
 } from './funcs';
-import type { AppSettings } from './structure';
+import type { SettingsType } from './structure';
 
-const rawSettings = {
+const rawSceneSettings = {
     scene: createSection('Настройки сцены', 'scene', {
         background: createChapter('Фон', {
             enable: createBoolean('Имитация неба', false),
@@ -110,11 +109,6 @@ const rawSettings = {
             }),
         }),
     }),
-    compass: createSection('Настройки компаса', 'compass', {
-        enable: createBoolean('Отображение', true),
-        type: createSelect<CompassType>('Режим', '2D', ['2D', '3D']),
-        size: createRange('Размер', 100, 70, 130, 5),
-    }),
     camera: createSection('Настройки камеры', 'camera', {
         noLimits: createBoolean('Свободная камера', false),
         minDistance: createRange('Дистанция приближения', 50, 10, 800, 10),
@@ -136,6 +130,6 @@ const rawSettings = {
         },
         { visible: false },
     ),
-} satisfies AppSettings;
+} satisfies SettingsType;
 
-export const appSettings = rawSettings;
+export const sceneSettings = rawSceneSettings;

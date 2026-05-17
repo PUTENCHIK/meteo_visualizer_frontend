@@ -4,7 +4,6 @@
     @include m.display-label;
     font-family: monospace;
     text-transform: uppercase;
-    cursor: default;
 
     &.public {
         background-color: color-mix(in srgb, var(--access-color), transparent 80%);

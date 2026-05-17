@@ -8,7 +8,7 @@ import { Suspense, useEffect, useMemo, useState } from 'react';
 import { Loader } from '@components/loader';
 import { SceneReporter } from '@helpers/scene-reporter';
 import { degToRad } from 'three/src/math/MathUtils.js';
-import { useSettings } from '@context/use-settings';
+import { useSceneSettings } from '@hooks/use-scene-settings';
 import { AtmosphereModel } from '@models_/atmosphere-model';
 import { SunModel } from '@models_/sun-model';
 import { useScene } from '@context/scene-context';
@@ -16,7 +16,7 @@ import { geographicToPolar } from '@utils/coordinate-systems';
 import { useComplexStore } from '@stores/complex-store';
 
 export const ComplexScene = () => {
-    const { map: settings } = useSettings();
+    const { map: settings } = useSceneSettings();
     const { controlsRef } = useScene();
     const { complex } = useComplexStore();
 

@@ -45,12 +45,18 @@ export const iconFiles: Record<IconName, React.ComponentType<React.SVGProps<SVGS
     checron: checron,
 };
 
+export const sizesToRem: Record<IconSize, number> = {
+    huge: 3,
+    big: 2,
+    medium: 1.5,
+    small: 1,
+    tiny: 0.75,
+};
+
 export const sizesToStrokes: Record<IconSize, number> = {
-    48: 2,
-    36: 2,
-    28: 2,
-    24: 2,
-    20: 2,
-    16: 3,
-    12: 3,
+    huge: 2,
+    big: 2,
+    medium: 2,
+    small: 2.5,
+    tiny: 3,
 };

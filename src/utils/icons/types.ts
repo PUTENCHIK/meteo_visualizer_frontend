@@ -21,4 +21,4 @@ export type IconName =
     | 'star-full'
     | 'checron';
 
-export type IconSize = 48 | 36 | 28 | 24 | 20 | 16 | 12;
+export type IconSize = 'huge' | 'big' | 'medium' | 'small' | 'tiny';

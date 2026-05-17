@@ -43,7 +43,7 @@ export const MastYardItem = ({ data, config }: MastYardItemProps) => {
                         <IconButton
                             iconName='pencil'
                             title='Редактировать'
-                            iconSize={16}
+                            iconSize={'small'}
                             onClick={updateMastYard}
                         />
                     </HasPermission>,
@@ -51,7 +51,7 @@ export const MastYardItem = ({ data, config }: MastYardItemProps) => {
                         <IconButton
                             iconName='bin'
                             title='Удалить'
-                            iconSize={16}
+                            iconSize={'small'}
                             onClick={deleteMastYard}
                         />
                     </HasPermission>,

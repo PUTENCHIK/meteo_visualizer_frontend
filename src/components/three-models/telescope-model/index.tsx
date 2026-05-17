@@ -2,7 +2,7 @@ import { BoxMesh } from '@models_/box-mesh';
 import { CylinderMesh } from '@models_/cylinder-mesh';
 import { Vector3 } from 'three';
 import { MeshGroup } from '@models_/mesh-group';
-import { useSettings } from '@context/use-settings';
+import { useSceneSettings } from '@hooks/use-scene-settings';
 
 interface TelescopeModelProps {
     height: number;
@@ -11,7 +11,7 @@ interface TelescopeModelProps {
 }
 
 export const TelescopeModel = ({ height, radius, length }: TelescopeModelProps) => {
-    const { map: settings } = useSettings();
+    const { map: settings } = useSceneSettings();
 
     return (
         <MeshGroup>

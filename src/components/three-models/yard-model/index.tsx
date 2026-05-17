@@ -2,7 +2,7 @@ import { WeatherStationModel } from '@models_/weather-station-model';
 import { MeshGroup } from '@models_/mesh-group';
 import { Vector3 } from 'three';
 import { BoxMesh } from '@models_/box-mesh';
-import { useSettings } from '@context/use-settings';
+import { useSceneSettings } from '@hooks/use-scene-settings';
 import type { Guid } from 'typescript-guid';
 import type { MastYardSchema } from '@utils/schemas';
 
@@ -12,7 +12,7 @@ interface YardModelProps {
 }
 
 export const YardModel = ({ data, mastId }: YardModelProps) => {
-    const { map: settings } = useSettings();
+    const { map: settings } = useSceneSettings();
 
     const yardSize = 0.3;
     const supportSize = 0.1;

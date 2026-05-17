@@ -43,7 +43,7 @@ export const MeasureAliasItem = ({ data, measure }: MeasureAliasItemProps) => {
                         <IconButton
                             iconName='pencil'
                             title='Редактировать'
-                            iconSize={16}
+                            iconSize={'small'}
                             onClick={updateMeasureAlias}
                         />
                     </HasPermission>,
@@ -51,7 +51,7 @@ export const MeasureAliasItem = ({ data, measure }: MeasureAliasItemProps) => {
                         <IconButton
                             iconName='bin'
                             title='Удалить'
-                            iconSize={16}
+                            iconSize={'small'}
                             onClick={deleteMeasureAlias}
                         />
                     </HasPermission>,

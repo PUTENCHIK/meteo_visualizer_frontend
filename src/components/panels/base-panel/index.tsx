@@ -4,7 +4,7 @@ import { Rnd } from 'react-rnd';
 import { IconButton } from '@components/icon-button';
 import { usePanels, type PanelId } from '@context/panel-context';
 import React from 'react';
-import { useSettings } from '@context/use-settings';
+import { useSceneSettings } from '@hooks/use-scene-settings';
 import { ComponentRowBox } from '@components/component-row-box';
 
 interface WindowSizeLimits {
@@ -36,7 +36,7 @@ export const BasePanel = ({
     noContent,
     children,
 }: BasePanelProps) => {
-    const { map: settings } = useSettings();
+    const { map: settings } = useSceneSettings();
     const { panelsOrder, closePanel, focusPanel } = usePanels();
 
     const index = panelsOrder.findIndex((p) => p === panelId);

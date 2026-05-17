@@ -2,7 +2,7 @@ import { Mesh, Vector3 } from 'three';
 import { Edges } from '@react-three/drei';
 import { forwardRef } from 'react';
 import { degToRad } from 'three/src/math/MathUtils.js';
-import { useSettings } from '@context/use-settings';
+import { useSceneSettings } from '@hooks/use-scene-settings';
 import type { EdgesEnable, Shadowable } from '@utils/three-models';
 
 interface BoxMeshProps extends EdgesEnable, Shadowable {
@@ -24,7 +24,7 @@ export const BoxMesh = forwardRef<Mesh, BoxMeshProps>(
         }: BoxMeshProps,
         ref,
     ) => {
-        const { map: settings } = useSettings();
+        const { map: settings } = useSceneSettings();
 
         const isShadow =
             forceShadow === 'with' || (forceShadow !== 'without' && settings.scene.shadows.enable);

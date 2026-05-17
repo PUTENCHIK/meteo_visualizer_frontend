@@ -5,6 +5,8 @@ import type { AuditableModelSchema } from '@utils/schemas';
 import { useDialogs } from '@context/dialog-context';
 import type { EntityType } from '@dialogs/entity-dialog/queries';
 import type { Guid } from 'typescript-guid';
+import { useAppSettings } from '@hooks/use-app-settings';
+import { useMemo } from 'react';
 
 type LabelSize = 'small' | 'big';
 
@@ -38,18 +40,25 @@ export const EntityLabel = <T extends DisplayableEntity>({
     type,
     linkable = false,
 }: EntityLabelProps<T>) => {
+    const { map: settings } = useAppSettings();
     const { user } = useAuthStore();
     const { openDialog } = useDialogs();
-    const entityId = entity ? entity.id.toString().slice(0, 8) : 'N/A';
+    const entityId = entity?.id.toString();
+    const idLabel = entity ? entity.id.toString().slice(0, 8) : 'N/A';
     const color = entity ? entity.id.toString().slice(0, 6) : '808080';
+
+    const styles = useMemo(() => (settings.common.colorEntityLabels ? {
+        backgroundColor: `#${color}`,
+        color: `contrast-color(#${color})`,
+    } : undefined), [settings.common.colorEntityLabels, color]);
 
     const getLabel = (): string => {
         if (!entity) {
-            return entityId;
+            return idLabel;
         }
 
         if (field) {
-            return field === 'id' ? entityId : String(entity[field]);
+            return field === 'id' ? idLabel : String(entity[field]);
         }
         if (user?.id === entity.id) {
             return 'Вы';
@@ -57,7 +66,7 @@ export const EntityLabel = <T extends DisplayableEntity>({
         if ('name' in entity) return entity.name;
         else if ('login' in entity) return entity.login;
         else if ('prefix' in entity) return entity.prefix;
-        else return entityId;
+        else return idLabel;
     };
 
     const handleClick = () => {
@@ -73,10 +82,8 @@ export const EntityLabel = <T extends DisplayableEntity>({
                 s[size],
                 type && linkable && entity && s['linkable'],
             )}
-            style={{
-                backgroundColor: `#${color}`,
-                color: `contrast-color(#${color})`,
-            }}
+            style={styles}
+            title={entityId}
             onClick={handleClick}>
             {getLabel()}
         </div>

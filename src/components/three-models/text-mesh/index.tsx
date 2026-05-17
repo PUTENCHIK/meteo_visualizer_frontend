@@ -1,4 +1,4 @@
-import { useSettings } from '@context/use-settings';
+import { useSceneSettings } from '@hooks/use-scene-settings';
 import { MeshGroup } from '@models_/mesh-group';
 import { Center, Edges, Text3D } from '@react-three/drei';
 import type { EdgesEnable } from '@utils/three-models';
@@ -30,7 +30,7 @@ export const TextMesh = ({
     height,
     forceEdges,
 }: TextMeshProps) => {
-    const { map: settings } = useSettings();
+    const { map: settings } = useSceneSettings();
 
     const isEdges =
         forceEdges === 'with' || (forceEdges !== 'without' && settings.scene.edges.enable);

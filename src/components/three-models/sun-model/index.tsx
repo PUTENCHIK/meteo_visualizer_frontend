@@ -1,4 +1,4 @@
-import { useSettings } from '@context/use-settings';
+import { useSceneSettings } from '@hooks/use-scene-settings';
 import { useFpsFrame } from '@hooks/use-fps-frame';
 import { SphereMesh } from '@models_/sphere-mesh';
 import { useComplexStore } from '@stores/complex-store';
@@ -11,7 +11,7 @@ interface SunModelProps {
 }
 
 export const SunModel = ({ basePlateSize }: SunModelProps) => {
-    const { map: settings } = useSettings();
+    const { map: settings } = useSceneSettings();
     const { complex } = useComplexStore();
 
     const sunRef = useRef<Mesh>(null);

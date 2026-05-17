@@ -64,7 +64,6 @@ export const BaseDialog = ({ dialogId, title, hardClose = false, children }: Bas
                             <IconButton
                                 iconName='cross'
                                 title='Закрыть'
-                                iconSize={24}
                                 onClick={() => closeDialog()}
                             />,
                         ]}

@@ -1,6 +1,7 @@
 import clsx from 'clsx';
 import s from './svg-icon.module.scss';
-import { type IconName, type IconSize, iconFiles, sizesToStrokes } from '@utils/icons';
+import { type IconName, type IconSize, iconFiles, sizesToRem, sizesToStrokes } from '@utils/icons';
+import { useAppSettings } from '@hooks/use-app-settings';
 
 interface SvgIconProps {
     iconName: IconName;
@@ -21,6 +22,7 @@ export const SvgIcon = ({
     primary = false,
     disabled = false,
 }: SvgIconProps) => {
+    const { map: settings } = useAppSettings();
     const SvgIcon = iconFiles[iconName];
 
     return (
@@ -31,8 +33,8 @@ export const SvgIcon = ({
                 primary && !color && s['primary'],
                 disabled && !color && s['disabled'],
             )}
-            width={size}
-            height={size}
+            width={sizesToRem[size] * settings.common.fontSize}
+            height={sizesToRem[size] * settings.common.fontSize}
             strokeWidth={strokeWidth ?? sizesToStrokes[size]}
             color={color}
             style={{

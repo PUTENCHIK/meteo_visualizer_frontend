@@ -3,7 +3,7 @@ import { BoxMesh } from '@models_/box-mesh';
 import { MeshGroup } from '@models_/mesh-group';
 import { YardModel } from '@models_/yard-model';
 import { CylinderMesh } from '@models_/cylinder-mesh';
-import { useSettings } from '@context/use-settings';
+import { useSceneSettings } from '@hooks/use-scene-settings';
 import type { MastSchema } from '@utils/schemas';
 import { geographicToPolar } from '@utils/coordinate-systems';
 import { useComplexStore } from '@stores/complex-store';
@@ -14,7 +14,7 @@ interface MastModelProps {
 }
 
 export const MastModel = ({ data }: MastModelProps) => {
-    const { map: settings } = useSettings();
+    const { map: settings } = useSceneSettings();
     const { complex } = useComplexStore();
 
     const defaultMastHeight = 5;

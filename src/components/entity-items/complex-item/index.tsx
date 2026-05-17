@@ -74,7 +74,7 @@ export const ComplexItem = ({ data, focusable = false }: ComplexItemProps) => {
     };
 
     return (
-        <BaseEntityItem isDeleted={isDeleted}>
+        <BaseEntityItem deleted={isDeleted}>
             <ComponentRowBox
                 left={[<h2>{data.name}</h2>, <EntityLabel entity={data} field='id' />]}
                 right={[
@@ -156,7 +156,7 @@ export const ComplexItem = ({ data, focusable = false }: ComplexItemProps) => {
                                     iconName='plus'
                                     title='Добавить мачту'
                                     type='primary'
-                                    iconSize={16}
+                                    iconSize={'small'}
                                     onClick={() => openDialog('edit-mast', { complex: data })}
                                 />
                             </HasPermission>,

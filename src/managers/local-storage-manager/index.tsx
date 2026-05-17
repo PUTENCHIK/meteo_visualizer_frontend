@@ -1,16 +1,11 @@
-import {
-    DEFAULT_FONT_SIZE,
-    DEFAULT_THEME,
-    type FontSize,
-    type Theme,
-} from '@context/theme-context';
-import type { AppSettings } from '@utils/settings';
+import type { SettingsType } from '@utils/settings';
 
-interface AppData {
-    theme: Theme;
-    fonsSize: FontSize;
-    settings: AppSettings;
+export interface AppData {
+    appSettings: SettingsType;
+    sceneSettings: SettingsType;
 }
+
+export type AppSettingsGroup = keyof Pick<AppData, 'appSettings' | 'sceneSettings'>;
 
 const STORAGE_KEY = 'meteo_visualizer';
 
@@ -32,9 +27,8 @@ class LocalStorageManager {
 
     public getDefault(): AppData {
         return {
-            theme: DEFAULT_THEME,
-            settings: {},
-            fonsSize: DEFAULT_FONT_SIZE,
+            appSettings: {},
+            sceneSettings: {},
         };
     }
 

@@ -40,7 +40,7 @@
     
     &:disabled {
         cursor: default;
-        background-color: #cacaca;
+        background-color: var(--disabled-color) !important;
 
         & > .ball {
             background-color: #ececec;

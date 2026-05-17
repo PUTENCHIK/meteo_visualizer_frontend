@@ -35,7 +35,7 @@ export const WeatherStationItem = ({
                     <IconButton
                         iconName='eye'
                         title='Фокус'
-                        iconSize={16}
+                        iconSize={'small'}
                         onClick={() => focusStation(id, mastId)}
                     />,
                 ]}

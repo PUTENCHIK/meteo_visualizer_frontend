@@ -60,7 +60,7 @@ export const TextInput = ({
                     iconName={passwordVisible ? 'eye-off' : 'eye'}
                     className={clsx(s['icon-button'])}
                     title={passwordVisible ? 'Скрыть' : 'Показать'}
-                    iconSize={12}
+                    iconSize={'tiny'}
                     onClick={togglePasswordVisible}
                 />
             )}

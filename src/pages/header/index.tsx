@@ -42,13 +42,13 @@ export const Header = () => {
                                 <IconButton
                                     iconName='user'
                                     title='Профиль'
-                                    iconSize={24}
+                                    iconSize={'medium'}
                                     onClick={() => openDialog('profile')}
                                 />,
                                 <IconButton
                                     iconName='settings'
                                     title='Настройки'
-                                    iconSize={24}
+                                    iconSize={'medium'}
                                     onClick={() => openDialog('settings')}
                                 />,
                             ],

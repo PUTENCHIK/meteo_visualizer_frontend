@@ -26,7 +26,7 @@ export const AuthPage = () => {
                 <IconButton
                     iconName='settings'
                     title='Настройки'
-                    iconSize={24}
+                    iconSize={'medium'}
                     onClick={() => openDialog('settings')}
                 />
             </div>

@@ -1,6 +1,6 @@
 import type { Mesh, Vector3 } from 'three';
 import { Edges, Outlines } from '@react-three/drei';
-import { useSettings } from '@context/use-settings';
+import { useSceneSettings } from '@hooks/use-scene-settings';
 import type { EdgesEnable, Namable, Shadowable } from '@utils/three-models';
 import { forwardRef } from 'react';
 
@@ -26,7 +26,7 @@ export const CylinderMesh = forwardRef<Mesh, CylinderMeshProps>(
         }: CylinderMeshProps,
         ref,
     ) => {
-        const { map: settings } = useSettings();
+        const { map: settings } = useSceneSettings();
 
         const isShadow =
             forceShadow === 'with' || (forceShadow !== 'without' && settings.scene.shadows.enable);

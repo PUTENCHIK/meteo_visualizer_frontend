@@ -39,7 +39,7 @@ export const IconButton = ({
     iconName,
     title,
     type = 'default',
-    iconSize = 24,
+    iconSize = 'medium',
     iconColor,
     iconRotate = 0,
     className,

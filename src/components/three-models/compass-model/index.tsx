@@ -7,17 +7,15 @@ import { Euler, Group, Vector3 } from 'three';
 import { MeshGroup } from '@models_/mesh-group';
 import { Loader } from '@components/loader';
 import { TextMesh } from '@models_/text-mesh';
-import { useSettings } from '@context/use-settings';
 import { useScene } from '@context/scene-context';
 import { useFpsFrame } from '@hooks/use-fps-frame';
-import { useTheme } from '@context/theme-context';
 import { Html } from '@react-three/drei';
+import { useAppSettings } from '@hooks/use-app-settings';
 
 export type CompassType = '2D' | '3D';
 
 const Compass = () => {
-    const { map: settings } = useSettings();
-    const { theme } = useTheme();
+    const { map: appSettings } = useAppSettings();
     const { cameraRef } = useScene();
 
     const directionSize = 0.06;
@@ -25,13 +23,13 @@ const Compass = () => {
 
     const compassRef = useRef<Group>(null);
 
-    const compassType = settings.compass.type;
+    const compassType = appSettings.complexPage.compass.type;
     const mainCamera = cameraRef.current;
 
     const textColor = useMemo(() => {
         const styles = getComputedStyle(document.documentElement);
         return styles.getPropertyValue('--compass-text-color'.trim());
-    }, [theme]);
+    }, [appSettings.common.theme]);
 
     const euler: Euler = useMemo(() => {
         return new Euler();
@@ -106,10 +104,10 @@ const Compass = () => {
 };
 
 export const CompassModel = () => {
-    const { map: settings } = useSettings();
-    const compassSize = settings.compass.size;
+    const { map: settings } = useAppSettings();
+    const compassSize = settings.complexPage.compass.size;
 
-    if (!settings.compass.enable) return null;
+    if (!settings.complexPage.compass.enable) return null;
 
     return (
         <div className={clsx(s['compass-wrapper'])}>

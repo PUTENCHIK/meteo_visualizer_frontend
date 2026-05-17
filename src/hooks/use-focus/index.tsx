@@ -1,5 +1,5 @@
 import { useScene } from '@context/scene-context';
-import { useSettings } from '@context/use-settings';
+import { useSceneSettings } from '@hooks/use-scene-settings';
 import { useComplexStore } from '@stores/complex-store';
 import type { MastSchema } from '@utils/schemas';
 import { Box3, PerspectiveCamera, Sphere, Vector3 } from 'three';
@@ -7,7 +7,7 @@ import { degToRad } from 'three/src/math/MathUtils.js';
 import type { Guid } from 'typescript-guid';
 
 export const useFocus = () => {
-    const { map: settings } = useSettings();
+    const { map: settings } = useSceneSettings();
     const { controlsRef, sceneRef, cameraRef } = useScene();
 
     const focusObject = (id: Guid, targetOffset?: Vector3, rotationY: number = 0) => {

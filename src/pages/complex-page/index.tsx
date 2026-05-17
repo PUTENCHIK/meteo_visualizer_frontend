@@ -2,7 +2,7 @@ import clsx from 'clsx';
 import s from './complex-page.module.scss';
 import { CompassModel } from '@models_/compass-model';
 import { ComplexScene } from '@models_/complex-scene';
-import { SettingsMenu } from '@components/settings-menu';
+import { SceneSettingsMenu } from '@components/app-settings/scene-settings-menu';
 import { IconButton } from '@components/icon-button';
 import { useNavigate, useParams } from 'react-router-dom';
 import { usePanels } from '@context/panel-context';
@@ -93,13 +93,11 @@ export const ComplexPage = () => {
                             <IconButton
                                 iconName='user'
                                 title='Профиль'
-                                iconSize={28}
                                 onClick={() => openDialog('profile')}
                             />,
                             <IconButton
                                 iconName='settings'
                                 title='Настройки'
-                                iconSize={28}
                                 onClick={() => openDialog('settings')}
                             />,
                         ],
@@ -124,7 +122,7 @@ export const ComplexPage = () => {
             {complex && (
                 <>
                     <ComplexScene />
-                    <SettingsMenu />
+                    <SceneSettingsMenu />
 
                     <CompassModel />
                     <SceneStats />

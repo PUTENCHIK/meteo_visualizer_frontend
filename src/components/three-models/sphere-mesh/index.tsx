@@ -1,6 +1,6 @@
 import { Vector3, type Mesh } from 'three';
 import { Outlines } from '@react-three/drei';
-import { useSettings } from '@context/use-settings';
+import { useSceneSettings } from '@hooks/use-scene-settings';
 import { forwardRef } from 'react';
 import type { EdgesEnable, Namable, Shadowable } from '@utils/three-models';
 import type { ThreeEvent } from '@react-three/fiber';
@@ -31,7 +31,7 @@ export const SphereMesh = forwardRef<Mesh, SphereMeshProps>(
         }: SphereMeshProps,
         ref,
     ) => {
-        const { map: settings } = useSettings();
+        const { map: settings } = useSceneSettings();
 
         const isShadow =
             forceShadow === 'with' || (forceShadow !== 'without' && settings.scene.shadows.enable);

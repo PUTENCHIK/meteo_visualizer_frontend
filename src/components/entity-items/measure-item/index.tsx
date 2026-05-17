@@ -58,7 +58,7 @@ export const MeasureItem = ({ data }: MeasureItemProps) => {
     const isDeleted = data.deleted_at !== null;
 
     return (
-        <BaseEntityItem isDeleted={isDeleted}>
+        <BaseEntityItem deleted={isDeleted}>
             <ComponentRowBox
                 left={[<h2>{data.name}</h2>, <EntityLabel entity={data} field='id' />]}
                 right={[
@@ -128,7 +128,7 @@ export const MeasureItem = ({ data }: MeasureItemProps) => {
                                                 : 'Добавить цвет'
                                         }
                                         type='primary'
-                                        iconSize={16}
+                                        iconSize={'small'}
                                         disabled={isMaxColors}
                                         onClick={() =>
                                             openDialog('edit-measure-color', { measure: data })
@@ -152,7 +152,7 @@ export const MeasureItem = ({ data }: MeasureItemProps) => {
                                         iconName='plus'
                                         title='Добавить псевдоним'
                                         type='primary'
-                                        iconSize={16}
+                                        iconSize={'small'}
                                         onClick={() =>
                                             openDialog('edit-measure-alias', { measure: data })
                                         }

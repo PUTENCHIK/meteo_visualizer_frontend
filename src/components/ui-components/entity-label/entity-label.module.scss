@@ -2,7 +2,6 @@
 
 .entity-label {
     @include m.display-label;
-    cursor: default;
 
     &.linkable {
         cursor: pointer;
